@@ -15,7 +15,6 @@
         .intro-logo { color: var(--rojo); font-size: 42px; font-weight: 900; letter-spacing: 10px; animation: cinematicIntro 2.5s ease-in-out forwards; text-shadow: 0 0 15px rgba(229, 9, 20, 0.5); }
         @keyframes cinematicIntro { 0% { transform: scale(0.7); opacity: 0; } 40% { opacity: 1; } 100% { transform: scale(1.1); opacity: 0; } }
 
-        /* LOGIN */
         #login-screen { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: var(--fondo); display: none; flex-direction: column; align-items: center; justify-content: center; z-index: 9998; padding: 20px; box-sizing: border-box; }
         .login-card { background: rgba(255,255,255,0.03); padding: 50px 30px; border-radius: 30px; width: 100%; max-width: 320px; text-align: center; border: 1px solid rgba(255,255,255,0.05); backdrop-filter: blur(10px); }
 
@@ -27,32 +26,35 @@
         .view.active { display: block; }
         @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
 
-        /* SELECTORES */
+        /* TABS */
         .type-selector { display: flex; background: rgba(255,255,255,0.03); margin: -20px -20px 20px; border-bottom: 1px solid var(--gris); }
         .type-btn { flex: 1; padding: 15px; border: none; background: none; color: #555; font-size: 11px; font-weight: 700; text-transform: uppercase; cursor: pointer; }
         .type-btn.active { color: white; border-bottom: 3px solid var(--rojo); }
 
         .filter-bar { display: flex; gap: 10px; overflow-x: auto; padding-bottom: 15px; scrollbar-width: none; }
-        .filter-btn { background: var(--gris); color: #bbb; border: none; padding: 8px 18px; border-radius: 20px; font-size: 12px; white-space: nowrap; cursor: pointer; }
+        .filter-btn { background: var(--gris); color: #bbb; border: none; padding: 8px 18px; border-radius: 20px; font-size: 12px; white-space: nowrap; }
         .filter-btn.active { background: white; color: black; }
 
         /* CARDS */
         .grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 15px; }
         .card { background: var(--card); border-radius: 12px; overflow: hidden; box-shadow: 0 4px 15px rgba(0,0,0,0.5); display: flex; flex-direction: column; }
         .card img { width: 100%; aspect-ratio: 2/3; object-fit: cover; cursor: pointer; }
-        .card-info { padding: 12px; text-align: center; flex-grow: 1; }
+        .card-info { padding: 12px; text-align: center; flex-grow: 1; display: flex; flex-direction: column; justify-content: space-between; }
         .movie-title { font-size: 11px; font-weight: 700; height: 32px; overflow: hidden; margin-bottom: 8px; line-height: 1.3; }
 
-        /* BOTONES */
-        .btn-action { background: var(--rojo); color: white; border: none; padding: 10px; border-radius: 8px; font-size: 10px; font-weight: 800; width: 100%; cursor: pointer; transition: 0.2s; }
-        .btn-status { background: var(--azul); }
-        .btn-visto-ok { background: var(--verde); display: flex; align-items: center; justify-content: center; gap: 4px; }
+        /* BOTONES - FIX COLOR VERDE */
+        .btn-action { background: var(--rojo); color: white; border: none; padding: 10px; border-radius: 8px; font-size: 10px; font-weight: 800; width: 100%; cursor: pointer; transition: 0.3s; }
+        .btn-added { background: var(--verde) !important; color: white !important; pointer-events: none; }
         .btn-exists { background: #333 !important; color: #777 !important; pointer-events: none; }
+        .btn-visto-ok { background: var(--verde); display: flex; align-items: center; justify-content: center; gap: 4px; }
 
-        /* PERFIL */
+        /* PERFIL & FOTO */
         .profile-card { background: rgba(255,255,255,0.03); backdrop-filter: blur(15px); padding: 40px 20px; border-radius: 28px; text-align: center; border: 1px solid rgba(255,255,255,0.06); }
-        .user-avatar-big { width: 90px; height: 90px; background: #111; border-radius: 50%; margin: 0 auto 15px; display: flex; align-items: center; justify-content: center; font-size: 40px; border: 4px solid var(--rojo); box-shadow: 0 0 20px rgba(229, 9, 20, 0.3); }
-        .stats-grid-profile { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-top: 25px; }
+        .user-avatar-big { width: 100px; height: 100px; background: #111; border-radius: 50%; margin: 0 auto 15px; display: flex; align-items: center; justify-content: center; font-size: 40px; border: 4px solid var(--rojo); box-shadow: 0 0 20px rgba(229, 9, 20, 0.3); cursor: pointer; position: relative; overflow: hidden; }
+        .user-avatar-big img { width: 100%; height: 100%; object-fit: cover; }
+        .edit-badge { position: absolute; bottom: 5px; right: 5px; background: var(--rojo); font-size: 10px; width: 22px; height: 22px; border-radius: 50%; display: flex; align-items: center; justify-content: center; border: 2px solid var(--fondo); z-index: 2; }
+
+        .stats-grid-profile { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-top: 25px; }
         .stat-box-profile { background: rgba(255,255,255,0.02); padding: 15px 5px; border-radius: 18px; border: 1px solid rgba(255,255,255,0.04); }
         .stat-num-profile { font-size: 22px; font-weight: 800; display: block; margin-bottom: 4px; }
         .stat-label-profile { font-size: 8px; color: #777; font-weight: 800; text-transform: uppercase; }
@@ -67,15 +69,13 @@
         .modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.9); z-index: 4000; justify-content: center; align-items: center; backdrop-filter: blur(8px); }
         .modal-content { background: #1c1c1e; width: 85%; max-width: 350px; border-radius: 24px; padding: 25px; text-align: center; position: relative; border: 1px solid rgba(255,255,255,0.08); overflow-y: auto; max-height: 85vh; }
         .close-x { position: absolute; top: 15px; right: 20px; font-size: 22px; color: #555; cursor: pointer; }
-        .stars-container { display: flex; justify-content: center; gap: 12px; margin: 20px 0; font-size: 32px; color: #333; }
-        .star { cursor: pointer; transition: 0.2s; }
-        .star.active { color: var(--oro); text-shadow: 0 0 10px rgba(255, 204, 0, 0.4); }
         .btn-opt { background: rgba(255,255,255,0.04); color: white; border: none; width: 100%; padding: 16px; border-radius: 14px; margin-bottom: 12px; font-weight: 700; text-align: left; display: flex; justify-content: space-between; align-items: center; cursor: pointer; }
 
-        .collection-container { margin-bottom: 30px; background: rgba(255,255,255,0.02); padding: 15px; border-radius: 18px; border: 1px solid #222; }
-        .collection-title { font-size: 13px; font-weight: 800; color: var(--oro); text-transform: uppercase; }
-        input { width: 100%; padding: 15px; border-radius: 14px; border: 1px solid #333; background: #111; color: white; outline: none; box-sizing: border-box; }
+        .avatar-gallery { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin-top: 15px; }
+        .avatar-opt { font-size: 28px; padding: 10px; background: rgba(255,255,255,0.05); border-radius: 12px; cursor: pointer; }
+        
         .info-tag { background: #333; padding: 10px; border-radius: 10px; font-size: 11px; margin-top: 15px; border-left: 4px solid var(--rojo); text-align: left; }
+        input { width: 100%; padding: 15px; border-radius: 14px; border: 1px solid #333; background: #111; color: white; outline: none; box-sizing: border-box; }
     </style>
 </head>
 <body>
@@ -112,7 +112,7 @@
 
     <div id="view-search" class="view">
         <div style="display:flex; gap:10px; margin-bottom:20px;">
-            <input type="text" id="query-input" list="sugerencias" placeholder="Buscar título..." oninput="autoSuggest()" onkeydown="if(event.key==='Enter') searchContent()">
+            <input type="text" id="query-input" list="sugerencias" placeholder="Buscar..." oninput="autoSuggest()" onkeydown="if(event.key==='Enter') searchContent()">
             <datalist id="sugerencias"></datalist>
             <button class="btn-action" style="width:auto; padding:0 20px; margin:0;" onclick="searchContent()">IR</button>
         </div>
@@ -140,7 +140,10 @@
 
     <div id="view-profile" class="view">
         <div class="profile-card">
-            <div class="user-avatar-big">🕵️</div>
+            <div class="user-avatar-big" onclick="openAvatarSelector()">
+                <div id="current-p-avatar">🕵️</div>
+                <div class="edit-badge"><i class="fas fa-camera"></i></div>
+            </div>
             <h3 id="p-name">Usuario</h3>
             <p id="p-rank" style="color:var(--oro); font-size:10px; font-weight:800; letter-spacing:2px; margin-top:5px;">ESPECTADOR</p>
             <div class="stats-grid-profile">
@@ -161,21 +164,26 @@
         <div class="nav-item" onclick="switchView('view-profile', this)"><i class="fas fa-user-alt"></i>Perfil</div>
     </nav>
 
-    <div id="statusModal" class="modal"><div class="modal-content" id="status-content"></div></div>
-    <div id="rateModal" class="modal">
+    <div id="avatarModal" class="modal">
         <div class="modal-content">
             <span class="close-x" onclick="closeModals()">&times;</span>
-            <h3 style="margin-bottom:10px;">Tu Nota</h3>
-            <div class="stars-container" id="stars-box">
-                <i class="fas fa-star star" onclick="setRating(1)"></i>
-                <i class="fas fa-star star" onclick="setRating(2)"></i>
-                <i class="fas fa-star star" onclick="setRating(3)"></i>
-                <i class="fas fa-star star" onclick="setRating(4)"></i>
-                <i class="fas fa-star star" onclick="setRating(5)"></i>
+            <h3>Personalizar Perfil</h3>
+            <button class="btn-action" style="margin-bottom:20px;" onclick="document.getElementById('fileInput').click()">SUBIR FOTO PROPIA</button>
+            <input type="file" id="fileInput" hidden accept="image/*" onchange="uploadPhoto(this)">
+            <p style="font-size:12px; color:#666;">O elige un avatar:</p>
+            <div class="avatar-gallery">
+                <div class="avatar-opt" onclick="updateAvatar('🕵️')">🕵️</div>
+                <div class="avatar-opt" onclick="updateAvatar('👽')">👽</div>
+                <div class="avatar-opt" onclick="updateAvatar('🦸')">🦸</div>
+                <div class="avatar-opt" onclick="updateAvatar('🧛')">🧛</div>
+                <div class="avatar-opt" onclick="updateAvatar('🤖')">🤖</div>
+                <div class="avatar-opt" onclick="updateAvatar('🎬')">🎬</div>
             </div>
-            <button class="btn-action" style="background:var(--oro); color:black; padding:15px; font-size:12px;" onclick="confirmWatch()">GUARDAR CRÍTICA</button>
         </div>
     </div>
+
+    <div id="statusModal" class="modal"><div class="modal-content" id="status-content"></div></div>
+    <div id="rateModal" class="modal"><div class="modal-content" id="rate-content"></div></div>
     <div id="moveModal" class="modal"><div class="modal-content glass"><span class="close-x" onclick="closeModals()">&times;</span><h3>¿A qué lista?</h3><div id="lists-options" style="margin-top:20px;"></div></div></div>
     <div id="movieModal" class="modal"><div class="modal-content" id="modalBody"></div></div>
 
@@ -202,11 +210,39 @@
             const n = document.getElementById('user-name-input').value;
             if(n.length < 2) return;
             localStorage.setItem('butaca_user', n);
+            localStorage.setItem('butaca_avatar', '🕵️');
             document.getElementById('login-screen').style.display = 'none';
             updateProfile(); loadTrending(null, true); loadSaved();
         }
 
-        /* --- NAVEGACIÓN RESTAURADA --- */
+        /* --- FOTO DE PERFIL --- */
+        function openAvatarSelector() { document.getElementById('avatarModal').style.display = 'flex'; }
+        function updateAvatar(icon) {
+            localStorage.setItem('butaca_avatar', icon);
+            localStorage.removeItem('butaca_custom_photo');
+            renderProfilePic();
+            closeModals();
+        }
+        function uploadPhoto(input) {
+            const file = input.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    localStorage.setItem('butaca_custom_photo', e.target.result);
+                    renderProfilePic();
+                    closeModals();
+                };
+                reader.readAsDataURL(file);
+            }
+        }
+        function renderProfilePic() {
+            const custom = localStorage.getItem('butaca_custom_photo');
+            const avatar = localStorage.getItem('butaca_avatar') || "🕵️";
+            const container = document.getElementById('current-p-avatar');
+            if(custom) container.innerHTML = `<img src="${custom}" style="width:100%; height:100%; border-radius:50%;">`;
+            else container.innerText = avatar;
+        }
+
         function switchView(viewId, el) {
             document.querySelectorAll('.view').forEach(v => v.classList.remove('active'));
             document.getElementById(viewId).classList.add('active');
@@ -254,7 +290,7 @@
                 else btnHtml = `<button class="btn-action" onclick="saveItem(this, '${title.replace(/'/g,"")}', '${poster}', ${id}, '${type}')">+ AGREGAR</button>`;
             } else {
                 if(seenItem) btnHtml = `<button class="btn-action btn-visto-ok" onclick="openStatus(${id}, '${type}', '${title.replace(/'/g,"")}', '${poster}')"><i class="fas fa-check-circle"></i> VISTA</button><div style="color:var(--oro); font-size:10px; margin-top:8px;">${'⭐'.repeat(seenItem.rating)}</div>`;
-                else btnHtml = `<button class="btn-action btn-status" onclick="openStatus(${id}, '${type}', '${title.replace(/'/g,"")}', '${poster}')">PENDIENTE</button>`;
+                else btnHtml = `<button class="btn-action btn-status" style="background:var(--azul)" onclick="openStatus(${id}, '${type}', '${title.replace(/'/g,"")}', '${poster}')">PENDIENTE</button>`;
             }
             card.innerHTML = `<img src="${img}" onclick="openDetails('${type}', ${id})"><div class="card-info"><div class="movie-title">${title}</div>${btnHtml}</div>`;
             container.appendChild(card);
@@ -270,35 +306,35 @@
             return false;
         }
 
+        function saveItem(btn, t, poster, id, type) {
+            const key = type === 'tv' ? 'butaca_series' : 'butaca_movies';
+            let list = JSON.parse(localStorage.getItem(key)) || [];
+            list.push({t, p: poster, id, type});
+            localStorage.setItem(key, JSON.stringify(list));
+            btn.innerText = "✔️ AGREGADO";
+            btn.classList.add('btn-added'); // CAMBIO A VERDE
+            loadSaved(); updateProfile();
+        }
+
         async function openDetails(type, id) {
             const resp = await fetch(`https://api.themoviedb.org/3/${type}/${id}?api_key=${API_KEY}&language=es-ES&append_to_response=watch/providers`);
             const m = await resp.json();
             const providers = m['watch/providers']?.results?.CL?.flatrate || [];
             let plat = providers.map(p => p.provider_name).join(", ");
-            if(!plat) {
-                if(type === 'movie' && m.status === 'Released') plat = "🍿 Disponible solo en Cines";
-                else plat = "No disponible en streaming todavía";
-            }
-            document.getElementById('modalBody').innerHTML = `
-                <span class="close-x" onclick="document.getElementById('movieModal').style.display='none'">&times;</span>
-                <img src="https://image.tmdb.org/t/p/w500${m.poster_path}" style="width:100%; border-radius:18px;">
-                <h3 style="color:var(--rojo); margin:20px 0 10px; font-size:18px;">${m.title || m.name}</h3>
-                <p style="font-size:12px; color:#aaa; text-align:left; line-height:1.6;">${m.overview || 'Sin sinopsis.'}</p>
-                <div class="info-tag"><strong>📺 Dónde ver:</strong><br>${plat}</div>
-                <a href="https://api.whatsapp.com/send?text=${encodeURIComponent('🎥 Recomendación: ' + (m.title || m.name))}" target="_blank" style="background:#25D366; color:white; padding:15px; border-radius:12px; display:flex; align-items:center; justify-content:center; gap:10px; margin-top:20px; text-decoration:none; font-size:14px; font-weight:800;"><i class="fab fa-whatsapp"></i> COMPARTIR</a>`;
+            if(!plat) plat = (type === 'movie' && m.status === 'Released') ? "🍿 Disponible solo en Cines" : "No disponible todavía";
+            document.getElementById('modalBody').innerHTML = `<span class="close-x" onclick="document.getElementById('movieModal').style.display='none'">&times;</span><img src="https://image.tmdb.org/t/p/w500${m.poster_path}" style="width:100%; border-radius:18px;"><h3>${m.title || m.name}</h3><p style="font-size:12px; color:#aaa; text-align:left;">${m.overview || 'Sin sinopsis.'}</p><div class="info-tag"><strong>📺 Dónde ver:</strong><br>${plat}</div>`;
             document.getElementById('movieModal').style.display = 'flex';
         }
 
         function setRating(n) { ratingTemp = n; const stars = document.querySelectorAll('#stars-box .star'); stars.forEach((s, i) => s.classList.toggle('active', i < n)); }
-        function saveItem(btn, t, poster, id, type) { const key = type === 'tv' ? 'butaca_series' : 'butaca_movies'; let list = JSON.parse(localStorage.getItem(key)) || []; list.push({t, p: poster, id, type}); localStorage.setItem(key, JSON.stringify(list)); btn.innerText = "✔️ AGREGADO"; btn.classList.add('btn-added'); loadSaved(); updateProfile(); }
         function confirmWatch() { if(ratingTemp === 0) return alert("¡Marca las estrellas!"); let watched = JSON.parse(localStorage.getItem('butaca_watched')) || []; const idx = watched.findIndex(x => x.id === currentItem.id); if(idx > -1) watched[idx].rating = ratingTemp; else watched.push({...currentItem, rating: ratingTemp}); localStorage.setItem('butaca_watched', JSON.stringify(watched)); closeModals(); loadSaved(); updateProfile(); }
         function loadSaved() { const mG = document.getElementById('saved-movies-grid'), sG = document.getElementById('saved-series-grid'); mG.innerHTML = ""; sG.innerHTML = ""; (JSON.parse(localStorage.getItem('butaca_movies')) || []).forEach(m => renderCard(m, mG, 'saved', 'movie')); (JSON.parse(localStorage.getItem('butaca_series')) || []).forEach(s => renderCard(s, sG, 'saved', 'tv')); renderSubCollections('movie', 'movies-collections'); renderSubCollections('tv', 'series-collections'); }
-        function renderSubCollections(type, containerId) { const key = type === 'movie' ? 'butaca_lists_movies' : 'butaca_lists_series'; const lists = JSON.parse(localStorage.getItem(key)) || []; const container = document.getElementById(containerId); container.innerHTML = ""; lists.forEach((list, index) => { let html = `<div class="collection-container"><div style="display:flex; justify-content:space-between; margin-bottom:10px;"><span class="collection-title">${list.name}</span><i class="fas fa-trash" style="color:#444; cursor:pointer;" onclick="deleteFullList('${type}', ${index})"></i></div><div class="grid">`; list.items.forEach(item => { const poster = item.poster_path || item.p; const img = poster ? (poster.startsWith('http') ? poster : `https://image.tmdb.org/t/p/w500${poster}`) : 'https://via.placeholder.com/500x750'; let seen = (JSON.parse(localStorage.getItem('butaca_watched')) || []).find(x => x.id === item.id); let btn = seen ? `<button class="btn-action btn-visto-ok" onclick="openStatus(${item.id}, '${type}', '${item.t}', '${poster}')">✔️ VISTA</button>` : `<button class="btn-action btn-status" onclick="openStatus(${item.id}, '${type}', '${item.t}', '${poster}')">PENDIENTE</button>`; html += `<div class="card"><img src="${img}" onclick="openDetails('${type}', ${item.id})"><div class="card-info"><div class="movie-title">${item.t}</div>${btn}</div></div>`; }); html += `</div></div>`; container.innerHTML += html; }); }
-        function updateProfile() { document.getElementById('p-name').innerText = localStorage.getItem('butaca_user') || "Usuario"; const watched = JSON.parse(localStorage.getItem('butaca_watched')) || []; const mList = JSON.parse(localStorage.getItem('butaca_movies')) || []; const sList = JSON.parse(localStorage.getItem('butaca_series')) || []; const mLists = JSON.parse(localStorage.getItem('butaca_lists_movies')) || []; const sLists = JSON.parse(localStorage.getItem('butaca_lists_series')) || []; let allM = [...mList]; mLists.forEach(l => allM.push(...l.items)); let allS = [...sList]; sLists.forEach(l => allS.push(...l.items)); const mP = Array.from(new Set(allM.map(a => a.id))).filter(id => !watched.some(w => w.id === id)).length; const sP = Array.from(new Set(allS.map(a => a.id))).filter(id => !watched.some(w => w.id === id)).length; document.getElementById('stat-movies-p').innerText = mP; document.getElementById('stat-series-p').innerText = sP; document.getElementById('stat-movies-v').innerText = watched.filter(x => x.type === 'movie').length; document.getElementById('stat-series-v').innerText = watched.filter(x => x.type === 'tv').length; }
+        function renderSubCollections(type, containerId) { const key = type === 'movie' ? 'butaca_lists_movies' : 'butaca_lists_series'; const lists = JSON.parse(localStorage.getItem(key)) || []; const container = document.getElementById(containerId); container.innerHTML = ""; lists.forEach((list, index) => { let html = `<div class="collection-container"><div style="display:flex; justify-content:space-between; margin-bottom:10px;"><span class="collection-title">${list.name}</span><i class="fas fa-trash" style="color:#444; cursor:pointer;" onclick="deleteFullList('${type}', ${index})"></i></div><div class="grid">`; list.items.forEach(item => { const poster = item.poster_path || item.p; const img = poster ? (poster.startsWith('http') ? poster : `https://image.tmdb.org/t/p/w500${poster}`) : 'https://via.placeholder.com/500x750'; let seen = (JSON.parse(localStorage.getItem('butaca_watched')) || []).find(x => x.id === item.id); let btn = seen ? `<button class="btn-action btn-visto-ok" onclick="openStatus(${item.id}, '${type}', '${item.t}', '${poster}')">✔️ VISTA</button>` : `<button class="btn-action btn-status" style="background:var(--azul)" onclick="openStatus(${item.id}, '${type}', '${item.t}', '${poster}')">PENDIENTE</button>`; html += `<div class="card"><img src="${img}" onclick="openDetails('${type}', ${item.id})"><div class="card-info"><div class="movie-title">${item.t}</div>${btn}</div></div>`; }); html += `</div></div>`; container.innerHTML += html; }); }
+        function updateProfile() { document.getElementById('p-name').innerText = localStorage.getItem('butaca_user') || "Usuario"; renderProfilePic(); const watched = JSON.parse(localStorage.getItem('butaca_watched')) || []; const mList = JSON.parse(localStorage.getItem('butaca_movies')) || []; const sList = JSON.parse(localStorage.getItem('butaca_series')) || []; const mLists = JSON.parse(localStorage.getItem('butaca_lists_movies')) || []; const sLists = JSON.parse(localStorage.getItem('butaca_lists_series')) || []; let allM = [...mList]; mLists.forEach(l => allM.push(...l.items)); let allS = [...sList]; sLists.forEach(l => allS.push(...l.items)); const mP = Array.from(new Set(allM.map(a => a.id))).filter(id => !watched.some(w => w.id === id)).length; const sP = Array.from(new Set(allS.map(a => a.id))).filter(id => !watched.some(w => w.id === id)).length; document.getElementById('stat-movies-p').innerText = mP; document.getElementById('stat-series-p').innerText = sP; document.getElementById('stat-movies-v').innerText = watched.filter(x => x.type === 'movie').length; document.getElementById('stat-series-v').innerText = watched.filter(x => x.type === 'tv').length; }
         function openStatus(id, type, t, poster) { currentItem = { id, type, t, p: poster }; document.getElementById('status-content').innerHTML = `<span class="close-x" onclick="closeModals()">&times;</span><h3>${t}</h3><button class="btn-opt" style="background:var(--verde);" onclick="goToRating()">Marcar como vista <i class="fas fa-check"></i></button><button class="btn-opt" onclick="openMoveToList()">Mover a una lista <i class="fas fa-folder"></i></button><button class="btn-opt" style="color:var(--rojo);" onclick="removeItemConfirm()">Quitar de mi lista <i class="fas fa-trash"></i></button>`; document.getElementById('statusModal').style.display = 'flex'; }
-        function goToRating() { ratingTemp = 0; document.querySelectorAll('.star').forEach(s => s.classList.remove('active')); document.getElementById('statusModal').style.display = 'none'; document.getElementById('rateModal').style.display = 'flex'; }
+        function goToRating() { ratingTemp = 0; document.getElementById('statusModal').style.display = 'none'; document.getElementById('rate-content').innerHTML = `<span class="close-x" onclick="closeModals()">&times;</span><h3>Tu Nota</h3><div class="stars-container" id="stars-box"><i class="fas fa-star star" onclick="setRating(1)"></i><i class="fas fa-star star" onclick="setRating(2)"></i><i class="fas fa-star star" onclick="setRating(3)"></i><i class="fas fa-star star" onclick="setRating(4)"></i><i class="fas fa-star star" onclick="setRating(5)"></i></div><button class="btn-action" style="background:var(--oro); color:black; padding:15px;" onclick="confirmWatch()">GUARDAR CRÍTICA</button>`; document.getElementById('rateModal').style.display = 'flex'; }
         function closeModals() { document.querySelectorAll('.modal').forEach(m => m.style.display = 'none'); }
-        function removeItemConfirm() { if(confirm("¿Quitar de tu lista?")) { removeItem(currentItem.id, currentItem.type); closeModals(); } }
+        function removeItemConfirm() { if(confirm("¿Quitar?")) { removeItem(currentItem.id, currentItem.type); closeModals(); } }
         function removeItem(id, type, refresh=true) { const baseKey = type === 'tv' ? 'butaca_series' : 'butaca_movies'; const listKey = type === 'tv' ? 'butaca_lists_series' : 'butaca_lists_movies'; localStorage.setItem(baseKey, JSON.stringify((JSON.parse(localStorage.getItem(baseKey)) || []).filter(m => m.id !== id))); let lists = JSON.parse(localStorage.getItem(listKey)) || []; lists.forEach(l => l.items = l.items.filter(i => i.id !== id)); localStorage.setItem(listKey, JSON.stringify(lists)); localStorage.setItem('butaca_watched', JSON.stringify((JSON.parse(localStorage.getItem('butaca_watched')) || []).filter(m => m.id !== id))); if(refresh) loadSaved(); updateProfile(); }
         function deleteFullList(t, i) { if(confirm("¿Eliminar lista?")) { const k = t === 'tv' ? 'butaca_lists_series' : 'butaca_lists_movies'; let l = JSON.parse(localStorage.getItem(k)) || []; l.splice(i, 1); localStorage.setItem(k, JSON.stringify(l)); loadSaved(); } }
         async function searchContent() { const q = document.getElementById('query-input').value; if(!q) return; const resp = await fetch(`https://api.themoviedb.org/3/search/multi?api_key=${API_KEY}&query=${encodeURIComponent(q)}&language=es-ES`); const data = await resp.json(); const gM = document.getElementById('search-grid-movie'), gT = document.getElementById('search-grid-tv'); gM.innerHTML = ""; gT.innerHTML = ""; data.results.forEach(item => { if(item.media_type === 'movie') renderCard(item, gM, 'search', 'movie'); else if(item.media_type === 'tv') renderCard(item, gT, 'search', 'tv'); }); document.getElementById('search-selector').style.display = 'flex'; switchSearchTab('movie'); }
