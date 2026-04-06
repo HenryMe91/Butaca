@@ -1,0 +1,206 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Butaca - Cine & Series</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        :root { --rojo: #e50914; --oro: #ffcc00; --fondo: #0a0a0a; --card: #1a1a1a; }
+        body { background: var(--fondo); color: white; font-family: 'Segoe UI', sans-serif; margin: 0; padding-bottom: 90px; }
+        
+        header { padding: 15px; background: #000; text-align: center; border-bottom: 1px solid #222; position: sticky; top: 0; z-index: 100; }
+        .logo { color: var(--rojo); font-size: 22px; font-weight: 900; letter-spacing: 2px; }
+
+        .view { display: none; padding: 15px; }
+        .view.active { display: block; }
+
+        /* BUSCADOR CON AUTOCOMPLETADO */
+        .search-box { display: flex; gap: 10px; margin-bottom: 20px; position: relative; }
+        input { flex: 1; padding: 12px; border-radius: 10px; border: 1px solid #333; background: #222; color: white; outline: none; font-size: 16px; }
+        .btn-search { background: var(--rojo); color: white; border: none; padding: 10px 15px; border-radius: 10px; font-weight: bold; }
+
+        /* GRID */
+        h2 { font-size: 18px; margin: 10px 0; color: #eee; border-left: 3px solid var(--rojo); padding-left: 10px; }
+        .grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px; }
+        .card { background: var(--card); border-radius: 10px; overflow: hidden; display: flex; flex-direction: column; }
+        .card img { width: 100%; aspect-ratio: 2/3; object-fit: cover; }
+        .card-info { padding: 8px; text-align: center; flex-grow: 1; display: flex; flex-direction: column; justify-content: space-between; }
+        .movie-title { font-size: 11px; font-weight: bold; height: 30px; overflow: hidden; margin-bottom: 5px; }
+        .btn-add { background: var(--rojo); color: white; border: none; width: 100%; padding: 6px; border-radius: 5px; font-size: 10px; font-weight: bold; }
+
+        /* NAV INFERIOR */
+        nav { position: fixed; bottom: 0; width: 100%; background: #000; display: flex; justify-content: space-around; padding: 12px 0; border-top: 1px solid #333; z-index: 1000; }
+        .nav-item { color: #666; text-align: center; font-size: 10px; cursor: pointer; }
+        .nav-item.active { color: var(--rojo); }
+        .nav-item i { font-size: 22px; display: block; margin-bottom: 4px; }
+
+        /* MODAL */
+        .modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.95); z-index: 2000; justify-content: center; align-items: center; }
+        .modal-content { background: #222; width: 85%; max-width: 350px; border-radius: 15px; padding: 20px; position: relative; max-height: 80vh; overflow-y: auto; }
+        .close { position: absolute; top: 10px; right: 15px; font-size: 24px; color: white; }
+    </style>
+</head>
+<body>
+
+    <header><div class="logo"><i class="fas fa-ticket-alt"></i> BUTACA</div></header>
+
+    <div id="view-home" class="view active">
+        <h2>🔥 Tendencias de Hoy</h2>
+        <div id="trending-grid" class="grid"></div>
+    </div>
+
+    <div id="view-search" class="view">
+        <h2>🔍 Explorar</h2>
+        <div class="search-box">
+            <input type="text" id="query-input" list="sugerencias" placeholder="Escribe una peli o serie..." oninput="autoSuggest()">
+            <datalist id="sugerencias"></datalist>
+            
+            <button class="btn-search" onclick="searchContent()">BUSCAR</button>
+        </div>
+        <div id="search-results" class="grid"></div>
+    </div>
+
+    <div id="view-movies" class="view">
+        <h2>🎬 Mis Películas Pendientes</h2>
+        <div id="saved-movies-grid" class="grid"></div>
+    </div>
+
+    <div id="view-series" class="view">
+        <h2>📺 Mis Series Pendientes</h2>
+        <div id="saved-series-grid" class="grid"></div>
+    </div>
+
+    <nav>
+        <div class="nav-item active" onclick="switchView('view-home', this)"><i class="fas fa-home"></i>Inicio</div>
+        <div class="nav-item" onclick="switchView('view-search', this)"><i class="fas fa-search"></i>Buscar</div>
+        <div class="nav-item" onclick="switchView('view-movies', this)"><i class="fas fa-film"></i>Películas</div>
+        <div class="nav-item" onclick="switchView('view-series', this)"><i class="fas fa-tv"></i>Series</div>
+    </nav>
+
+    <div id="movieModal" class="modal"><div class="modal-content" id="modalBody"></div></div>
+
+    <script>
+        const API_KEY = 'e7803f371057b32d0d0664e165bf78f1';
+
+        window.onload = () => { loadTrending(); loadSaved(); };
+
+        function switchView(viewId, el) {
+            document.querySelectorAll('.view').forEach(v => v.classList.remove('active'));
+            document.getElementById(viewId).classList.add('active');
+            document.querySelectorAll('.nav-item').forEach(item => item.classList.remove('active'));
+            el.classList.add('active');
+        }
+
+        async function loadTrending() {
+            const resp = await fetch(`https://api.themoviedb.org/3/trending/all/day?api_key=${API_KEY}&language=es-ES`);
+            const data = await resp.json();
+            const grid = document.getElementById('trending-grid');
+            grid.innerHTML = "";
+            data.results.slice(0, 10).forEach(m => renderCard(m, grid, true));
+        }
+
+        // --- FUNCIÓN DE SUGERENCIAS DE TEXTO ---
+        async function autoSuggest() {
+            const q = document.getElementById('query-input').value;
+            const datalist = document.getElementById('sugerencias');
+            
+            if(q.length > 2) {
+                // Buscamos nombres para el autocompletado
+                const resp = await fetch(`https://api.themoviedb.org/3/search/multi?api_key=${API_KEY}&query=${encodeURIComponent(q)}&language=es-ES`);
+                const data = await resp.json();
+                
+                // Limpiamos sugerencias anteriores
+                datalist.innerHTML = "";
+                
+                // Llenamos con los nuevos nombres encontrados
+                data.results.slice(0, 5).forEach(item => {
+                    const nombre = item.title || item.name;
+                    if(nombre) {
+                        const option = document.createElement('option');
+                        option.value = nombre;
+                        datalist.appendChild(option);
+                    }
+                });
+            }
+        }
+
+        async function searchContent() {
+            const q = document.getElementById('query-input').value;
+            if(!q) return;
+            const resp = await fetch(`https://api.themoviedb.org/3/search/multi?api_key=${API_KEY}&query=${encodeURIComponent(q)}&language=es-ES`);
+            const data = await resp.json();
+            const grid = document.getElementById('search-results');
+            grid.innerHTML = "";
+            data.results.filter(m => m.media_type !== 'person').slice(0, 8).forEach(m => renderCard(m, grid, true));
+        }
+
+        function renderCard(item, container, isSavable) {
+            const img = item.poster_path ? `https://image.tmdb.org/t/p/w500${item.poster_path}` : (item.img ? item.img : 'https://via.placeholder.com/200x300');
+            const title = item.title || item.name || item.t;
+            const id = item.id;
+            const type = item.media_type || (item.name ? 'tv' : 'movie');
+
+            const card = document.createElement('div');
+            card.className = 'card';
+            card.innerHTML = `
+                <img src="${img}" onclick="openDetails('${type}', ${id})">
+                <div class="card-info">
+                    <div class="movie-title">${title}</div>
+                    ${isSavable ? `<button class="btn-add" onclick="saveItem('${title.replace(/'/g,"")}', '${img}', ${id}, '${type}')">+ ANOTAR</button>` : `<button onclick="removeItem(${id}, '${type}')" style="background:none; border:1px solid #444; color:#666; font-size:10px; padding:4px; border-radius:5px; width:100%">Quitar</button>`}
+                </div>`;
+            container.appendChild(card);
+        }
+
+        async function openDetails(type, id) {
+            const modal = document.getElementById('movieModal');
+            const body = document.getElementById('modalBody');
+            const resp = await fetch(`https://api.themoviedb.org/3/${type}/${id}?api_key=${API_KEY}&language=es-ES&append_to_response=watch/providers`);
+            const m = await resp.json();
+            const providers = m['watch/providers']?.results?.CL?.flatrate || [];
+            const platNames = providers.length ? providers.map(p => p.provider_name).join(", ") : "No disponible por suscripción (CL)";
+
+            body.innerHTML = `
+                <span class="close" onclick="closeModal()">&times;</span>
+                <img src="https://image.tmdb.org/t/p/w500${m.poster_path}" style="width:100%; border-radius:10px;">
+                <h3 style="color:var(--rojo); margin:15px 0 5px;">${m.title || m.name}</h3>
+                <p style="font-size:13px; color:#ccc; line-height:1.4;">${m.overview || 'Sin descripción.'}</p>
+                <div style="background:#333; padding:10px; border-radius:10px; font-size:12px; margin-top:10px; border-left:4px solid var(--rojo);">
+                    <strong>🎬 Dónde ver en Chile:</strong><br>${platNames}
+                </div>`;
+            modal.style.display = 'flex';
+        }
+
+        function closeModal() { document.getElementById('movieModal').style.display = 'none'; }
+
+        function saveItem(t, img, id, type) {
+            const key = type === 'tv' ? 'butaca_series' : 'butaca_movies';
+            let list = JSON.parse(localStorage.getItem(key)) || [];
+            if(list.some(m => m.id === id)) return alert("Ya está anotada");
+            list.push({t, img, id, type});
+            localStorage.setItem(key, JSON.stringify(list));
+            loadSaved();
+            alert(`¡${t} anotada!`);
+        }
+
+        function loadSaved() {
+            const movieGrid = document.getElementById('saved-movies-grid');
+            const seriesGrid = document.getElementById('saved-series-grid');
+            let movies = JSON.parse(localStorage.getItem('butaca_movies')) || [];
+            let series = JSON.parse(localStorage.getItem('butaca_series')) || [];
+            movieGrid.innerHTML = movies.length ? "" : "<p style='grid-column:span 2; color:#555; text-align:center;'>Sin películas.</p>";
+            seriesGrid.innerHTML = series.length ? "" : "<p style='grid-column:span 2; color:#555; text-align:center;'>Sin series.</p>";
+            movies.forEach(m => renderCard(m, movieGrid, false));
+            series.forEach(s => renderCard(s, seriesGrid, false));
+        }
+
+        function removeItem(id, type) {
+            const key = type === 'tv' ? 'butaca_series' : 'butaca_movies';
+            let list = JSON.parse(localStorage.getItem(key)) || [];
+            list = list.filter(m => m.id !== id);
+            localStorage.setItem(key, JSON.stringify(list));
+            loadSaved();
+        }
+    </script>
+</body>
+</html>
