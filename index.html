@@ -10,11 +10,12 @@
         :root { --rojo: #e50914; --oro: #ffcc00; --fondo: #0a0a0a; --card: #181818; --azul: #0071eb; --verde: #46d369; --gris: #2f2f2f; }
         body { background: var(--fondo); color: white; font-family: 'Inter', sans-serif; margin: 0; padding-bottom: 110px; overflow-x: hidden; -webkit-tap-highlight-color: transparent; }
 
-        /* INTRO & LOGIN */
+        /* INTRO */
         #splash-screen { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: #000; display: flex; align-items: center; justify-content: center; z-index: 10000; transition: opacity 0.8s ease; }
         .intro-logo { color: var(--rojo); font-size: 42px; font-weight: 900; letter-spacing: 10px; animation: cinematicIntro 2.5s ease-in-out forwards; text-shadow: 0 0 15px rgba(229, 9, 20, 0.5); }
         @keyframes cinematicIntro { 0% { transform: scale(0.7); opacity: 0; } 40% { opacity: 1; } 100% { transform: scale(1.1); opacity: 0; } }
 
+        /* LOGIN */
         #login-screen { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: var(--fondo); display: none; flex-direction: column; align-items: center; justify-content: center; z-index: 9998; padding: 20px; box-sizing: border-box; }
         .login-card { background: rgba(255,255,255,0.03); padding: 50px 30px; border-radius: 30px; width: 100%; max-width: 320px; text-align: center; border: 1px solid rgba(255,255,255,0.05); backdrop-filter: blur(10px); }
 
@@ -26,50 +27,53 @@
         .view.active { display: block; }
         @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
 
-        /* TABS & FILTROS */
+        /* SELECTORES */
         .type-selector { display: flex; background: rgba(255,255,255,0.03); margin: -20px -20px 20px; border-bottom: 1px solid var(--gris); }
         .type-btn { flex: 1; padding: 15px; border: none; background: none; color: #555; font-size: 11px; font-weight: 700; text-transform: uppercase; cursor: pointer; }
         .type-btn.active { color: white; border-bottom: 3px solid var(--rojo); }
 
         .filter-bar { display: flex; gap: 10px; overflow-x: auto; padding-bottom: 15px; scrollbar-width: none; }
-        .filter-btn { background: var(--gris); color: #bbb; border: none; padding: 8px 18px; border-radius: 20px; font-size: 12px; white-space: nowrap; }
+        .filter-btn { background: var(--gris); color: #bbb; border: none; padding: 8px 18px; border-radius: 20px; font-size: 12px; white-space: nowrap; cursor: pointer; }
         .filter-btn.active { background: white; color: black; }
 
-        /* GRID & CARDS */
+        /* CARDS */
         .grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 15px; }
         .card { background: var(--card); border-radius: 12px; overflow: hidden; box-shadow: 0 4px 15px rgba(0,0,0,0.5); display: flex; flex-direction: column; }
         .card img { width: 100%; aspect-ratio: 2/3; object-fit: cover; cursor: pointer; }
-        .card-info { padding: 12px; text-align: center; flex-grow: 1; display: flex; flex-direction: column; justify-content: space-between; }
+        .card-info { padding: 12px; text-align: center; flex-grow: 1; }
         .movie-title { font-size: 11px; font-weight: 700; height: 32px; overflow: hidden; margin-bottom: 8px; line-height: 1.3; }
 
         /* BOTONES */
         .btn-action { background: var(--rojo); color: white; border: none; padding: 10px; border-radius: 8px; font-size: 10px; font-weight: 800; width: 100%; cursor: pointer; transition: 0.2s; }
+        .btn-status { background: var(--azul); }
         .btn-visto-ok { background: var(--verde); display: flex; align-items: center; justify-content: center; gap: 4px; }
-        .btn-added { background: rgba(70, 211, 105, 0.1) !important; color: var(--verde) !important; border: 1px solid var(--verde); pointer-events: none; }
         .btn-exists { background: #333 !important; color: #777 !important; pointer-events: none; }
 
         /* PERFIL */
         .profile-card { background: rgba(255,255,255,0.03); backdrop-filter: blur(15px); padding: 40px 20px; border-radius: 28px; text-align: center; border: 1px solid rgba(255,255,255,0.06); }
         .user-avatar-big { width: 90px; height: 90px; background: #111; border-radius: 50%; margin: 0 auto 15px; display: flex; align-items: center; justify-content: center; font-size: 40px; border: 4px solid var(--rojo); box-shadow: 0 0 20px rgba(229, 9, 20, 0.3); }
-        .stats-grid-profile { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-top: 25px; }
+        .stats-grid-profile { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-top: 25px; }
         .stat-box-profile { background: rgba(255,255,255,0.02); padding: 15px 5px; border-radius: 18px; border: 1px solid rgba(255,255,255,0.04); }
         .stat-num-profile { font-size: 22px; font-weight: 800; display: block; margin-bottom: 4px; }
         .stat-label-profile { font-size: 8px; color: #777; font-weight: 800; text-transform: uppercase; }
+
+        /* NAV */
+        nav { position: fixed; bottom: 0; width: 100%; background: rgba(10,10,10,0.95); backdrop-filter: blur(10px); display: flex; justify-content: space-around; padding: 12px 0 30px; border-top: 1px solid #222; z-index: 1000; }
+        .nav-item { color: #555; text-align: center; font-size: 9px; font-weight: 700; flex: 1; cursor: pointer; }
+        .nav-item.active { color: var(--rojo); }
+        .nav-item i { font-size: 20px; display: block; margin-bottom: 4px; }
 
         /* MODALES */
         .modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.9); z-index: 4000; justify-content: center; align-items: center; backdrop-filter: blur(8px); }
         .modal-content { background: #1c1c1e; width: 85%; max-width: 350px; border-radius: 24px; padding: 25px; text-align: center; position: relative; border: 1px solid rgba(255,255,255,0.08); overflow-y: auto; max-height: 85vh; }
         .close-x { position: absolute; top: 15px; right: 20px; font-size: 22px; color: #555; cursor: pointer; }
         .stars-container { display: flex; justify-content: center; gap: 12px; margin: 20px 0; font-size: 32px; color: #333; }
-        .star { cursor: pointer; }
+        .star { cursor: pointer; transition: 0.2s; }
         .star.active { color: var(--oro); text-shadow: 0 0 10px rgba(255, 204, 0, 0.4); }
         .btn-opt { background: rgba(255,255,255,0.04); color: white; border: none; width: 100%; padding: 16px; border-radius: 14px; margin-bottom: 12px; font-weight: 700; text-align: left; display: flex; justify-content: space-between; align-items: center; cursor: pointer; }
 
-        nav { position: fixed; bottom: 0; width: 100%; background: rgba(10,10,10,0.95); backdrop-filter: blur(10px); display: flex; justify-content: space-around; padding: 12px 0 30px; border-top: 1px solid #222; z-index: 1000; }
-        .nav-item { color: #555; text-align: center; font-size: 9px; font-weight: 700; flex: 1; cursor: pointer; }
-        .nav-item.active { color: var(--rojo); }
-        .nav-item i { font-size: 20px; display: block; margin-bottom: 4px; }
-        
+        .collection-container { margin-bottom: 30px; background: rgba(255,255,255,0.02); padding: 15px; border-radius: 18px; border: 1px solid #222; }
+        .collection-title { font-size: 13px; font-weight: 800; color: var(--oro); text-transform: uppercase; }
         input { width: 100%; padding: 15px; border-radius: 14px; border: 1px solid #333; background: #111; color: white; outline: none; box-sizing: border-box; }
         .info-tag { background: #333; padding: 10px; border-radius: 10px; font-size: 11px; margin-top: 15px; border-left: 4px solid var(--rojo); text-align: left; }
     </style>
@@ -158,8 +162,21 @@
     </nav>
 
     <div id="statusModal" class="modal"><div class="modal-content" id="status-content"></div></div>
-    <div id="rateModal" class="modal"><div class="modal-content" id="rate-content"></div></div>
-    <div id="moveModal" class="modal"><div class="modal-content"><span class="close-x" onclick="closeModals()">&times;</span><h3>¿A qué lista?</h3><div id="lists-options" style="margin-top:20px;"></div></div></div>
+    <div id="rateModal" class="modal">
+        <div class="modal-content">
+            <span class="close-x" onclick="closeModals()">&times;</span>
+            <h3 style="margin-bottom:10px;">Tu Nota</h3>
+            <div class="stars-container" id="stars-box">
+                <i class="fas fa-star star" onclick="setRating(1)"></i>
+                <i class="fas fa-star star" onclick="setRating(2)"></i>
+                <i class="fas fa-star star" onclick="setRating(3)"></i>
+                <i class="fas fa-star star" onclick="setRating(4)"></i>
+                <i class="fas fa-star star" onclick="setRating(5)"></i>
+            </div>
+            <button class="btn-action" style="background:var(--oro); color:black; padding:15px; font-size:12px;" onclick="confirmWatch()">GUARDAR CRÍTICA</button>
+        </div>
+    </div>
+    <div id="moveModal" class="modal"><div class="modal-content glass"><span class="close-x" onclick="closeModals()">&times;</span><h3>¿A qué lista?</h3><div id="lists-options" style="margin-top:20px;"></div></div></div>
     <div id="movieModal" class="modal"><div class="modal-content" id="modalBody"></div></div>
 
     <script>
@@ -189,6 +206,7 @@
             updateProfile(); loadTrending(null, true); loadSaved();
         }
 
+        /* --- NAVEGACIÓN RESTAURADA --- */
         function switchView(viewId, el) {
             document.querySelectorAll('.view').forEach(v => v.classList.remove('active'));
             document.getElementById(viewId).classList.add('active');
@@ -199,7 +217,6 @@
             if(viewId === 'view-movies' || viewId === 'view-series') loadSaved();
         }
 
-        /* --- NUEVO: AUTOCOMPLETE --- */
         async function autoSuggest() {
             const q = document.getElementById('query-input').value;
             const datalist = document.getElementById('sugerencias');
@@ -278,10 +295,10 @@
         function loadSaved() { const mG = document.getElementById('saved-movies-grid'), sG = document.getElementById('saved-series-grid'); mG.innerHTML = ""; sG.innerHTML = ""; (JSON.parse(localStorage.getItem('butaca_movies')) || []).forEach(m => renderCard(m, mG, 'saved', 'movie')); (JSON.parse(localStorage.getItem('butaca_series')) || []).forEach(s => renderCard(s, sG, 'saved', 'tv')); renderSubCollections('movie', 'movies-collections'); renderSubCollections('tv', 'series-collections'); }
         function renderSubCollections(type, containerId) { const key = type === 'movie' ? 'butaca_lists_movies' : 'butaca_lists_series'; const lists = JSON.parse(localStorage.getItem(key)) || []; const container = document.getElementById(containerId); container.innerHTML = ""; lists.forEach((list, index) => { let html = `<div class="collection-container"><div style="display:flex; justify-content:space-between; margin-bottom:10px;"><span class="collection-title">${list.name}</span><i class="fas fa-trash" style="color:#444; cursor:pointer;" onclick="deleteFullList('${type}', ${index})"></i></div><div class="grid">`; list.items.forEach(item => { const poster = item.poster_path || item.p; const img = poster ? (poster.startsWith('http') ? poster : `https://image.tmdb.org/t/p/w500${poster}`) : 'https://via.placeholder.com/500x750'; let seen = (JSON.parse(localStorage.getItem('butaca_watched')) || []).find(x => x.id === item.id); let btn = seen ? `<button class="btn-action btn-visto-ok" onclick="openStatus(${item.id}, '${type}', '${item.t}', '${poster}')">✔️ VISTA</button>` : `<button class="btn-action btn-status" onclick="openStatus(${item.id}, '${type}', '${item.t}', '${poster}')">PENDIENTE</button>`; html += `<div class="card"><img src="${img}" onclick="openDetails('${type}', ${item.id})"><div class="card-info"><div class="movie-title">${item.t}</div>${btn}</div></div>`; }); html += `</div></div>`; container.innerHTML += html; }); }
         function updateProfile() { document.getElementById('p-name').innerText = localStorage.getItem('butaca_user') || "Usuario"; const watched = JSON.parse(localStorage.getItem('butaca_watched')) || []; const mList = JSON.parse(localStorage.getItem('butaca_movies')) || []; const sList = JSON.parse(localStorage.getItem('butaca_series')) || []; const mLists = JSON.parse(localStorage.getItem('butaca_lists_movies')) || []; const sLists = JSON.parse(localStorage.getItem('butaca_lists_series')) || []; let allM = [...mList]; mLists.forEach(l => allM.push(...l.items)); let allS = [...sList]; sLists.forEach(l => allS.push(...l.items)); const mP = Array.from(new Set(allM.map(a => a.id))).filter(id => !watched.some(w => w.id === id)).length; const sP = Array.from(new Set(allS.map(a => a.id))).filter(id => !watched.some(w => w.id === id)).length; document.getElementById('stat-movies-p').innerText = mP; document.getElementById('stat-series-p').innerText = sP; document.getElementById('stat-movies-v').innerText = watched.filter(x => x.type === 'movie').length; document.getElementById('stat-series-v').innerText = watched.filter(x => x.type === 'tv').length; }
-        function openStatus(id, type, t, poster) { currentItem = { id, type, t, p: poster }; document.getElementById('status-title').innerText = t; document.getElementById('status-content').innerHTML = `<span class="close-x" onclick="closeModals()">&times;</span><h3>${t}</h3><button class="btn-opt" style="background:var(--verde);" onclick="goToRating()">Marcar como vista <i class="fas fa-check"></i></button><button class="btn-opt" onclick="openMoveToList()">Mover a una lista <i class="fas fa-folder"></i></button><button class="btn-opt" style="color:var(--rojo);" onclick="removeItemConfirm()">Quitar de mi lista <i class="fas fa-trash"></i></button>`; document.getElementById('statusModal').style.display = 'flex'; }
-        function goToRating() { ratingTemp = 0; document.getElementById('statusModal').style.display = 'none'; document.getElementById('rate-content').innerHTML = `<span class="close-x" onclick="closeModals()">&times;</span><h3>Tu Nota</h3><div class="stars-container" id="stars-box"><i class="fas fa-star star" onclick="setRating(1)"></i><i class="fas fa-star star" onclick="setRating(2)"></i><i class="fas fa-star star" onclick="setRating(3)"></i><i class="fas fa-star star" onclick="setRating(4)"></i><i class="fas fa-star star" onclick="setRating(5)"></i></div><button class="btn-action" style="background:var(--oro); color:black; padding:15px; font-size:12px;" onclick="confirmWatch()">GUARDAR CRÍTICA</button>`; document.getElementById('rateModal').style.display = 'flex'; }
+        function openStatus(id, type, t, poster) { currentItem = { id, type, t, p: poster }; document.getElementById('status-content').innerHTML = `<span class="close-x" onclick="closeModals()">&times;</span><h3>${t}</h3><button class="btn-opt" style="background:var(--verde);" onclick="goToRating()">Marcar como vista <i class="fas fa-check"></i></button><button class="btn-opt" onclick="openMoveToList()">Mover a una lista <i class="fas fa-folder"></i></button><button class="btn-opt" style="color:var(--rojo);" onclick="removeItemConfirm()">Quitar de mi lista <i class="fas fa-trash"></i></button>`; document.getElementById('statusModal').style.display = 'flex'; }
+        function goToRating() { ratingTemp = 0; document.querySelectorAll('.star').forEach(s => s.classList.remove('active')); document.getElementById('statusModal').style.display = 'none'; document.getElementById('rateModal').style.display = 'flex'; }
         function closeModals() { document.querySelectorAll('.modal').forEach(m => m.style.display = 'none'); }
-        function removeItemConfirm() { if(confirm("¿Quitar?")) { removeItem(currentItem.id, currentItem.type); closeModals(); } }
+        function removeItemConfirm() { if(confirm("¿Quitar de tu lista?")) { removeItem(currentItem.id, currentItem.type); closeModals(); } }
         function removeItem(id, type, refresh=true) { const baseKey = type === 'tv' ? 'butaca_series' : 'butaca_movies'; const listKey = type === 'tv' ? 'butaca_lists_series' : 'butaca_lists_movies'; localStorage.setItem(baseKey, JSON.stringify((JSON.parse(localStorage.getItem(baseKey)) || []).filter(m => m.id !== id))); let lists = JSON.parse(localStorage.getItem(listKey)) || []; lists.forEach(l => l.items = l.items.filter(i => i.id !== id)); localStorage.setItem(listKey, JSON.stringify(lists)); localStorage.setItem('butaca_watched', JSON.stringify((JSON.parse(localStorage.getItem('butaca_watched')) || []).filter(m => m.id !== id))); if(refresh) loadSaved(); updateProfile(); }
         function deleteFullList(t, i) { if(confirm("¿Eliminar lista?")) { const k = t === 'tv' ? 'butaca_lists_series' : 'butaca_lists_movies'; let l = JSON.parse(localStorage.getItem(k)) || []; l.splice(i, 1); localStorage.setItem(k, JSON.stringify(l)); loadSaved(); } }
         async function searchContent() { const q = document.getElementById('query-input').value; if(!q) return; const resp = await fetch(`https://api.themoviedb.org/3/search/multi?api_key=${API_KEY}&query=${encodeURIComponent(q)}&language=es-ES`); const data = await resp.json(); const gM = document.getElementById('search-grid-movie'), gT = document.getElementById('search-grid-tv'); gM.innerHTML = ""; gT.innerHTML = ""; data.results.forEach(item => { if(item.media_type === 'movie') renderCard(item, gM, 'search', 'movie'); else if(item.media_type === 'tv') renderCard(item, gT, 'search', 'tv'); }); document.getElementById('search-selector').style.display = 'flex'; switchSearchTab('movie'); }
