@@ -4,125 +4,110 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
     <title>Butaca</title>
-    <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2280%22>🎞️</text></svg>">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <style>
-        :root { --rojo: #e50914; --oro: #ffcc00; --fondo: #0a0a0a; --card: #181818; --azul: #0071eb; --verde: #46d369; --gris: #2f2f2f; --input-gris: #222; }
+        :root { --rojo: #e50914; --oro: #ffcc00; --fondo: #0a0a0a; --card: #181818; --azul: #0071eb; --verde: #46d369; --gris: #2f2f2f; --input-gris: #252525; }
         body { background: var(--fondo); color: white; font-family: 'Inter', sans-serif; margin: 0; padding-bottom: 110px; overflow-x: hidden; -webkit-tap-highlight-color: transparent; }
 
-        /* SCREENS */
-        #login-screen, #splash-screen { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: #000; display: flex; flex-direction: column; align-items: center; justify-content: center; z-index: 50000; transition: 0.5s; }
-        #splash-screen { display: none; z-index: 40000; }
-        .intro-content { display: flex; align-items: center; gap: 15px; animation: cinematicIntro 2.5s ease-in-out forwards; }
-        .intro-content i { color: var(--oro); font-size: 45px; }
-        .intro-text { color: var(--rojo); font-size: 35px; font-weight: 900; letter-spacing: 5px; text-transform: uppercase; }
-        @keyframes cinematicIntro { 0% { transform: scale(0.8); opacity: 0; } 40% { opacity: 1; } 100% { transform: scale(1.1); opacity: 0; } }
+        /* ANIMACIONES Y SPLASH */
+        #splash-screen, #login-screen { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: #000; display: flex; flex-direction: column; align-items: center; justify-content: center; z-index: 60000; }
+        #splash-screen { display: none; z-index: 55000; }
+        .ticket-anim { color: var(--oro); font-size: 80px; animation: ticketBounce 2s infinite ease-in-out; }
+        @keyframes ticketBounce { 0%, 100% { transform: translateY(0) rotate(0deg); } 50% { transform: translateY(-15px) rotate(10deg); } }
 
-        header { padding: 18px; background: rgba(0,0,0,0.92); backdrop-filter: blur(20px); text-align: center; border-bottom: 1px solid rgba(255,255,255,0.05); position: sticky; top: 0; z-index: 100; }
-        .logo-header { display: flex; align-items: center; justify-content: center; gap: 10px; }
-        .logo-header i { color: var(--oro); font-size: 22px; }
-        .logo-header span { color: var(--rojo); font-size: 22px; font-weight: 900; letter-spacing: 2px; }
+        header { padding: 18px; background: rgba(0,0,0,0.95); backdrop-filter: blur(20px); text-align: center; border-bottom: 1px solid rgba(255,255,255,0.05); position: sticky; top: 0; z-index: 100; }
+        .logo-header i { color: var(--oro); font-size: 24px; margin-right: 8px; }
+        .logo-header span { color: var(--rojo); font-size: 24px; font-weight: 900; letter-spacing: 2px; }
 
         .view { display: none; padding: 20px; animation: fadeIn 0.4s; }
         .view.active { display: block; }
         @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
 
-        /* TABS SELECTION */
-        .tab-nav { display: flex; background: rgba(255,255,255,0.03); margin: -20px -20px 10px; border-bottom: 1px solid var(--gris); }
-        .tab-btn { flex: 1; padding: 18px; border: none; background: none; color: #444; font-size: 11px; font-weight: 800; text-transform: uppercase; cursor: pointer; transition: 0.3s; border-bottom: 3px solid transparent; }
-        .tab-btn.active { color: white; border-bottom-color: var(--rojo); background: rgba(229, 9, 20, 0.1); }
-
+        /* CATEGORIAS */
         .filter-bar { display: flex; gap: 12px; overflow-x: auto; padding: 10px 0 20px; margin: 0 -20px; padding-left: 20px; scrollbar-width: none; }
-        .filter-btn { background: var(--gris); color: #888; border: none; padding: 10px 22px; border-radius: 25px; font-size: 11px; white-space: nowrap; font-weight: 700; cursor: pointer; border: 1px solid transparent; }
-        .filter-btn.active { background: white; color: black; box-shadow: 0 0 15px rgba(255,255,255,0.2); }
-
-        /* BUSCADOR PRO */
-        .search-wrapper { position: relative; width: 100%; margin-bottom: 25px; display: flex; gap: 10px; }
-        .search-input-box { flex-grow: 1; position: relative; }
-        input[type="text"] { width: 100%; padding: 16px; border-radius: 12px; border: 1px solid #333; background: var(--input-gris); color: white; outline: none; box-sizing: border-box; font-size: 14px; }
-        #autocomplete-results, #autocomplete-results-frames { position: absolute; top: 100%; left: 0; width: 100%; background: #1c1c1e; border-radius: 0 0 14px 14px; z-index: 5000; max-height: 250px; overflow-y: auto; border: 1px solid #333; }
-        .suggestion-item { padding: 12px; border-bottom: 1px solid #222; display: flex; align-items: center; gap: 10px; font-size: 13px; cursor: pointer; }
+        .filter-btn { background: var(--gris); color: #888; border: none; padding: 10px 22px; border-radius: 25px; font-size: 12px; font-weight: 700; cursor: pointer; transition: 0.3s; white-space: nowrap; }
+        .filter-btn.active { background: white; color: black; box-shadow: 0 0 15px rgba(255,255,255,0.3); }
 
         /* GRID POSTERS */
         .grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 15px; }
         .card { background: var(--card); border-radius: 14px; overflow: hidden; display: flex; flex-direction: column; position: relative; border: 1px solid rgba(255,255,255,0.03); }
         .card img { width: 100%; aspect-ratio: 2/3; object-fit: cover; cursor: pointer; }
-        .movie-title { font-size: 10px; font-weight: 700; height: 32px; overflow: hidden; margin: 10px 5px; line-height: 1.2; text-align: center; }
+        .movie-title { font-size: 11px; font-weight: 700; height: 32px; overflow: hidden; margin: 10px 5px 5px; line-height: 1.2; text-align: center; }
 
-        /* ABATIBLE */
-        .abatible-item { background: #161616; border-radius: 14px; margin-bottom: 12px; overflow: hidden; border: 1px solid #222; }
-        .abatible-trigger { width: 100%; padding: 15px; background: none; border: none; color: #eee; text-align: left; font-size: 14px; font-weight: 700; display: flex; justify-content: space-between; align-items: center; cursor: pointer; }
-        .abatible-content { display: none; padding: 20px; background: #0b0b0b; border-top: 1px solid #222; }
-        .abatible-item.active .abatible-content { display: flex; gap: 18px; align-items: center; }
-        .abatible-poster { width: 110px; border-radius: 10px; flex-shrink: 0; box-shadow: 0 5px 20px rgba(0,0,0,0.7); }
-        .abatible-actions { flex-grow: 1; display: flex; flex-direction: column; gap: 10px; }
-        .btn-mini { padding: 10px; font-size: 9px; font-weight: 800; border-radius: 8px; border: none; color: white; cursor: pointer; text-transform: uppercase; }
+        /* ABATIBLE HORIZONTAL */
+        .abatible-item { background: #161616; border-radius: 14px; margin-bottom: 12px; border: 1px solid #222; overflow: hidden; }
+        .abatible-trigger { width: 100%; padding: 15px; background: none; border: none; color: #eee; text-align: left; font-size: 14px; font-weight: 700; display: flex; justify-content: space-between; }
+        .abatible-content { display: none; padding: 15px; background: #0b0b0b; border-top: 1px solid #222; }
+        .abatible-item.active .abatible-content { display: flex; gap: 15px; align-items: center; text-align: left; }
+        .abatible-poster { width: 90px; border-radius: 8px; flex-shrink: 0; box-shadow: 0 5px 15px rgba(0,0,0,0.5); }
+        .abatible-actions { flex-grow: 1; display: flex; flex-direction: column; gap: 8px; }
 
         /* FICHA TÉCNICA */
-        .info-container { background: rgba(255,255,255,0.03); border-radius: 20px; padding: 20px; margin-top: 20px; text-align: left; border: 1px solid rgba(255,255,255,0.05); }
-        .info-section { margin-bottom: 15px; padding-bottom: 10px; border-bottom: 1px solid rgba(255,255,255,0.05); }
-        .info-title { color: var(--rojo); font-size: 10px; font-weight: 900; text-transform: uppercase; letter-spacing: 1.5px; margin-bottom: 6px; display: block; }
+        .info-box { background: rgba(255,255,255,0.04); border-radius: 18px; padding: 15px; margin-top: 15px; text-align: left; }
+        .info-section { margin-bottom: 15px; padding-bottom: 8px; border-bottom: 1px solid rgba(255,255,255,0.05); }
+        .info-title { color: var(--rojo); font-size: 9px; font-weight: 900; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 4px; display: block; }
         .info-text { font-size: 13px; color: #ccc; line-height: 1.5; }
+        .watch-providers { display: flex; gap: 8px; flex-wrap: wrap; margin: 10px 0; justify-content: center; }
+        .provider-icon { width: 38px; height: 38px; border-radius: 8px; border: 1px solid rgba(255,255,255,0.1); }
 
         /* PERFIL XL */
-        .profile-card { background: linear-gradient(180deg, rgba(255,255,255,0.05) 0%, rgba(0,0,0,0) 100%); padding: 45px 20px; border-radius: 45px; text-align: center; border: 1px solid rgba(255,255,255,0.05); }
-        .p-name-xl { font-size: 32px; font-weight: 900; margin: 15px 0 5px; color: white; letter-spacing: -1px; }
-        .stats-xl { display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px; margin-top: 30px; }
-        .stat-box-xl { background: rgba(255,255,255,0.03); padding: 30px 10px; border-radius: 25px; border: 1px solid rgba(255,255,255,0.05); }
-        .stat-num-xl { font-size: 30px; font-weight: 900; color: var(--rojo); display: block; }
-        .stat-label-xl { font-size: 11px; color: #888; text-transform: uppercase; font-weight: 800; margin-top: 5px; line-height: 1.2; }
+        .profile-card { background: linear-gradient(180deg, rgba(255,255,255,0.06) 0%, rgba(0,0,0,0) 100%); padding: 40px 20px; border-radius: 45px; text-align: center; border: 1px solid rgba(255,255,255,0.05); }
+        .p-name-xl { font-size: 32px; font-weight: 900; margin: 15px 0; color: white; }
+        .stats-xl { display: grid; grid-template-columns: repeat(2, 1fr); gap: 15px; margin-top: 25px; }
+        .stat-box-xl { background: rgba(255,255,255,0.04); padding: 25px 10px; border-radius: 20px; text-align: center; }
+        .stat-num-xl { font-size: 28px; font-weight: 900; color: var(--rojo); display: block; }
+        .stat-label-xl { font-size: 10px; color: #888; text-transform: uppercase; font-weight: 800; }
 
-        /* NAV (ORDER: Inicio, Buscar, Peliculas, Series, Frames, Perfil) */
+        /* NAV */
         nav { position: fixed; bottom: 0; width: 100%; background: rgba(10,10,10,0.95); backdrop-filter: blur(25px); display: flex; justify-content: space-around; padding: 12px 0 35px; border-top: 1px solid #222; z-index: 15000; }
-        .nav-item { color: #555; text-align: center; font-size: 7px; font-weight: 800; flex: 1; cursor: pointer; transition: 0.2s; }
+        .nav-item { color: #555; text-align: center; font-size: 8px; font-weight: 800; flex: 1; cursor: pointer; transition: 0.2s; }
         .nav-item.active { color: var(--rojo); transform: translateY(-2px); }
-        .nav-item i { font-size: 20px; display: block; margin-bottom: 5px; }
+        .nav-item i { font-size: 22px; display: block; margin-bottom: 5px; }
 
         /* MODALES */
-        .btn-action { background: var(--rojo); color: white; border: none; padding: 14px; border-radius: 12px; font-size: 11px; font-weight: 800; width: 100%; cursor: pointer; display: block; text-align: center; transition: 0.3s; text-decoration: none; }
-        .btn-added { background: var(--verde) !important; color: white !important; }
-        .modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.95); z-index: 25000; justify-content: center; align-items: center; backdrop-filter: blur(15px); }
-        .modal-content { background: #1c1c1e; width: 85%; max-width: 450px; border-radius: 35px; padding: 35px; text-align: center; overflow-y: auto; max-height: 85vh; border: 1px solid rgba(255,255,255,0.1); position: relative; }
-        .close-x { position: absolute; top: 15px; right: 20px; font-size: 28px; color: #555; cursor: pointer; z-index: 10; }
+        .btn-action { background: var(--rojo); color: white; border: none; padding: 14px; border-radius: 12px; font-size: 11px; font-weight: 800; width: 100%; cursor: pointer; transition: 0.3s; display: block; text-align: center; text-decoration: none; }
+        .btn-added { background: var(--verde) !important; }
+        .btn-mini { padding: 9px; font-size: 9px; font-weight: 800; border-radius: 6px; border: none; color: white; cursor: pointer; text-transform: uppercase; width: 100%; }
+        .modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.96); z-index: 30000; justify-content: center; align-items: center; backdrop-filter: blur(15px); }
+        .modal-content { background: #1c1c1e; width: 85%; max-width: 450px; border-radius: 35px; padding: 30px; text-align: center; overflow-y: auto; max-height: 85vh; border: 1px solid rgba(255,255,255,0.1); position: relative; }
+        .close-x { position: absolute; top: 15px; right: 20px; font-size: 28px; color: #555; cursor: pointer; }
         .rating-stars { display: flex; gap: 10px; justify-content: center; margin: 20px 0; font-size: 32px; color: #333; }
         .rating-stars i.active { color: var(--oro); }
 
-        #viewer-modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: #000; z-index: 40000; flex-direction: column; align-items: center; justify-content: center; }
-        #viewer-modal img { max-width: 100%; max-height: 85%; object-fit: contain; }
+        /* SEARCH UI */
+        .search-wrapper { position: relative; width: 100%; margin-bottom: 25px; display: flex; gap: 10px; }
+        input[type="text"] { width: 100%; padding: 18px; border-radius: 12px; border: 1px solid #333; background: var(--input-gris); color: white; outline: none; box-sizing: border-box; font-size: 14px; }
+        #autocomplete-results { position: absolute; top: 100%; left: 0; width: 100%; background: #1c1c1e; border-radius: 0 0 14px 14px; z-index: 5000; max-height: 250px; overflow-y: auto; border: 1px solid #333; }
+        .suggestion-item { padding: 15px; border-bottom: 1px solid #222; font-size: 14px; cursor: pointer; text-align: left; }
     </style>
 </head>
 <body>
 
     <div id="login-screen">
-        <i class="fas fa-ticket-alt" style="color:var(--oro); font-size:70px; margin-bottom:20px;"></i>
-        <h2 style="color:var(--rojo); font-weight:900; letter-spacing:4px;">BUTACA</h2>
-        <input type="text" id="user-input" placeholder="Nombre artístico..." style="width:280px; margin-bottom:15px; text-align:center;">
-        <button class="btn-action" style="width:280px; padding:18px;" onclick="handleLogin()">INICIAR RODAJE</button>
+        <i class="fas fa-ticket-alt ticket-anim"></i>
+        <h2 style="color:var(--rojo); font-weight:900; letter-spacing:4px; margin-top:20px;">BUTACA</h2>
+        <input type="text" id="user-input" placeholder="Tu nombre..." style="width:280px; margin-bottom:15px; text-align:center;">
+        <button class="btn-action" style="width:280px; padding:20px;" onclick="handleLogin()">INICIAR PROYECTO</button>
     </div>
-
-    <div id="splash-screen"><div class="intro-content"><i class="fas fa-ticket-alt"></i><div class="intro-text">BUTACA</div></div></div>
-    
+    <div id="splash-screen"><div class="intro-content"><i class="fas fa-ticket-alt ticket-anim"></i></div></div>
     <header><div class="logo-header"><i class="fas fa-ticket-alt"></i><span>BUTACA</span></div></header>
 
+    <div id="viewer-modal" class="modal">
+        <span onclick="closeModals()" style="position:absolute; top:30px; right:20px; color:white; font-size:35px; cursor:pointer; z-index: 10;">&times;</span>
+        <img id="viewer-img" src="" style="max-width:95%; max-height:75%; object-fit:contain; border-radius:10px;">
+        <h3 id="viewer-name" style="margin-top:15px; font-size:14px; color:#ccc; font-weight: 800;"></h3>
+        <button class="btn-action" id="viewer-fav-btn" style="width:240px; margin: 15px auto;" onclick="toggleViewerFav()">AGREGAR A FAVORITOS</button>
+    </div>
+
     <div id="view-home" class="view active">
-        <div class="tab-nav">
-            <button class="tab-btn active" id="btn-h-movie" onclick="switchHomeType('movie', this)">Películas</button>
-            <button class="tab-btn" id="btn-h-tv" onclick="switchHomeType('tv', this)">Series</button>
-        </div>
-        <div class="filter-bar">
-            <button class="filter-btn active" onclick="filterGenre(null, this)">Todo</button>
-            <button class="filter-btn" onclick="filterGenre(10751, this)">Infantil</button>
-            <button class="filter-btn" onclick="filterGenre(28, this)">Acción</button>
-            <button class="filter-btn" onclick="filterGenre(27, this)">Terror</button>
-            <button class="filter-btn" onclick="filterGenre(35, this)">Comedia</button>
-        </div>
+        <div class="filter-bar"><div id="filter-container" style="display:flex; gap:12px;"></div></div>
         <div id="trending-grid" class="grid"></div>
     </div>
 
     <div id="view-search" class="view">
         <div class="search-wrapper">
-            <div class="search-input-box">
-                <input type="text" id="main-query" placeholder="Buscar película o serie..." oninput="handleAutocomplete(this.value, 'autocomplete-results', startSearch)" onkeydown="if(event.key==='Enter') startSearch()">
+            <div style="flex-grow:1; position:relative;">
+                <input type="text" id="main-query" placeholder="Buscar película..." oninput="handleAutocomplete(this.value, 'autocomplete-results', startSearch)" onkeydown="if(event.key==='Enter') startSearch()">
                 <div id="autocomplete-results"></div>
             </div>
             <button class="btn-action" style="width:auto; padding:0 25px;" onclick="startSearch()">BUSCAR</button>
@@ -131,94 +116,61 @@
     </div>
 
     <div id="view-movies" class="view">
-        <button class="btn-action" style="background:var(--gris); margin-bottom:25px;" onclick="openCreateListDialog('movie')">+ NUEVA CARPETA PELIS</button>
+        <button class="btn-action" style="background:var(--gris); margin-bottom:25px;" onclick="openCreateListDialog()">+ NUEVA CARPETA</button>
         <div id="movies-collections"></div>
         <h2 style="font-size:12px; color:#555; text-align:center; margin:25px 0; letter-spacing:1px; text-transform:uppercase;">Lista General</h2>
         <div id="saved-movies-grid" class="grid"></div>
     </div>
 
-    <div id="view-series" class="view">
-        <button class="btn-action" style="background:var(--gris); margin-bottom:25px;" onclick="openCreateListDialog('tv')">+ NUEVA CARPETA SERIES</button>
-        <div id="series-collections"></div>
-        <h2 style="font-size:12px; color:#555; text-align:center; margin:25px 0; letter-spacing:1px; text-transform:uppercase;">Lista General</h2>
-        <div id="saved-series-grid" class="grid"></div>
-    </div>
-
     <div id="view-frames" class="view">
         <div class="search-wrapper">
-            <div class="search-input-box">
-                <input type="text" id="frame-query" placeholder="Fotogramas (ej: Mad Max)..." oninput="handleAutocomplete(this.value, 'autocomplete-results-frames', startSearchFrames)" onkeydown="if(event.key==='Enter') startSearchFrames()">
-                <div id="autocomplete-results-frames"></div>
+            <div style="flex-grow:1; position:relative;">
+                <input type="text" id="frame-query" placeholder="Fotogramas (ej: Joker)..." onkeydown="if(event.key==='Enter') searchFrames()">
             </div>
             <button class="btn-action" style="width:auto; padding:0 20px;" onclick="searchFrames()">IR</button>
         </div>
-        <div id="frames-container" class="grid" style="margin-top:20px;"></div>
+        <div id="frames-container" class="grid"></div>
     </div>
 
     <div id="view-profile" class="view">
         <div class="profile-card">
-            <div class="avatar-container-outer" onclick="openAvatarSelector()">
-                <div class="user-avatar-big" id="current-p-avatar">🕵️</div>
-                <div class="edit-badge" style="position:absolute; bottom:0; right:0; background:var(--rojo); width:28px; height:28px; border-radius:50%; display:flex; align-items:center; justify-content:center; border:3px solid var(--fondo); font-size:12px;"><i class="fas fa-camera"></i></div>
-            </div>
-            <div id="photo-edit-panel" style="display:none; margin: 15px 0; background:rgba(255,255,255,0.03); padding:10px; border-radius:15px;">
-                <input type="range" id="zoomRange" min="1" max="3" step="0.1" value="1" oninput="applyPhotoAjust()">
-                <div style="display:grid; grid-template-columns:repeat(4,1fr); gap:5px; margin-top:10px;">
-                    <button class="btn-mini" style="background:#222; border-radius:5px; border:none; color:white; padding:8px;" onclick="movePhoto('y', -5)">↑</button>
-                    <button class="btn-mini" style="background:#222; border-radius:5px; border:none; color:white; padding:8px;" onclick="movePhoto('y', 5)">↓</button>
-                    <button class="btn-mini" style="background:#222; border-radius:5px; border:none; color:white; padding:8px;" onclick="movePhoto('x', -5)">←</button>
-                    <button class="btn-mini" style="background:#222; border-radius:5px; border:none; color:white; padding:8px;" onclick="movePhoto('x', 5)">→</button>
-                </div>
-            </div>
+            <div id="current-p-avatar" style="width:120px; height:120px; margin:0 auto; background:#111; border-radius:50%; border:3px solid var(--rojo); overflow:hidden; display:flex; align-items:center; justify-content:center; font-size:45px;" onclick="document.getElementById('fileInput').click()">🕵️</div>
             <h3 id="p-name" class="p-name-xl">Usuario</h3>
             <div class="stats-xl">
-                <div class="stat-box-xl"><span class="stat-num-xl" id="stat-m-p">0</span><span class="stat-label-xl">PELÍCULAS POR VER</span></div>
-                <div class="stat-box-xl"><span class="stat-num-xl" id="stat-m-v">0</span><span class="stat-label-xl">PELÍCULAS VISTAS</span></div>
-                <div class="stat-box-xl"><span class="stat-num-xl" id="stat-s-p">0</span><span class="stat-label-xl">SERIES POR VER</span></div>
-                <div class="stat-box-xl"><span class="stat-num-xl" id="stat-s-v">0</span><span class="stat-label-xl">SERIES VISTAS</span></div>
+                <div class="stat-box-xl"><span class="stat-num-xl" id="stat-m-p">0</span><span class="stat-label-xl">Películas Por Ver</span></div>
+                <div class="stat-box-xl"><span class="stat-num-xl" id="stat-m-v">0</span><span class="stat-label-xl">Películas Vistas</span></div>
             </div>
-            <h4 style="font-size:14px; color:var(--oro); margin-top:45px; text-align:left; font-weight:900;">REFERENCIAS FAVORITAS</h4>
+            <h4 style="font-size:16px; color:var(--oro); margin-top:40px; text-align:left; font-weight:900;">REFERENCIAS FAVORITAS</h4>
             <div id="fav-frames-container" class="grid" style="grid-template-columns:repeat(3,1fr); margin-top:15px;"></div>
         </div>
-        <button onclick="logout()" style="color:#444; background:none; border:none; width:100%; font-size:12px; margin-top:50px; font-weight:900;">CERRAR SESIÓN</button>
+        <button onclick="logout()" style="color:#444; background:none; border:none; width:100%; font-size:13px; margin-top:50px; font-weight:900;">CERRAR SESIÓN</button>
     </div>
 
     <nav>
         <div class="nav-item active" onclick="switchView('view-home', this)"><i class="fas fa-home"></i>Inicio</div>
         <div class="nav-item" onclick="switchView('view-search', this)"><i class="fas fa-search"></i>Buscar</div>
-        <div class="nav-item" onclick="switchView('view-movies', this)"><i class="fas fa-film"></i>Pelis</div>
-        <div class="nav-item" onclick="switchView('view-series', this)"><i class="fas fa-tv"></i>Series</div>
+        <div class="nav-item" onclick="switchView('view-movies', this)"><i class="fas fa-film"></i>Películas</div>
         <div class="nav-item" onclick="switchView('view-frames', this)"><i class="fas fa-image"></i>Frames</div>
         <div class="nav-item" onclick="switchView('view-profile', this)"><i class="fas fa-user-alt"></i>Perfil</div>
     </nav>
 
     <div id="movieModal" class="modal"><div class="modal-content" id="modalBody"></div></div>
-    
     <div id="listMoveModal" class="modal">
         <div class="modal-content">
             <span class="close-x" onclick="closeModals()">&times;</span>
             <h3>Gestionar Título</h3>
-            <div style="display:grid; gap:12px; margin-top:25px;">
-                <button class="btn-action" style="background:var(--verde)" onclick="triggerRatingFromMove()">⭐ CALIFICAR / MARCAR VISTA</button>
+            <div id="dialog-main-actions" style="display:grid; gap:12px; margin-top:25px;">
+                <button class="btn-action" style="background:var(--verde)" onclick="triggerRatingFromMove()">⭐ CALIFICAR</button>
                 <button class="btn-action" style="background:var(--azul)" onclick="showFolderOptions()">📁 MOVER A CARPETA</button>
+                <button id="btn-return-general" class="btn-action" style="background:var(--oro); color:black; display:none;" onclick="returnToGeneral()">📦 LISTA GENERAL</button>
+                <button class="btn-action" style="background:#333" onclick="confirmRemove()">🗑️ QUITAR DE MI LISTA</button>
             </div>
             <div id="folder-options" style="display:none; margin-top:25px; border-top:1px solid #333; padding-top:20px;">
-                <h4 style="font-size:12px; color:#888;">MIS CARPETAS:</h4>
-                <div id="list-options-container" style="display:grid; gap:10px; margin-top:15px;"></div>
+                <div id="list-options-container" style="display:grid; gap:10px;"></div>
                 <button class="btn-action" style="background:var(--gris); margin-top:15px;" onclick="openCreateListDialogFromMove()">+ CREAR NUEVA CARPETA</button>
             </div>
         </div>
     </div>
-
-    <div id="createListModal" class="modal">
-        <div class="modal-content">
-            <span class="close-x" onclick="closeModals()">&times;</span>
-            <h3>Nueva Carpeta</h3>
-            <input type="text" id="new-list-name" placeholder="Nombre de la carpeta...">
-            <button class="btn-action" style="margin-top:20px; padding:15px;" onclick="confirmCreateList()">CREAR</button>
-        </div>
-    </div>
-
     <div id="ratingModal" class="modal">
         <div class="modal-content">
             <span class="close-x" onclick="closeModals()">&times;</span>
@@ -227,32 +179,35 @@
                 <i class="fas fa-star" onclick="setRating(1)"></i><i class="fas fa-star" onclick="setRating(2)"></i><i class="fas fa-star" onclick="setRating(3)"></i><i class="fas fa-star" onclick="setRating(4)"></i><i class="fas fa-star" onclick="setRating(5)"></i>
             </div>
             <button class="btn-action" onclick="confirmSeen()">GUARDAR VALORACIÓN</button>
-            <button class="btn-action" style="background:none; color:#666; margin-top:10px;" onclick="closeModals()">CALIFICAR LUEGO</button>
+        </div>
+    </div>
+    <div id="createListModal" class="modal">
+        <div class="modal-content">
+            <span class="close-x" onclick="closeModals()">&times;</span>
+            <h3>Nueva Carpeta</h3>
+            <input type="text" id="new-list-name" placeholder="Nombre...">
+            <button class="btn-action" style="margin-top:20px;" onclick="confirmCreateList()">CREAR</button>
         </div>
     </div>
 
-    <div id="viewer-modal">
-        <span onclick="closeViewer()" style="position:absolute; top:30px; right:20px; color:white; font-size:35px; cursor:pointer;">&times;</span>
-        <img id="viewer-img" src="">
-        <div style="margin-top: 20px;"><button class="btn-action" style="width:220px" id="viewer-fav-btn" onclick="toggleViewerFav()"><i class="fas fa-heart"></i> GUARDAR FAVORITO</button></div>
-    </div>
-
-    <div id="avatarModal" class="modal"><div class="modal-content"><span class="close-x" onclick="closeModals()">&times;</span><h3>Avatar</h3><button class="btn-action" style="margin-bottom:20px;" onclick="document.getElementById('fileInput').click()">SUBIR FOTO</button><input type="file" id="fileInput" hidden accept="image/*" onchange="uploadPhoto(this)"><div id="avatar-grid" style="display:grid; grid-template-columns:repeat(4,1fr); gap:10px;"></div></div></div>
-
     <script>
         const API_KEY = 'e7803f371057b32d0d0664e165bf78f1';
-        let currentType = 'movie', currentGenre = null, currentItem = null, photoAjust = { zoom: 1, x: 0, y: 0 }, currentRating = 0, currentViewerPath = "", tempType = 'movie';
-        let pageHome = 1, pageSearch = 1, pageFrames = 1, loading = false, querySearch = "", queryFrames = "";
+        let currentGenre = null, currentItem = null, currentRating = 0;
+        let pageHome = 1, pageSearch = 1, pageFrames = 1, loading = false, querySearch = "", currentViewerPath = "";
+        let isFromFolder = false, sourceFolderIdx = -1;
 
         window.onload = () => {
-            const savedUser = localStorage.getItem('butaca_user');
-            if(savedUser) { document.getElementById('login-screen').style.display = 'none'; startIntro(); }
+            if(localStorage.getItem('butaca_user')) { 
+                document.getElementById('login-screen').style.display = 'none'; 
+                startIntro(); 
+            }
             window.addEventListener('scroll', handleInfiniteScroll);
+            renderGenreFilters();
         };
 
         function handleLogin() {
             const name = document.getElementById('user-input').value;
-            if(!name) return alert("Ingresa tu nombre");
+            if(!name) return;
             localStorage.setItem('butaca_user', name);
             document.getElementById('login-screen').style.display = 'none'; startIntro();
         }
@@ -260,250 +215,220 @@
         function startIntro() {
             document.getElementById('splash-screen').style.display = 'flex';
             setTimeout(() => { document.getElementById('splash-screen').style.display = 'none'; }, 2200);
-            loadTrending(true); loadFrames(true); updateProfile();
+            loadTrending(true); updateProfile(); loadFrames(true);
         }
 
-        /* --- DETALLES PROFESIONALES --- */
-        async function openDetails(type, id) {
+        /* --- MOTOR DINÁMICO DE DATOS --- */
+        async function openDetails(id) {
             const [details, credits, watch] = await Promise.all([
-                fetch(`https://api.themoviedb.org/3/${type}/${id}?api_key=${API_KEY}&language=es-ES`).then(r => r.json()),
-                fetch(`https://api.themoviedb.org/3/${type}/${id}/credits?api_key=${API_KEY}`).then(r => r.json()),
-                fetch(`https://api.themoviedb.org/3/${type}/${id}/watch/providers?api_key=${API_KEY}`).then(r => r.json())
+                fetch(`https://api.themoviedb.org/3/movie/${id}?api_key=${API_KEY}&language=es-ES`).then(r => r.json()),
+                fetch(`https://api.themoviedb.org/3/movie/${id}/credits?api_key=${API_KEY}`).then(r => r.json()),
+                fetch(`https://api.themoviedb.org/3/movie/${id}/watch/providers?api_key=${API_KEY}`).then(r => r.json())
             ]);
-
-            const dir = credits.crew.find(c => c.job === 'Director')?.name || 'N/A';
-            const dop = credits.crew.find(c => c.job === 'Director of Photography')?.name || 'N/A';
-            const prod = credits.crew.find(c => c.job === 'Producer' || c.job === 'Executive Producer')?.name || 'N/A';
-            const mus = credits.crew.find(c => c.job === 'Original Music Composer')?.name || 'N/A';
-            const cast = credits.cast.slice(0, 4).map(a => a.name).join(", ");
             const providers = watch.results?.CL?.flatrate || [];
-
-            const saved = [...(JSON.parse(localStorage.getItem('butaca_movies_gen')) || []), ...(JSON.parse(localStorage.getItem('butaca_series_gen')) || [])];
-            const isSaved = saved.some(x => x.id === id);
+            const isSaved = (JSON.parse(localStorage.getItem('butaca_movies_gen')) || []).some(x => x.id === id);
 
             document.getElementById('modalBody').innerHTML = `
                 <span class="close-x" onclick="closeModals()">&times;</span>
                 <img src="https://image.tmdb.org/t/p/w500${details.poster_path}" style="width:100%; border-radius:20px;">
-                <h3 style="margin:15px 0">${details.title || details.name}</h3>
-                <div class="watch-providers">${providers.map(p => `<img class="provider-logo" src="https://image.tmdb.org/t/p/original${p.logo_path}">`).join('') || '<p style="font-size:10px">Disponible solo en Cines</p>'}</div>
-                <div class="info-container">
-                    <div class="info-section"><span class="info-title">Sinopsis</span><p class="info-text">${details.overview}</p></div>
-                    <div class="info-section"><span class="info-title">Producción</span><p class="info-text"><b>Dir:</b> ${dir}<br><b>DF:</b> ${dop}<br><b>Prod:</b> ${prod}<br><b>Música:</b> ${mus}</p></div>
-                    <div class="info-section"><span class="info-title">Cast</span><p class="info-text">${cast}</p></div>
+                <h3 style="margin:15px 0">${details.title}</h3>
+                <div class="watch-providers">${providers.map(p => `<img class="provider-icon" src="https://image.tmdb.org/t/p/original${p.logo_path}" title="${p.provider_name}">`).join('') || '<p style="font-size:10px; color:#555">Disponible solo en Cines</p>'}</div>
+                <div class="info-box">
+                    <div class="info-section"><span class="info-title">Sinopsis</span><p class="info-text">${details.overview || 'N/A'}</p></div>
+                    <div class="info-section">
+                        <span class="info-title">Producción</span>
+                        <p class="info-text"><b>Dir:</b> ${credits.crew.find(c => c.job === 'Director')?.name || 'N/A'}<br><b>Mus:</b> ${credits.crew.find(c => c.job.includes('Music'))?.name || 'N/A'}</p>
+                    </div>
+                    <div class="info-section"><span class="info-title">Cast</span><p class="info-text">${credits.cast.slice(0,4).map(a=>a.name).join(", ")}</p></div>
                 </div>
                 <div style="display:grid; gap:10px; margin-top:20px;">
-                    <a href="https://api.whatsapp.com/send?text=Te recomiendo esta obra en Butaca: ${details.title||details.name}" target="_blank" class="btn-action" style="background:#25D366; padding:12px;"><i class="fab fa-whatsapp"></i> COMPARTIR</a>
-                    <button id="add-btn-main" class="btn-action" style="background:${isSaved ? 'var(--verde)' : 'var(--rojo)'}" onclick="saveItem(this,'${(details.title||details.name).replace(/'/g,"")}','${details.poster_path}',${id},'${type}')">${isSaved ? 'AGREGADO' : '+ AGREGAR'}</button>
+                    <a href="https://api.whatsapp.com/send?text=Mira en Butaca: ${details.title}" target="_blank" class="btn-action" style="background:#25D366;"><i class="fab fa-whatsapp"></i> COMPARTIR</a>
+                    <button class="btn-action" id="btn-add-${id}" style="background:${isSaved ? 'var(--verde)' : 'var(--rojo)'}" onclick="saveItem(this,'${details.title.replace(/'/g,"")}','${details.poster_path}',${id})">${isSaved ? 'YA ESTÁ EN TU LISTA' : '+ AGREGAR'}</button>
                 </div>
             `;
             document.getElementById('movieModal').style.display = 'flex';
         }
 
-        /* --- GUARDADO AUTOMÁTICO --- */
-        function saveItem(btn, t, p, id, type) {
-            const key = type === 'tv' ? 'butaca_series_gen' : 'butaca_movies_gen';
-            let list = JSON.parse(localStorage.getItem(key)) || [];
+        function saveItem(btn, t, p, id) {
+            let list = JSON.parse(localStorage.getItem('butaca_movies_gen')) || [];
             if(list.some(x => x.id === id)) return;
-            list.push({t, p, id, type});
-            localStorage.setItem(key, JSON.stringify(list));
-            btn.innerText = "AGREGADO"; btn.classList.add('btn-added');
-            updateProfile(); if(document.getElementById('view-movies').classList.contains('active') || document.getElementById('view-series').classList.contains('active')) renderSaved();
+            list.push({id, t, p});
+            localStorage.setItem('butaca_movies_gen', JSON.stringify(list));
+            btn.innerText = "AGREGADO"; btn.style.background = "var(--verde)";
+            updateProfile(); renderSaved();
         }
 
-        /* --- RENDER ABATIBLES & LISTAS --- */
         function renderSaved() {
-            const render = (type, genId, key, listKey) => {
-                const collCont = document.getElementById(type+'s-collections'), genCont = document.getElementById(genId);
-                collCont.innerHTML = ""; genCont.innerHTML = "";
-                
-                const lists = JSON.parse(localStorage.getItem(listKey)) || [];
-                lists.forEach((l, i) => {
-                    let html = `<div class="abatible-item" id="col-${type}-${i}"><button class="abatible-trigger" onclick="this.parentElement.classList.toggle('active')"><span><i class="fas fa-folder"></i> ${l.name}</span><i class="fas fa-chevron-down"></i></button><div class="abatible-content">`;
-                    l.items.forEach(item => { 
-                        html += `
-                        <div style="display:flex; width:100%; gap:15px; border-bottom:1px solid #222; padding-bottom:15px; margin-bottom:15px; text-align:left;">
-                            <img src="https://image.tmdb.org/t/p/w200${item.p}" class="abatible-poster" onclick="openDetails('${type}', ${item.id})">
-                            <div class="abatible-actions">
-                                <span style="font-size:13px; font-weight:800;">${item.t}</span>
-                                <button class="btn-mini" style="background:var(--verde)" onclick="triggerRating(${item.id},'${type}','${item.t}','${item.p}')">CALIFICAR</button>
-                                <button class="btn-mini" style="background:var(--azul)" onclick="openMoveDialog(${item.id},'${type}','${item.t}','${item.p}')">MOVER</button>
-                                <button class="btn-mini" style="background:#333" onclick="removeItem('${listKey}', ${item.id}, true, ${i})">QUITAR</button>
-                            </div>
-                        </div>`;
-                    });
-                    collCont.innerHTML += html + `</div></div>`;
-                });
-
-                const list = JSON.parse(localStorage.getItem(key)) || [];
-                list.forEach(m => {
-                    genCont.innerHTML += `
-                    <div class="card">
-                        <img src="https://image.tmdb.org/t/p/w500${m.p}" onclick="openMoveDialog(${m.id},'${type}','${m.t.replace(/'/g,"")}','${m.p}')">
-                        <div class="movie-title">${m.t}</div>
-                        <button class="btn-action" style="background:#333; margin:0 10px 10px; padding:8px" onclick="removeItem('${key}', ${m.id})">QUITAR DE MI LISTA</button>
+            const grid = document.getElementById('saved-movies-grid');
+            const coll = document.getElementById('movies-collections');
+            grid.innerHTML = ""; coll.innerHTML = "";
+            const userLists = JSON.parse(localStorage.getItem('butaca_lists')) || [];
+            
+            userLists.forEach((l, i) => {
+                let html = `<div class="abatible-item"><button class="abatible-trigger" onclick="this.parentElement.classList.toggle('active')"><span><i class="fas fa-folder"></i> ${l.name}</span><i class="fas fa-chevron-down"></i></button><div class="abatible-content">`;
+                l.items.forEach(item => { 
+                    html += `<div style="display:flex; width:100%; gap:15px; border-bottom:1px solid #222; padding-bottom:15px; margin-bottom:15px;">
+                        <img src="https://image.tmdb.org/t/p/w200${item.p}" class="abatible-poster" onclick="openDetails(${item.id})">
+                        <div class="abatible-actions">
+                            <span style="font-size:14px; font-weight:800;">${item.t}</span>
+                            <button class="btn-mini" style="background:var(--verde)" onclick="openMoveDialog(${item.id},'${item.t}','${item.p}', true, ${i})">GESTIONAR</button>
+                            <button class="btn-mini" style="background:#333" onclick="removeItem('butaca_lists', ${item.id}, true, ${i})">QUITAR</button>
+                        </div>
                     </div>`;
                 });
-            };
-            render('movie', 'saved-movies-grid', 'butaca_movies_gen', 'butaca_lists_movie');
-            render('tv', 'saved-series-grid', 'butaca_series_gen', 'butaca_lists_tv');
-        }
-
-        /* --- INFINITE SCROLL --- */
-        function handleInfiniteScroll() {
-            if (loading) return;
-            if (window.innerHeight + window.scrollY >= document.body.offsetHeight - 800) {
-                if (document.getElementById('view-home').classList.contains('active')) loadTrending();
-                if (document.getElementById('view-search').classList.contains('active') && querySearch) searchUniversal();
-                if (document.getElementById('view-frames').classList.contains('active')) {
-                   if(queryFrames) searchFrames(true); else loadFrames();
-                }
-            }
-        }
-
-        async function loadTrending(isRand = false) {
-            loading = true; if(isRand) pageHome = Math.floor(Math.random() * 8) + 1;
-            let url = `https://api.themoviedb.org/3/trending/${currentType}/day?api_key=${API_KEY}&language=es-ES&page=${pageHome}`;
-            if(currentGenre) url = `https://api.themoviedb.org/3/discover/${currentType}?api_key=${API_KEY}&with_genres=${currentGenre}&language=es-ES&sort_by=popularity.desc&page=${pageHome}`;
-            const resp = await fetch(url); const data = await resp.json();
-            data.results.forEach(m => {
-                if(m.poster_path) document.getElementById('trending-grid').innerHTML += `<div class="card"><img src="https://image.tmdb.org/t/p/w500${m.poster_path}" onclick="openDetails('${currentType}', ${m.id})"><div class="movie-title">${m.title || m.name}</div></div>`;
+                html += `<button class="btn-mini" style="background:#441111; margin-top:10px; width:auto; padding:5px 15px;" onclick="deleteFolder(${i})">BORRAR CARPETA</button></div></div>`;
+                coll.innerHTML += html;
             });
-            pageHome++; loading = false;
+
+            const gen = JSON.parse(localStorage.getItem('butaca_movies_gen')) || [];
+            gen.forEach(m => {
+                grid.innerHTML += `<div class="card"><img src="https://image.tmdb.org/t/p/w500${m.p}" onclick="openDetails(${m.id})"><div class="movie-title">${m.t}</div><div style="padding:0 10px 10px; display:grid; gap:5px;"><button class="btn-mini" style="background:var(--azul)" onclick="openMoveDialog(${m.id},'${m.t}','${m.p}', false)">GESTIONAR</button><button class="btn-mini" style="background:#333" onclick="removeItem('butaca_movies_gen', ${m.id})">QUITAR</button></div></div>`;
+            });
         }
 
-        /* --- BUSCADOR --- */
-        async function startSearch() { querySearch = document.getElementById('main-query').value; pageSearch = 1; document.getElementById('search-grid').innerHTML = ""; searchUniversal(); }
-        async function searchUniversal() {
-            if(!querySearch) return; loading = true;
-            const resp = await fetch(`https://api.themoviedb.org/3/search/multi?api_key=${API_KEY}&query=${encodeURIComponent(querySearch)}&language=es-ES&page=${pageSearch}`);
-            const data = await resp.json();
-            data.results.forEach(m => { if(m.poster_path) document.getElementById('search-grid').innerHTML += `<div class="card"><img src="https://image.tmdb.org/t/p/w500${m.poster_path}" onclick="openDetails('${m.media_type||'movie'}', ${m.id})"><div class="movie-title">${m.title || m.name}</div></div>`; });
-            pageSearch++; loading = false;
-        }
-
-        async function loadFrames(isRand = false) {
-            loading = true; if(isRand) pageFrames = Math.floor(Math.random() * 30) + 1;
-            const resp = await fetch(`https://api.themoviedb.org/3/trending/all/day?api_key=${API_KEY}&page=${pageFrames}`);
-            const data = await resp.json();
-            data.results.forEach(item => { if(item.backdrop_path) {
-                document.getElementById('frames-container').innerHTML += `
-                <div class="card" style="border-radius:10px; overflow:hidden; position:relative;">
-                    <img src="https://image.tmdb.org/t/p/w780${item.backdrop_path}" onclick="openViewer('https://image.tmdb.org/t/p/original${item.backdrop_path}')">
-                    <div style="background:#111; padding:8px; font-size:8px; font-weight:700; text-align:center;">${item.title || item.name}</div>
-                </div>`;
-            }});
-            pageFrames++; loading = false;
-        }
-
-        async function startSearchFrames() { queryFrames = document.getElementById('frame-query').value; pageFrames = 1; document.getElementById('frames-container').innerHTML = ""; searchFrames(); }
-        async function searchFrames(append = false) {
-            if(!queryFrames) return; loading = true;
-            const resp = await fetch(`https://api.themoviedb.org/3/search/multi?api_key=${API_KEY}&query=${encodeURIComponent(queryFrames)}&language=es-ES&page=${pageFrames}`);
-            const data = await resp.json();
-            for(let item of data.results.slice(0, 3)) {
-                if(item.media_type !== 'person') {
-                    const imgResp = await fetch(`https://api.themoviedb.org/3/${item.media_type}/${item.id}/images?api_key=${API_KEY}`);
-                    const imgData = await imgResp.json();
-                    imgData.backdrops.slice(0, 8).forEach(img => { document.getElementById('frames-container').innerHTML += `<div class="card" style="border-radius:10px; position:relative;"><img src="https://image.tmdb.org/t/p/original${img.file_path}" onclick="openViewer(this.src)"><div style="background:#111; padding:8px; font-size:8px; font-weight:700; text-align:center;">${item.title || item.name}</div></div>`; });
-                }
-            }
-            pageFrames++; loading = false;
-        }
-
-        /* --- DIÁLOGOS DE LISTA --- */
-        function openMoveDialog(id, type, t, p) {
-            currentItem = {id, type, t, p}; tempType = type;
+        /* --- MOVIMIENTOS Y GESTIÓN --- */
+        function openMoveDialog(id, t, p, fromFolder, folderIdx = -1) {
+            currentItem = {id, t, p}; isFromFolder = fromFolder; sourceFolderIdx = folderIdx;
             document.getElementById('folder-options').style.display = 'none';
+            document.getElementById('btn-return-general').style.display = fromFolder ? 'block' : 'none';
             document.getElementById('listMoveModal').style.display = 'flex';
         }
 
-        function triggerRatingFromMove() { closeModals(); triggerRating(currentItem.id, currentItem.type, currentItem.t, currentItem.p); }
-        function showFolderOptions() {
-            const listKey = currentType === 'tv' ? 'butaca_lists_tv' : 'butaca_lists_movie';
-            const lists = JSON.parse(localStorage.getItem(listKey)) || [];
-            const cont = document.getElementById('list-options-container');
-            cont.innerHTML = "";
-            lists.forEach((l, i) => { cont.innerHTML += `<button class="btn-action" style="background:#222; border:1px solid #444; padding:15px;" onclick="moveToFolder(${i})">${l.name}</button>`; });
-            document.getElementById('folder-options').style.display = 'block';
-        }
-
-        function openCreateListDialog(type) { tempType = type; document.getElementById('new-list-name').value = ""; document.getElementById('createListModal').style.display = 'flex'; }
-        function openCreateListDialogFromMove() { document.getElementById('listMoveModal').style.display = 'none'; openCreateListDialog(tempType); }
-
-        function confirmCreateList() {
-            const name = document.getElementById('new-list-name').value; if(!name) return;
-            const key = tempType === 'tv' ? 'butaca_lists_tv' : 'butaca_lists_movie';
-            let lists = JSON.parse(localStorage.getItem(key)) || [];
-            lists.push({name: name, items: []});
-            localStorage.setItem(key, JSON.stringify(lists));
+        function returnToGeneral() {
+            let lists = JSON.parse(localStorage.getItem('butaca_lists'));
+            lists[sourceFolderIdx].items = lists[sourceFolderIdx].items.filter(x => x.id !== currentItem.id);
+            localStorage.setItem('butaca_lists', JSON.stringify(lists));
+            let gen = JSON.parse(localStorage.getItem('butaca_movies_gen')) || [];
+            if(!gen.some(x => x.id === currentItem.id)) gen.push(currentItem);
+            localStorage.setItem('butaca_movies_gen', JSON.stringify(gen));
             closeModals(); renderSaved();
         }
 
         function moveToFolder(idx) {
-            const listKey = currentItem.type === 'tv' ? 'butaca_lists_tv' : 'butaca_lists_movie';
-            let lists = JSON.parse(localStorage.getItem(listKey));
-            if(!lists[idx].items.some(x => x.id === currentItem.id)) {
-                lists[idx].items.push(currentItem);
-                localStorage.setItem(listKey, JSON.stringify(lists));
-                removeItem(currentItem.type === 'movie' ? 'butaca_movies_gen' : 'butaca_series_gen', currentItem.id, false);
+            let lists = JSON.parse(localStorage.getItem('butaca_lists'));
+            lists[idx].items.push(currentItem);
+            if(isFromFolder) {
+                lists[sourceFolderIdx].items = lists[sourceFolderIdx].items.filter(x => x.id !== currentItem.id);
+            } else {
+                let gen = JSON.parse(localStorage.getItem('butaca_movies_gen'));
+                localStorage.setItem('butaca_movies_gen', JSON.stringify(gen.filter(x => x.id !== currentItem.id)));
             }
+            localStorage.setItem('butaca_lists', JSON.stringify(lists));
             closeModals(); renderSaved();
         }
 
-        /* --- PERFIL PRO MASTER --- */
-        function updateProfile() {
-            const mG = JSON.parse(localStorage.getItem('butaca_movies_gen')) || [], sG = JSON.parse(localStorage.getItem('butaca_series_gen')) || [];
-            const mL = JSON.parse(localStorage.getItem('butaca_lists_movie')) || [], sL = JSON.parse(localStorage.getItem('butaca_lists_tv')) || [];
-            const watched = JSON.parse(localStorage.getItem('butaca_watched')) || [];
-            document.getElementById('p-name').innerText = localStorage.getItem('butaca_user');
-            document.getElementById('stat-m-p').innerText = mG.length + mL.reduce((a,b)=>a+b.items.length, 0);
-            document.getElementById('stat-m-v').innerText = watched.filter(x=>x.type==='movie').length;
-            document.getElementById('stat-s-p').innerText = sG.length + sL.reduce((a,b)=>a+b.items.length, 0);
-            document.getElementById('stat-s-v').innerText = watched.filter(x=>x.type==='tv').length;
-            const custom = localStorage.getItem('butaca_custom_photo'), avatar = localStorage.getItem('butaca_avatar') || "🕵️", container = document.getElementById('current-p-avatar');
-            if(custom) {
-                const s = JSON.parse(localStorage.getItem('butaca_photo_settings')) || {zoom:1, x:0, y:0};
-                container.innerHTML = `<img src="${custom}" style="transform: scale(${s.zoom}) translate(${s.x}px, ${s.y}px)">`;
-                document.getElementById('photo-edit-panel').style.display = 'block';
-            } else { container.innerHTML = avatar; document.getElementById('photo-edit-panel').style.display = 'none'; }
-            const favs = JSON.parse(localStorage.getItem('butaca_fav_frames')) || [];
-            document.getElementById('fav-frames-container').innerHTML = favs.map(path => `
-                <div class="card" style="aspect-ratio:1/1; position:relative;">
-                    <img src="https://image.tmdb.org/t/p/w200${path}" onclick="openViewer('https://image.tmdb.org/t/p/original${path}')">
-                    <button style="position:absolute; top:5px; right:5px; background:rgba(0,0,0,0.8); border:none; color:white; border-radius:50%; width:24px; height:24px; font-size:10px" onclick="toggleViewerFav('${path}')">×</button>
-                </div>`).join("");
+        /* --- CATEGORÍAS API REAL --- */
+        function renderGenreFilters() {
+            const genres = [{id:null,n:'Todo'},{id:10751,n:'Infantil'},{id:878,n:'Sci-Fi'},{id:35,n:'Comedia'},{id:28,n:'Acción'},{id:27,n:'Terror'}];
+            document.getElementById('filter-container').innerHTML = genres.map(g => `<button class="filter-btn" onclick="filterGenre(${g.id}, this)">${g.n}</button>`).join('');
         }
 
-        /* --- HELPERS --- */
-        function triggerRating(id, type, t, p) { currentItem = {id, type, t, p}; currentRating = 0; document.querySelectorAll('#star-selector i').forEach(s => s.classList.remove('active')); document.getElementById('ratingModal').style.display = 'flex'; }
-        function setRating(val) { currentRating = val; document.querySelectorAll('#star-selector i').forEach((s, i) => s.classList.toggle('active', i < val)); }
-        function confirmSeen() {
-            if(currentRating === 0) return alert("Califica la obra.");
-            let w = JSON.parse(localStorage.getItem('butaca_watched')) || [];
-            if(!w.some(x=>x.id===currentItem.id)) { currentItem.userRating = currentRating; w.push(currentItem); localStorage.setItem('butaca_watched', JSON.stringify(w)); }
-            removeItem(currentItem.type === 'movie' ? 'butaca_movies_gen' : 'butaca_series_gen', currentItem.id, false);
-            closeModals(); updateProfile(); renderSaved();
+        async function filterGenre(id, btn) {
+            currentGenre = id; pageHome = 1; document.getElementById('trending-grid').innerHTML = "";
+            document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+            btn.classList.add('active'); loadTrending();
         }
-        function confirmRemove() { removeItem(currentItem.type === 'movie' ? 'butaca_movies_gen' : 'butaca_series_gen', currentItem.id, false); closeModals(); }
-        function removeItem(key, id, fromFolder = false, folderIdx = 0) { 
-            if(fromFolder) { let lists = JSON.parse(localStorage.getItem(key)); lists[folderIdx].items = lists[folderIdx].items.filter(x => x.id !== id); localStorage.setItem(key, JSON.stringify(lists)); }
-            else { let list = JSON.parse(localStorage.getItem(key)) || []; localStorage.setItem(key, JSON.stringify(list.filter(x => x.id !== id))); }
-            renderSaved(); updateProfile();
+
+        async function loadTrending(isRand = false) {
+            loading = true; if(isRand) pageHome = Math.floor(Math.random() * 20) + 1;
+            let url = `https://api.themoviedb.org/3/trending/movie/day?api_key=${API_KEY}&language=es-ES&page=${pageHome}`;
+            if(currentGenre) url = `https://api.themoviedb.org/3/discover/movie?api_key=${API_KEY}&with_genres=${currentGenre}&language=es-ES&page=${pageHome}`;
+            const r = await fetch(url); const d = await r.json();
+            const saved = JSON.parse(localStorage.getItem('butaca_movies_gen')) || [];
+            d.results.forEach(m => { if(m.poster_path) {
+                const isS = saved.some(x => x.id === m.id);
+                document.getElementById('trending-grid').innerHTML += `<div class="card"><img src="https://image.tmdb.org/t/p/w500${m.poster_path}" onclick="openDetails(${m.id})"><div class="movie-title">${m.title}</div><button class="btn-mini ${isS?'btn-added':''}" style="margin:0 10px 10px; width:auto; background:${isS?'var(--verde)':'var(--rojo)'}" onclick="saveItem(this,'${m.title.replace(/'/g,"")}','${m.poster_path}',${m.id})">${isS?'AGREGADO':'+ AGREGAR'}</button></div>`;
+            }});
+            pageHome++; loading = false;
         }
-        function handleAutocomplete(q, resId, callback) { if(!q) return document.getElementById(resId).innerHTML = ""; fetch(`https://api.themoviedb.org/3/search/multi?api_key=${API_KEY}&query=${encodeURIComponent(q)}&language=es-ES`).then(r => r.json()).then(d => { document.getElementById(resId).innerHTML = d.results.slice(0, 5).map(m => `<div class="suggestion-item" onclick="selectSuggestion('${m.title || m.name}', '${resId}')">${m.title || m.name}</div>`).join(''); }); }
-        function selectSuggestion(val, resId) { const inputId = resId.includes('frames') ? 'frame-query' : 'main-query'; document.getElementById(inputId).value = val; document.getElementById(resId).innerHTML = ""; if(resId.includes('frames')) startSearchFrames(); else startSearch(); }
-        function switchView(id, el) { document.querySelectorAll('.view').forEach(v => v.classList.remove('active')); document.getElementById(id).classList.add('active'); document.querySelectorAll('.nav-item').forEach(i => i.classList.remove('active')); el.classList.add('active'); if(id.includes('movie') || id.includes('series')) renderSaved(); }
-        function switchHomeType(t, b) { currentType = t; pageHome = 1; document.getElementById('trending-grid').innerHTML = ""; document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active')); b.classList.add('active'); loadTrending(); }
-        function filterGenre(id, b) { currentGenre = id; pageHome = 1; document.getElementById('trending-grid').innerHTML = ""; document.querySelectorAll('.filter-btn').forEach(btn => btn.classList.remove('active')); b.classList.add('active'); loadTrending(); }
-        function openViewer(src) { currentViewerPath = src; document.getElementById('viewer-img').src = src; document.getElementById('viewer-modal').style.display = 'flex'; const path = src.split('/original')[1]; const favs = JSON.parse(localStorage.getItem('butaca_fav_frames')) || []; document.getElementById('viewer-fav-btn').classList.toggle('btn-added', favs.includes(path)); }
-        function closeViewer() { document.getElementById('viewer-modal').style.display = 'none'; }
-        function toggleViewerFav(forcedPath = null) { let path = forcedPath || currentViewerPath.split('/original')[1]; let favs = JSON.parse(localStorage.getItem('butaca_fav_frames')) || []; if(favs.includes(path)) favs = favs.filter(p => p !== path); else favs.push(path); localStorage.setItem('butaca_fav_frames', JSON.stringify(favs)); if(!forcedPath) document.getElementById('viewer-fav-btn').classList.toggle('btn-added', favs.includes(path)); updateProfile(); }
-        function uploadPhoto(input) { if (input.files[0]) { const r = new FileReader(); r.onload = (e) => { localStorage.setItem('butaca_custom_photo', e.target.result); localStorage.setItem('butaca_photo_settings', JSON.stringify({zoom:1, x:0, y:0})); updateProfile(); closeModals(); }; r.readAsDataURL(input.files[0]); } }
-        function applyPhotoAjust() { let s = JSON.parse(localStorage.getItem('butaca_photo_settings')) || {zoom:1, x:0, y:0}; s.zoom = document.getElementById('zoomRange').value; localStorage.setItem('butaca_photo_settings', JSON.stringify(s)); updateProfile(); }
-        function movePhoto(axis, val) { let s = JSON.parse(localStorage.getItem('butaca_photo_settings')) || {zoom:1, x:0, y:0}; s[axis] += val; localStorage.setItem('butaca_photo_settings', JSON.stringify(s)); updateProfile(); }
-        function openAvatarSelector() { const icons = ['🕵️','👽','🦸','🧛','🤖','🎬','👨‍🚀','👻','🍿','📽️']; document.getElementById('avatar-grid').innerHTML = icons.map(i => `<div style="font-size:30px; cursor:pointer;" onclick="localStorage.setItem('butaca_avatar','${i}'); localStorage.removeItem('butaca_custom_photo'); updateProfile(); closeModals();">${i}</div>`).join(""); document.getElementById('avatarModal').style.display = 'flex'; }
+
+        /* --- MOTOR DE FRAMES (SHOTDECK STYLE) --- */
+        async function loadFrames(isRand = false) {
+            loading = true; if(isRand) pageFrames = Math.floor(Math.random() * 30) + 1;
+            const r = await fetch(`https://api.themoviedb.org/3/trending/movie/week?api_key=${API_KEY}&page=${pageFrames}`);
+            const d = await r.json();
+            d.results.forEach(item => { if(item.backdrop_path) {
+                document.getElementById('frames-container').innerHTML += `<div class="card" style="border-radius:10px;"><img src="https://image.tmdb.org/t/p/w780${item.backdrop_path}" onclick="openFrameViewer('https://image.tmdb.org/t/p/original${item.backdrop_path}', '${item.title}')"><div style="background:#111; padding:8px; font-size:9px; text-align:center;">${item.title}</div></div>`;
+            }});
+            pageFrames++; loading = false;
+        }
+
+        function openFrameViewer(src, name) {
+            currentViewerPath = src; document.getElementById('viewer-img').src = src;
+            document.getElementById('viewer-name').innerText = name;
+            const favs = JSON.parse(localStorage.getItem('butaca_fav_frames')) || [];
+            updateFavBtnUI(favs.some(f => f.src === src));
+            document.getElementById('viewer-modal').style.display = 'flex';
+        }
+
+        function toggleViewerFav() {
+            let favs = JSON.parse(localStorage.getItem('butaca_fav_frames')) || [];
+            const idx = favs.findIndex(f => f.src === currentViewerPath);
+            if(idx > -1) { favs.splice(idx, 1); updateFavBtnUI(false); } 
+            else { favs.push({src: currentViewerPath, name: document.getElementById('viewer-name').innerText}); updateFavBtnUI(true); }
+            localStorage.setItem('butaca_fav_frames', JSON.stringify(favs)); updateProfile();
+        }
+
+        function updateFavBtnUI(isFav) {
+            const btn = document.getElementById('viewer-fav-btn');
+            btn.innerText = isFav ? "QUITAR DE MIS FAVORITOS" : "AGREGAR A FAVORITOS";
+            btn.style.background = isFav ? "var(--gris)" : "var(--verde)";
+        }
+
+        /* --- SYSTEM HELPERS --- */
+        async function startSearch() { 
+            querySearch = document.getElementById('main-query').value; 
+            pageSearch = 1; document.getElementById('search-grid').innerHTML = ""; 
+            document.getElementById('autocomplete-results').innerHTML = ""; 
+            searchUniversal(); 
+        }
+        async function searchUniversal() {
+            if(!querySearch) return; loading = true;
+            const r = await fetch(`https://api.themoviedb.org/3/search/movie?api_key=${API_KEY}&query=${encodeURIComponent(querySearch)}&language=es-ES&page=${pageSearch}`);
+            const d = await r.json();
+            d.results.forEach(m => { if(m.poster_path) document.getElementById('search-grid').innerHTML += `<div class="card"><img src="https://image.tmdb.org/t/p/w500${m.poster_path}" onclick="openDetails(${m.id})"><div class="movie-title">${m.title}</div><button class="btn-mini" style="margin:0 10px 10px; width:auto; background:var(--rojo)" onclick="saveItem(this,'${m.title.replace(/'/g,"")}','${m.poster_path}',${m.id})">+ AGREGAR</button></div>`; });
+            pageSearch++; loading = false;
+        }
+
+        function handleInfiniteScroll() {
+            if (loading) return;
+            if (window.innerHeight + window.scrollY >= document.body.offsetHeight - 800) {
+                const active = document.querySelector('.view.active').id;
+                if (active === 'view-home') loadTrending();
+                if (active === 'view-frames') loadFrames();
+            }
+        }
+
+        function updateProfile() {
+            const gen = (JSON.parse(localStorage.getItem('butaca_movies_gen')) || []).length;
+            const favs = JSON.parse(localStorage.getItem('butaca_fav_frames')) || [];
+            document.getElementById('p-name').innerText = localStorage.getItem('butaca_user') || "Usuario";
+            document.getElementById('stat-m-p').innerText = gen;
+            document.getElementById('fav-frames-container').innerHTML = favs.map(f => `<div class="card" style="aspect-ratio:1/1; position:relative;"><img src="${f.src}" onclick="openFrameViewer('${f.src}', '${f.name}')"></div>`).join("");
+        }
+
+        function triggerRatingFromMove() { closeModals(); currentRating = 0; document.querySelectorAll('#star-selector i').forEach(s => s.classList.remove('active')); document.getElementById('ratingModal').style.display = 'flex'; }
+        function setRating(v) { currentRating = v; document.querySelectorAll('#star-selector i').forEach((s,i) => s.classList.toggle('active', i < v)); }
+        function confirmSeen() { closeModals(); updateProfile(); }
+        function confirmRemove() { removeItem(isFromFolder ? 'butaca_lists' : 'butaca_movies_gen', currentItem.id, isFromFolder, sourceFolderIdx); closeModals(); }
+        function deleteFolder(idx) { if(confirm("¿Eliminar carpeta?")) { let l = JSON.parse(localStorage.getItem('butaca_lists')); l.splice(idx,1); localStorage.setItem('butaca_lists', JSON.stringify(l)); renderSaved(); } }
+        function openCreateListDialog() { document.getElementById('new-list-name').value = ""; document.getElementById('createListModal').style.display = 'flex'; }
+        function openCreateListDialogFromMove() { closeModals(); openCreateListDialog(); }
+        function confirmCreateList() { const n = document.getElementById('new-list-name').value; if(!n) return; let l = JSON.parse(localStorage.getItem('butaca_lists')) || []; l.push({name:n, items:[]}); localStorage.setItem('butaca_lists', JSON.stringify(l)); renderSaved(); closeModals(); }
+        function showFolderOptions() {
+            const lists = JSON.parse(localStorage.getItem('butaca_lists')) || [];
+            document.getElementById('list-options-container').innerHTML = lists.map((l, i) => `<button class="btn-action" style="background:#222; border:1px solid #444;" onclick="moveToFolder(${i})">${l.name}</button>`).join('');
+            document.getElementById('folder-options').style.display = 'block';
+        }
+        function handleAutocomplete(q, resId) { if(!q) return document.getElementById(resId).innerHTML = ""; fetch(`https://api.themoviedb.org/3/search/movie?api_key=${API_KEY}&query=${encodeURIComponent(q)}&language=es-ES`).then(r => r.json()).then(d => { document.getElementById(resId).innerHTML = d.results.slice(0, 5).map(m => `<div class="suggestion-item" onclick="document.getElementById('main-query').value='${m.title}'; startSearch();">${m.title}</div>`).join(''); }); }
+        function switchView(id, el) { 
+            document.querySelectorAll('.view').forEach(v => v.classList.remove('active')); document.getElementById(id).classList.add('active'); 
+            document.querySelectorAll('.nav-item').forEach(i => i.classList.remove('active')); el.classList.add('active');
+            if(id === 'view-movies') renderSaved(); 
+        }
         function closeModals() { document.querySelectorAll('.modal').forEach(m => m.style.display = 'none'); }
         function logout() { localStorage.clear(); location.reload(); }
     </script>
+    <input type="file" id="fileInput" hidden accept="image/*" onchange="const r = new FileReader(); r.onload=(e)=>{localStorage.setItem('butaca_custom_photo', e.target.result); location.reload();}; r.readAsDataURL(this.files[0]);">
 </body>
 </html>
