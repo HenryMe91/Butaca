@@ -3,147 +3,163 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-    <title>Butaca - Cine & Series</title>
-    
+    <title>Butaca Master Cut</title>
     <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2280%22>🎞️</text></svg>">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
-    
     <style>
         :root { --rojo: #e50914; --oro: #ffcc00; --fondo: #0a0a0a; --card: #181818; --azul: #0071eb; --verde: #46d369; --gris: #2f2f2f; }
         body { background: var(--fondo); color: white; font-family: 'Inter', sans-serif; margin: 0; padding-bottom: 110px; overflow-x: hidden; -webkit-tap-highlight-color: transparent; }
 
-        /* INTRO */
+        /* INTRO TICKET DORADO */
         #splash-screen { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: #000; display: flex; align-items: center; justify-content: center; z-index: 10000; transition: opacity 0.8s ease; }
         .intro-content { display: flex; align-items: center; gap: 15px; animation: cinematicIntro 2.5s ease-in-out forwards; }
         .intro-content i { color: var(--oro); font-size: 45px; filter: drop-shadow(0 0 10px rgba(255, 204, 0, 0.4)); }
         .intro-text { color: var(--rojo); font-size: 35px; font-weight: 900; letter-spacing: 5px; text-transform: uppercase; }
-        @keyframes cinematicIntro { 0% { transform: scale(0.8); opacity: 0; filter: blur(10px); } 40% { opacity: 1; filter: blur(0px); } 100% { transform: scale(1.1); opacity: 0; } }
+        @keyframes cinematicIntro { 0% { transform: scale(0.8); opacity: 0; filter: blur(5px); } 40% { opacity: 1; filter: blur(0px); } 100% { transform: scale(1.1); opacity: 0; } }
 
+        /* HEADER */
         header { padding: 18px; background: rgba(0,0,0,0.85); backdrop-filter: blur(10px); text-align: center; border-bottom: 1px solid rgba(255,255,255,0.05); position: sticky; top: 0; z-index: 100; }
         .logo-header { display: flex; align-items: center; justify-content: center; gap: 10px; }
         .logo-header i { color: var(--oro); font-size: 22px; }
-        .logo-header span { color: var(--rojo); font-size: 22px; font-weight: 900; letter-spacing: 2px; text-transform: uppercase; }
+        .logo-header span { color: var(--rojo); font-size: 22px; font-weight: 900; letter-spacing: 2px; }
 
         .view { display: none; padding: 20px; animation: fadeIn 0.4s; }
         .view.active { display: block; }
         @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
 
-        .type-selector { display: flex; background: rgba(255,255,255,0.03); margin: -20px -20px 20px; border-bottom: 1px solid var(--gris); }
+        /* SELECTORES & FILTROS */
+        .type-selector { display: flex; background: rgba(255,255,255,0.03); margin: -20px -20px 10px; border-bottom: 1px solid var(--gris); }
         .type-btn { flex: 1; padding: 15px; border: none; background: none; color: #555; font-size: 11px; font-weight: 700; text-transform: uppercase; cursor: pointer; border-bottom: 3px solid transparent; transition: 0.3s; }
         .type-btn.active { color: white; border-bottom-color: var(--rojo); }
+        .filter-bar { display: flex; gap: 10px; overflow-x: auto; padding: 10px 0 20px; margin: 0 -20px; padding-left: 20px; scrollbar-width: none; }
+        .filter-btn { background: var(--gris); color: #bbb; border: none; padding: 8px 18px; border-radius: 20px; font-size: 11px; white-space: nowrap; font-weight: 600; cursor: pointer; }
+        .filter-btn.active { background: white; color: black; }
 
+        /* CARDS */
         .grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 15px; }
-        .card { background: var(--card); border-radius: 12px; overflow: hidden; box-shadow: 0 4px 15px rgba(0,0,0,0.5); display: flex; flex-direction: column; }
+        .card { background: var(--card); border-radius: 12px; overflow: hidden; display: flex; flex-direction: column; }
         .card img { width: 100%; aspect-ratio: 2/3; object-fit: cover; cursor: pointer; }
-        .card-info { padding: 12px; text-align: center; flex-grow: 1; display: flex; flex-direction: column; justify-content: space-between; }
-        .movie-title { font-size: 11px; font-weight: 700; height: 32px; overflow: hidden; margin-bottom: 8px; line-height: 1.2; }
+        .movie-title { font-size: 10px; font-weight: 700; height: 32px; overflow: hidden; margin: 10px 5px; line-height: 1.2; text-align: center; }
 
-        .btn-action { background: var(--rojo); color: white; border: none; padding: 10px; border-radius: 8px; font-size: 10px; font-weight: 800; width: 100%; cursor: pointer; transition: 0.3s; text-decoration: none; display: block; text-align: center; }
-        .btn-added { background: var(--verde) !important; }
-
-        /* LISTAS DESPLEGABLES */
-        .collection-item { margin-bottom: 10px; border-radius: 12px; overflow: hidden; border: 1px solid #222; background: rgba(255,255,255,0.02); }
+        /* LISTAS (CARPETAS DE DOS NIVELES) */
+        .collection-item { margin-bottom: 10px; border-radius: 12px; overflow: hidden; background: rgba(255,255,255,0.02); border: 1px solid #222; }
         .collection-trigger { width: 100%; padding: 15px; background: none; border: none; color: var(--oro); font-weight: 800; font-size: 12px; text-align: left; display: flex; justify-content: space-between; align-items: center; cursor: pointer; }
-        .collection-content { display: none; background: #000; border-top: 1px solid #222; }
+        .collection-content { display: none; background: #000; padding: 10px; border-top: 1px solid #222; }
         .collection-item.open .collection-content { display: block; }
-        .sub-movie-item { border-bottom: 1px solid #111; }
-        .sub-movie-header { padding: 15px; font-size: 13px; font-weight: 600; display: flex; justify-content: space-between; align-items: center; }
-        .sub-movie-details { display: none; padding: 15px; background: #0a0a0a; animation: fadeIn 0.3s; }
-        .sub-movie-item.expanded .sub-movie-details { display: flex; gap: 15px; align-items: flex-start; }
-        .sub-movie-img { width: 70px; border-radius: 8px; }
+        .sub-movie-item { display: flex; align-items: center; gap: 10px; padding: 12px 0; border-bottom: 1px solid #111; }
+        .sub-movie-img { width: 45px; border-radius: 4px; }
 
-        /* FICHA TÉCNICA */
-        .crew-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 15px; text-align: left; background: rgba(255,255,255,0.03); padding: 12px; border-radius: 12px; }
-        .crew-item { font-size: 10px; }
-        .crew-role { color: #666; font-weight: 800; text-transform: uppercase; font-size: 8px; display: block; margin-bottom: 2px; }
-        .crew-name { color: white; font-weight: 600; }
+        /* FRAMES HD */
+        .frames-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; }
+        .frame-card { position: relative; border-radius: 8px; overflow: hidden; background: #111; aspect-ratio: 16/9; }
+        .frame-card img { width: 100%; height: 100%; object-fit: cover; cursor: zoom-in; }
+        .frame-label { position: absolute; bottom: 0; width: 100%; padding: 4px; background: linear-gradient(transparent, rgba(0,0,0,0.8)); font-size: 6px; font-weight: 700; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+        .fav-frame-btn { position: absolute; top: 5px; right: 5px; background: rgba(0,0,0,0.5); color: white; border: none; border-radius: 50%; width: 22px; height: 22px; display: flex; align-items: center; justify-content: center; font-size: 10px; cursor: pointer; backdrop-filter: blur(4px); }
+        .fav-frame-btn.active { color: var(--rojo); }
 
         /* PERFIL */
-        .profile-card { background: rgba(255,255,255,0.03); backdrop-filter: blur(15px); padding: 40px 20px; border-radius: 28px; text-align: center; border: 1px solid rgba(255,255,255,0.06); }
+        .profile-card { background: rgba(255,255,255,0.03); padding: 40px 20px; border-radius: 28px; text-align: center; border: 1px solid rgba(255,255,255,0.06); }
         .avatar-container-outer { position: relative; width: 110px; height: 110px; margin: 0 auto 15px; }
-        .user-avatar-big { width: 100%; height: 100%; background: #111; border-radius: 50%; border: 4px solid var(--rojo); display: flex; align-items: center; justify-content: center; font-size: 45px; position: relative; overflow: hidden; aspect-ratio: 1/1; cursor: pointer; }
+        .user-avatar-big { width: 100%; height: 100%; background: #111; border-radius: 50%; border: 4px solid var(--rojo); overflow: hidden; position: relative; display: flex; align-items: center; justify-content: center; font-size: 45px; cursor: pointer; }
         .user-avatar-big img { position: absolute; width: 100%; height: 100%; object-fit: cover; }
-        .edit-badge { position: absolute; bottom: 0; right: 0; background: var(--rojo); width: 28px; height: 28px; border-radius: 50%; display: flex; align-items: center; justify-content: center; border: 3px solid var(--fondo); z-index: 5; font-size: 12px; }
-
         .stats-grid-profile { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 25px; }
         .stat-box-profile { background: rgba(255,255,255,0.02); padding: 12px 5px; border-radius: 18px; border: 1px solid rgba(255,255,255,0.04); }
         .stat-num-profile { font-size: 20px; font-weight: 800; display: block; color: white; }
-        .stat-label-profile { font-size: 7px; color: #666; font-weight: 800; text-transform: uppercase; letter-spacing: 0.5px; }
+        .stat-label-profile { font-size: 7px; color: #666; font-weight: 800; text-transform: uppercase; }
 
+        /* FICHA TÉCNICA */
+        .crew-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin: 15px 0; text-align: left; background: rgba(255,255,255,0.03); padding: 12px; border-radius: 12px; }
+        .crew-item { font-size: 10px; }
+        .crew-role { color: #666; font-weight: 800; text-transform: uppercase; font-size: 8px; display: block; }
+
+        /* NAV */
         nav { position: fixed; bottom: 0; width: 100%; background: rgba(10,10,10,0.95); backdrop-filter: blur(10px); display: flex; justify-content: space-around; padding: 12px 0 35px; border-top: 1px solid #222; z-index: 1000; }
-        .nav-item { color: #555; text-align: center; font-size: 9px; font-weight: 700; flex: 1; cursor: pointer; }
+        .nav-item { color: #555; text-align: center; font-size: 8px; font-weight: 700; flex: 1; cursor: pointer; }
         .nav-item.active { color: var(--rojo); }
         .nav-item i { font-size: 20px; display: block; margin-bottom: 4px; }
 
-        input[type="text"] { width: 100%; padding: 15px; border-radius: 14px; border: 1px solid #333; background: #111; color: white; outline: none; box-sizing: border-box; }
-        input[type="range"] { width: 100%; accent-color: var(--rojo); margin: 10px 0; }
-
+        /* UTILS */
+        .btn-action { background: var(--rojo); color: white; border: none; padding: 10px; border-radius: 8px; font-size: 10px; font-weight: 800; width: 100%; cursor: pointer; transition: 0.3s; display: block; text-align: center; }
+        .btn-added { background: var(--verde) !important; }
+        input[type="text"], input[type="range"] { width: 100%; padding: 14px; border-radius: 14px; border: 1px solid #333; background: #111; color: white; outline: none; box-sizing: border-box; }
         .modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.9); z-index: 4000; justify-content: center; align-items: center; backdrop-filter: blur(8px); }
-        .modal-content { background: #1c1c1e; width: 85%; max-width: 350px; border-radius: 24px; padding: 25px; position: relative; overflow-y: auto; max-height: 85vh; border: 1px solid rgba(255,255,255,0.08); text-align: center; }
-        .close-x { position: absolute; top: 15px; right: 20px; font-size: 22px; color: #555; cursor: pointer; z-index: 10; }
-        .btn-opt { background: rgba(255,255,255,0.04); color: white; border: none; width: 100%; padding: 16px; border-radius: 14px; margin-bottom: 12px; font-weight: 700; text-align: left; display: flex; justify-content: space-between; align-items: center; cursor: pointer; }
+        .modal-content { background: #1c1c1e; width: 85%; max-width: 350px; border-radius: 24px; padding: 25px; text-align: center; overflow-y: auto; max-height: 85vh; border: 1px solid rgba(255,255,255,0.1); }
+        #viewer-modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: #000; z-index: 10000; justify-content: center; align-items: center; }
+        #viewer-modal img { max-width: 100%; max-height: 100%; object-fit: contain; }
     </style>
 </head>
 <body>
 
     <div id="splash-screen"><div class="intro-content"><i class="fas fa-ticket-alt"></i><div class="intro-text">BUTACA</div></div></div>
-    
     <header><div class="logo-header"><i class="fas fa-ticket-alt"></i><span>BUTACA</span></div></header>
+
+    <div id="viewer-modal"><span onclick="closeViewer()" style="position:absolute; top:30px; right:20px; color:white; font-size:35px; cursor:pointer; z-index: 10001;">&times;</span><img id="viewer-img" src=""></div>
 
     <div id="view-home" class="view active">
         <div class="type-selector">
             <button class="type-btn active" id="btn-h-movie" onclick="switchHomeType('movie', this)">Películas</button>
             <button class="type-btn" id="btn-h-tv" onclick="switchHomeType('tv', this)">Series</button>
         </div>
+        <div class="filter-bar">
+            <button class="filter-btn active" onclick="filterGenre(null, this)">Todo</button>
+            <button class="filter-btn" onclick="filterGenre(10751, this)">Familiar</button>
+            <button class="filter-btn" onclick="filterGenre(28, this)">Acción</button>
+            <button class="filter-btn" onclick="filterGenre(27, this)">Terror</button>
+            <button class="filter-btn" onclick="filterGenre(878, this)">Sci-Fi</button>
+        </div>
         <div id="trending-grid" class="grid"></div>
-    </div>
-
-    <div id="view-search" class="view">
-        <div style="display:flex; gap:10px; margin-bottom:20px; position: relative;">
-            <input type="text" id="query-input" list="sugerencias" placeholder="Buscar..." oninput="autoSuggest()" onkeydown="if(event.key==='Enter') searchContent()">
-            <datalist id="sugerencias"></datalist>
-            <button class="btn-action" style="width:auto; padding:0 20px;" onclick="searchContent()">IR</button>
-        </div>
-        <div id="search-results-box" style="display:none;">
-            <div class="type-selector">
-                <button class="type-btn active" id="search-movie-tab" onclick="switchSearchTab('movie')">Películas</button>
-                <button class="type-btn" id="search-tv-tab" onclick="switchSearchTab('tv')">Series</button>
-            </div>
-            <div id="search-grid-movie" class="grid"></div>
-            <div id="search-grid-tv" class="grid" style="display:none;"></div>
-        </div>
     </div>
 
     <div id="view-movies" class="view">
         <button class="btn-action" style="background:var(--gris); margin-bottom:20px;" onclick="createNewList('movie')">+ NUEVA LISTA PELIS</button>
         <div id="movies-collections"></div>
+        <h2 style="font-size:10px; color:#444; text-align:center; margin:20px 0;">Catálogo General</h2>
         <div id="saved-movies-grid" class="grid"></div>
     </div>
 
     <div id="view-series" class="view">
         <button class="btn-action" style="background:var(--gris); margin-bottom:20px;" onclick="createNewList('tv')">+ NUEVA LISTA SERIES</button>
         <div id="series-collections"></div>
+        <h2 style="font-size:10px; color:#444; text-align:center; margin:20px 0;">Catálogo General</h2>
         <div id="saved-series-grid" class="grid"></div>
+    </div>
+
+    <div id="view-frames" class="view">
+        <input type="text" id="frame-query" placeholder="Buscar frames (ej: Joker)..." onkeydown="if(event.key==='Enter') searchFrames()">
+        <div id="frames-container" class="frames-grid" style="margin-top:20px;"></div>
+        <div id="frames-loader" style="text-align:center; padding:20px; color:var(--rojo); display:none;"><i class="fas fa-spinner fa-spin"></i></div>
     </div>
 
     <div id="view-profile" class="view">
         <div class="profile-card">
-            <div class="avatar-container-outer">
-                <div class="user-avatar-big" onclick="openAvatarSelector()"><div id="current-p-avatar">🕵️</div></div>
-                <div class="edit-badge" onclick="openAvatarSelector()"><i class="fas fa-camera"></i></div>
+            <div class="avatar-container-outer" onclick="openAvatarSelector()">
+                <div class="user-avatar-big" id="current-p-avatar">🕵️</div>
+                <div style="position:absolute; bottom:0; right:0; background:var(--rojo); width:28px; height:28px; border-radius:50%; display:flex; align-items:center; justify-content:center; border:3px solid var(--fondo); font-size:12px;"><i class="fas fa-camera"></i></div>
             </div>
-            <div id="photo-edit-panel" style="display:none; margin-bottom:20px;">
+            
+            <div id="photo-edit-panel" style="display:none; margin: 15px 0;">
                 <input type="range" id="zoomRange" min="1" max="3" step="0.1" value="1" oninput="applyPhotoAjust()">
-                <div style="display:grid; grid-template-columns:1fr 1fr; gap:5px;"><button class="btn-action" style="background:#222" onclick="movePhoto('y', -5)">↑</button><button class="btn-action" style="background:#222" onclick="movePhoto('y', 5)">↓</button><button class="btn-action" style="background:#222" onclick="movePhoto('x', -5)">←</button><button class="btn-action" style="background:#222" onclick="movePhoto('x', 5)">→</button></div>
+                <div style="display:grid; grid-template-columns:repeat(4,1fr); gap:5px; margin-top:10px;">
+                    <button class="btn-action" style="background:#222" onclick="movePhoto('y', -5)">↑</button>
+                    <button class="btn-action" style="background:#222" onclick="movePhoto('y', 5)">↓</button>
+                    <button class="btn-action" style="background:#222" onclick="movePhoto('x', -5)">←</button>
+                    <button class="btn-action" style="background:#222" onclick="movePhoto('x', 5)">→</button>
+                </div>
             </div>
-            <h3 id="p-name" style="margin:0;">Usuario</h3>
-            <p id="p-rank" style="color:var(--oro); font-size:10px; font-weight:800; letter-spacing:2px; margin-top:5px; text-transform:uppercase;">ESPECTADOR</p>
+
+            <h3 id="p-name">Usuario</h3>
+            <p id="p-rank" style="color:var(--oro); font-size:10px; font-weight:800; text-transform:uppercase;">ESPECTADOR</p>
             
             <div class="stats-grid-profile">
-                <div class="stat-box-profile"><span class="stat-num-profile" id="stat-m-p">0</span><span class="stat-label-profile">Pelis Pend.</span></div>
-                <div class="stat-box-profile"><span class="stat-num-profile" id="stat-s-p">0</span><span class="stat-label-profile">Series Pend.</span></div>
-                <div class="stat-box-profile"><span class="stat-num-profile" id="stat-m-v">0</span><span class="stat-label-profile">Pelis Vistas</span></div>
-                <div class="stat-box-profile"><span class="stat-num-profile" id="stat-s-v">0</span><span class="stat-label-profile">Series Vistas</span></div>
+                <div class="stat-box-profile"><span class="stat-num-profile" id="stat-m-p">0</span><span class="stat-label-profile">PELIS PEND.</span></div>
+                <div class="stat-box-profile"><span class="stat-num-profile" id="stat-s-p">0</span><span class="stat-label-profile">SERIES PEND.</span></div>
+                <div class="stat-box-profile"><span class="stat-num-profile" id="stat-m-v">0</span><span class="stat-label-profile">PELIS VISTAS</span></div>
+                <div class="stat-box-profile"><span class="stat-num-profile" id="stat-s-v">0</span><span class="stat-label-profile">SERIES VISTAS</span></div>
+            </div>
+
+            <div style="margin-top:25px; text-align:left;">
+                <h4 style="font-size:10px; color:var(--oro); letter-spacing:1px; margin-bottom:10px;">REFERENCIAS FAVORITAS</h4>
+                <div id="fav-frames-container" class="frames-grid" style="grid-template-columns: repeat(4, 1fr);"></div>
             </div>
         </div>
         <button onclick="logout()" style="color:#444; background:none; border:none; width:100%; font-size:11px; margin-top:40px; font-weight:700;">CERRAR SESIÓN</button>
@@ -151,214 +167,262 @@
 
     <nav>
         <div class="nav-item active" onclick="switchView('view-home', this)"><i class="fas fa-home"></i>Inicio</div>
-        <div class="nav-item" onclick="switchView('view-search', this)"><i class="fas fa-search"></i>Buscar</div>
         <div class="nav-item" onclick="switchView('view-movies', this)"><i class="fas fa-film"></i>Pelis</div>
         <div class="nav-item" onclick="switchView('view-series', this)"><i class="fas fa-tv"></i>Series</div>
+        <div class="nav-item" onclick="switchView('view-frames', this)"><i class="fas fa-image"></i>Frames</div>
         <div class="nav-item" onclick="switchView('view-profile', this)"><i class="fas fa-user-alt"></i>Perfil</div>
     </nav>
 
     <div id="movieModal" class="modal"><div class="modal-content" id="modalBody"></div></div>
-    <div id="statusModal" class="modal"><div class="modal-content" id="status-content"></div></div>
-    <div id="moveModal" class="modal"><div class="modal-content"><span class="close-x" onclick="closeModals()">&times;</span><h3>¿A qué lista?</h3><div id="lists-options" style="margin-top:20px;"></div><button class="btn-action" style="background:var(--gris);" onclick="createNewListAndMove()">+ CREAR NUEVA LISTA</button></div></div>
-    <div id="avatarModal" class="modal"><div class="modal-content"><span class="close-x" onclick="closeModals()">&times;</span><h3>Avatar</h3><button class="btn-action" style="margin-bottom:20px;" onclick="document.getElementById('fileInput').click()">SUBIR FOTO</button><input type="file" id="fileInput" hidden accept="image/*" onchange="uploadPhoto(this)"><div id="avatar-grid" style="display:grid; grid-template-columns:repeat(3,1fr); gap:10px;"></div></div></div>
+    <div id="moveModal" class="modal"><div class="modal-content"><span class="close-x" onclick="closeModals()">&times;</span><h3>¿A qué lista?</h3><div id="lists-options" style="margin-top:20px;"></div><button class="btn-action" style="background:var(--gris); margin-top:10px;" onclick="createNewListAndMove()">+ NUEVA LISTA</button></div></div>
+    <div id="avatarModal" class="modal"><div class="modal-content"><span class="close-x" onclick="closeModals()">&times;</span><h3>Perfil</h3><button class="btn-action" style="margin-bottom:20px;" onclick="document.getElementById('fileInput').click()">SUBIR FOTO</button><input type="file" id="fileInput" hidden accept="image/*" onchange="uploadPhoto(this)"><div id="avatar-grid" style="display:grid; grid-template-columns:repeat(4,1fr); gap:10px; margin-top:15px;"></div></div></div>
 
     <script>
         const API_KEY = 'e7803f371057b32d0d0664e165bf78f1';
-        let currentType = 'movie', currentItem = null, photoAjust = { zoom: 1, x: 0, y: 0 };
+        let currentType = 'movie', currentGenre = null, currentItem = null, photoAjust = { zoom: 1, x: 0, y: 0 };
+        let framePage = 1, loadingFrames = false;
 
         window.onload = () => {
-            setTimeout(() => { document.getElementById('splash-screen').style.opacity = '0'; setTimeout(() => { document.getElementById('splash-screen').style.display = 'none'; }, 800); }, 2500);
-            loadTrending();
-            updateProfile();
+            setTimeout(() => { document.getElementById('splash-screen').style.display = 'none'; }, 2000);
+            loadTrending(); loadFrames(); updateProfile();
+            window.addEventListener('scroll', () => {
+                if(document.getElementById('view-frames').classList.contains('active')) {
+                    if((window.innerHeight + window.scrollY) >= document.body.offsetHeight - 800) loadFrames();
+                }
+            });
         };
 
+        /* --- MOTOR DE LISTAS & FICHA TÉCNICA --- */
         async function openDetails(type, id) {
             const [details, credits, videos] = await Promise.all([
                 fetch(`https://api.themoviedb.org/3/${type}/${id}?api_key=${API_KEY}&language=es-ES`).then(r => r.json()),
                 fetch(`https://api.themoviedb.org/3/${type}/${id}/credits?api_key=${API_KEY}`).then(r => r.json()),
                 fetch(`https://api.themoviedb.org/3/${type}/${id}/videos?api_key=${API_KEY}`).then(r => r.json())
             ]);
-
             const crew = credits.crew;
-            const director = crew.find(c => c.job === 'Director')?.name || 'No disponible';
-            const dop = crew.find(c => c.job === 'Director of Photography')?.name || 'No disponible';
-            const music = crew.find(c => c.job === 'Original Music Composer')?.name || 'No disponible';
-            const producer = crew.find(c => c.job === 'Executive Producer' || c.job === 'Producer')?.name || 'No disponible';
-
-            // LOGICA TRAILER DIRECTO: Forzamos la búsqueda de la versión latina en YouTube
-            const v = videos.results;
-            const tId = v.find(x => x.type === 'Trailer' && (x.name.toLowerCase().includes('latino') || x.name.toLowerCase().includes('español'))) || v.find(x => x.type === 'Trailer') || null;
+            const dir = crew.find(c => c.job === 'Director')?.name || 'N/A';
+            const dop = crew.find(c => c.job === 'Director of Photography')?.name || 'N/A';
+            const prod = crew.find(c => c.job === 'Executive Producer' || c.job === 'Producer')?.name || 'N/A';
+            const music = crew.find(c => c.job === 'Original Music Composer')?.name || 'N/A';
             
-            // Si el trailer no está explícitamente en latino en la DB, generamos el enlace de búsqueda "suertuda" de YouTube
-            const finalUrl = tId ? `https://www.youtube.com/watch?v=${tId.key}` : `https://www.youtube.com/results?search_query=${encodeURIComponent((details.title || details.name) + ' trailer oficial español latino subtitulado')}`;
+            const trailer = videos.results.find(v => v.site === 'YouTube' && (v.name.toLowerCase().includes('latino') || v.name.toLowerCase().includes('español'))) || videos.results[0];
+            const trailerUrl = trailer ? `https://www.youtube.com/watch?v=${trailer.key}` : `https://www.youtube.com/results?search_query=${encodeURIComponent(details.title || details.name + ' trailer oficial español latino')}`;
 
             document.getElementById('modalBody').innerHTML = `
                 <span class="close-x" onclick="closeModals()">&times;</span>
                 <img src="https://image.tmdb.org/t/p/w500${details.poster_path}" style="width:100%; border-radius:18px; margin-bottom:15px;">
-                <h3 style="margin-bottom:5px;">${details.title || details.name}</h3>
-                <p style="font-size:11px; color:#aaa; text-align:left; margin-bottom:15px;">${details.overview || 'Sin sinopsis.'}</p>
+                <h3>${details.title || details.name}</h3>
                 <div class="crew-grid">
-                    <div class="crew-item"><span class="crew-role">Dirección</span><span class="crew-name">${director}</span></div>
-                    <div class="crew-item"><span class="crew-role">Fotografía</span><span class="crew-name">${dop}</span></div>
-                    <div class="crew-item"><span class="crew-role">Música</span><span class="crew-name">${music}</span></div>
-                    <div class="crew-item"><span class="crew-role">Producción</span><span class="crew-name">${producer}</span></div>
+                    <div class="crew-item"><span class="crew-role">Dirección</span>${dir}</div>
+                    <div class="crew-item"><span class="crew-role">Fotografía</span>${dop}</div>
+                    <div class="crew-item"><span class="crew-role">Música</span>${music}</div>
+                    <div class="crew-item"><span class="crew-role">Producción</span>${prod}</div>
                 </div>
+                <p style="font-size:11px; color:#aaa; text-align:left; line-height:1.4;">${details.overview}</p>
                 <div style="display:grid; gap:10px; margin-top:20px;">
-                    <a href="${finalUrl}" target="_blank" class="btn-action" style="background:#ff0000; padding:12px;"><i class="fab fa-youtube"></i> VER TRÁILER EN YOUTUBE</a>
-                    <a href="https://api.whatsapp.com/send?text=${encodeURIComponent('Mira esta recomendación: ' + (details.title || details.name))}" target="_blank" class="btn-action" style="background:#25D366; padding:12px;"><i class="fab fa-whatsapp"></i> COMPARTIR</a>
+                    <a href="${trailerUrl}" target="_blank" class="btn-action" style="background:#ff0000; padding:12px;"><i class="fab fa-youtube"></i> VER TRÁILER EN YOUTUBE</a>
+                    <button class="btn-action" style="background:var(--verde)" onclick="markSeen(${details.id},'${type}','${(details.title||details.name).replace(/'/g,"")}','${details.poster_path}')">MARCAR COMO VISTA</button>
                 </div>
             `;
             document.getElementById('movieModal').style.display = 'flex';
         }
 
-        /* --- PERFIL --- */
-        function updateProfile() {
-            document.getElementById('p-name').innerText = localStorage.getItem('butaca_user') || "Usuario";
-            const watched = JSON.parse(localStorage.getItem('butaca_watched')) || [];
-            const mV = watched.filter(x => x.type === 'movie').length;
-            const sV = watched.filter(x => x.type === 'tv').length;
-            document.getElementById('stat-m-v').innerText = mV;
-            document.getElementById('stat-s-v').innerText = sV;
-
-            const mG = JSON.parse(localStorage.getItem('butaca_movies_gen')) || [], sG = JSON.parse(localStorage.getItem('butaca_series_gen')) || [];
-            const mL = JSON.parse(localStorage.getItem('butaca_lists_movie')) || [], sL = JSON.parse(localStorage.getItem('butaca_lists_tv')) || [];
-            let mP = mG.length; mL.forEach(l => mP += l.items.length);
-            let sP = sG.length; sL.forEach(l => sP += l.items.length);
-            document.getElementById('stat-m-p').innerText = mP;
-            document.getElementById('stat-s-p').innerText = sP;
-
-            let rank = "ESPECTADOR"; const total = mV + sV;
-            if(total > 5) rank = "CINÉFILO"; if(total > 15) rank = "CRÍTICO"; if(total > 30) rank = "DIRECTOR";
-            document.getElementById('p-rank').innerText = rank;
-            renderProfilePic();
-        }
-
-        /* --- FUNCIONES CORE --- */
-        async function autoSuggest() {
-            const q = document.getElementById('query-input').value;
-            if(q.length < 3) return;
-            const resp = await fetch(`https://api.themoviedb.org/3/search/multi?api_key=${API_KEY}&query=${encodeURIComponent(q)}&language=es-ES`);
-            const data = await resp.json();
-            document.getElementById('sugerencias').innerHTML = data.results.slice(0, 5).map(m => `<option value="${m.title || m.name}">`).join("");
-        }
-        async function searchContent() {
-            const q = document.getElementById('query-input').value; if(!q) return;
-            const resp = await fetch(`https://api.themoviedb.org/3/search/multi?api_key=${API_KEY}&query=${encodeURIComponent(q)}&language=es-ES`);
-            const data = await resp.json();
-            const gM = document.getElementById('search-grid-movie'), gT = document.getElementById('search-grid-tv');
-            gM.innerHTML = ""; gT.innerHTML = "";
-            data.results.forEach(m => {
-                if(!m.poster_path) return;
-                const card = document.createElement('div'); card.className = 'card';
-                card.innerHTML = `<img src="https://image.tmdb.org/t/p/w500${m.poster_path}" onclick="openDetails('${m.media_type}', ${m.id})"><div class="card-info"><div class="movie-title">${m.title || m.name}</div><button class="btn-action" onclick="saveItem(this, '${(m.title || m.name).replace(/'/g,"")}', '${m.poster_path}', ${m.id}, '${m.media_type}')">+ AGREGAR</button></div>`;
-                if(m.media_type === 'movie') gM.appendChild(card); else if(m.media_type === 'tv') gT.appendChild(card);
-            });
-            document.getElementById('search-results-box').style.display = "block";
-            switchSearchTab('movie');
-        }
-        function switchSearchTab(t) {
-            document.getElementById('search-grid-movie').style.display = t === 'movie' ? 'grid' : 'none';
-            document.getElementById('search-grid-tv').style.display = t === 'tv' ? 'grid' : 'none';
-            document.querySelectorAll('#search-results-box .type-btn').forEach(b => b.classList.toggle('active', (b.innerText.includes('Películas') && t === 'movie') || (b.innerText.includes('Series') && t === 'tv')));
-        }
-        async function loadTrending() {
-            const resp = await fetch(`https://api.themoviedb.org/3/trending/${currentType}/day?api_key=${API_KEY}&language=es-ES`);
-            const data = await resp.json();
-            const grid = document.getElementById('trending-grid'); grid.innerHTML = "";
-            data.results.forEach(m => {
-                const card = document.createElement('div'); card.className = 'card';
-                card.innerHTML = `<img src="https://image.tmdb.org/t/p/w500${m.poster_path}" onclick="openDetails('${currentType}', ${m.id})"><div class="card-info"><div class="movie-title">${m.title || m.name}</div><button class="btn-action" onclick="saveItem(this, '${(m.title || m.name).replace(/'/g,"")}', '${m.poster_path}', ${m.id}, '${currentType}')">+ AGREGAR</button></div>`;
-                grid.appendChild(card);
-            });
-        }
-        function saveItem(btn, t, p, id, type) { currentItem = {t, p, id, type}; openMoveToList(); btn.innerText = "✔️ AGREGADO"; btn.classList.add('btn-added'); }
-        function openMoveToList() {
-            const key = currentItem.type === 'tv' ? 'butaca_lists_tv' : 'butaca_lists_movie';
+        /* --- SISTEMA DE CARPETAS --- */
+        function saveItem(btn, t, p, id, type) {
+            currentItem = {t, p, id, type};
+            const key = type === 'tv' ? 'butaca_lists_tv' : 'butaca_lists_movie';
             const lists = JSON.parse(localStorage.getItem(key)) || [];
             const container = document.getElementById('lists-options'); container.innerHTML = "";
-            lists.forEach((l, i) => { container.innerHTML += `<button class="btn-opt" onclick="addItemToList(${i})">${l.name} <i class="fas fa-chevron-right"></i></button>`; });
-            container.innerHTML += `<button class="btn-opt" style="border:1px solid #333" onclick="addItemToGeneral()">Lista General</button>`;
+            lists.forEach((l, i) => { 
+                container.innerHTML += `<button class="btn-action" style="margin-bottom:10px; background:var(--gris)" onclick="addItemToList(${i})">${l.name}</button>`; 
+            });
+            container.innerHTML += `<button class="btn-action" style="background:#333" onclick="addItemToGeneral()">Lista General</button>`;
             document.getElementById('moveModal').style.display = 'flex';
+            btn.innerText = "✔️ AGREGADO"; btn.classList.add('btn-added');
         }
+
         function addItemToList(idx) {
             const key = currentItem.type === 'tv' ? 'butaca_lists_tv' : 'butaca_lists_movie';
             let lists = JSON.parse(localStorage.getItem(key));
-            lists[idx].items.push(currentItem);
+            if(!lists[idx].items.some(x => x.id === currentItem.id)) lists[idx].items.push(currentItem);
             localStorage.setItem(key, JSON.stringify(lists));
-            updateProfile(); closeModals();
+            closeModals(); updateProfile(); renderSaved();
         }
+
         function addItemToGeneral() {
             const key = currentItem.type === 'tv' ? 'butaca_series_gen' : 'butaca_movies_gen';
             let list = JSON.parse(localStorage.getItem(key)) || [];
-            list.push(currentItem); localStorage.setItem(key, JSON.stringify(list));
-            updateProfile(); closeModals();
+            if(!list.some(x => x.id === currentItem.id)) list.push(currentItem);
+            localStorage.setItem(key, JSON.stringify(list));
+            closeModals(); updateProfile(); renderSaved();
         }
+
         function createNewList(type) {
-            const n = prompt("Nombre:"); if(!n) return;
+            const n = prompt("Nombre de la carpeta:"); if(!n) return;
             const key = type === 'tv' ? 'butaca_lists_tv' : 'butaca_lists_movie';
             let lists = JSON.parse(localStorage.getItem(key)) || [];
-            lists.push({name: n, items: []}); localStorage.setItem(key, JSON.stringify(lists));
-            loadSaved();
+            lists.push({name: n, items: []});
+            localStorage.setItem(key, JSON.stringify(lists));
+            renderSaved();
         }
+
         function createNewListAndMove() {
-            const n = prompt("Nombre de la lista:"); if(!n) return;
+            const n = prompt("Nombre de la carpeta:"); if(!n) return;
             const key = currentItem.type === 'tv' ? 'butaca_lists_tv' : 'butaca_lists_movie';
             let lists = JSON.parse(localStorage.getItem(key)) || [];
-            lists.push({name: n, items: [currentItem]}); localStorage.setItem(key, JSON.stringify(lists));
-            updateProfile(); closeModals();
+            lists.push({name: n, items: [currentItem]});
+            localStorage.setItem(key, JSON.stringify(lists));
+            closeModals(); updateProfile(); renderSaved();
         }
-        function loadSaved() {
-            renderSection('movie', 'movies-collections', 'saved-movies-grid', 'butaca_lists_movie', 'butaca_movies_gen');
-            renderSection('tv', 'series-collections', 'saved-series-grid', 'butaca_lists_tv', 'butaca_series_gen');
+
+        /* --- PERFIL PRO MASTER --- */
+        function updateProfile() {
+            const mG = JSON.parse(localStorage.getItem('butaca_movies_gen')) || [], sG = JSON.parse(localStorage.getItem('butaca_series_gen')) || [];
+            const mL = JSON.parse(localStorage.getItem('butaca_lists_movie')) || [], sL = JSON.parse(localStorage.getItem('butaca_lists_tv')) || [];
+            const watched = JSON.parse(localStorage.getItem('butaca_watched')) || [];
+
+            let totalMP = mG.length; mL.forEach(l => totalMP += l.items.length);
+            let totalSP = sG.length; sL.forEach(l => totalSP += l.items.length);
+
+            document.getElementById('stat-m-p').innerText = totalMP;
+            document.getElementById('stat-s-p').innerText = totalSP;
+            document.getElementById('stat-m-v').innerText = watched.filter(x => x.type === 'movie').length;
+            document.getElementById('stat-s-v').innerText = watched.filter(x => x.type === 'tv').length;
+            
+            const custom = localStorage.getItem('butaca_custom_photo'), avatar = localStorage.getItem('butaca_avatar') || "🕵️", container = document.getElementById('current-p-avatar');
+            if(custom) {
+                const s = JSON.parse(localStorage.getItem('butaca_photo_settings')) || {zoom:1, x:0, y:0};
+                container.innerHTML = `<img src="${custom}" style="transform: scale(${s.zoom}) translate(${s.x}px, ${s.y}px)">`;
+                document.getElementById('photo-edit-panel').style.display = 'block';
+            } else {
+                container.innerHTML = avatar; document.getElementById('photo-edit-panel').style.display = 'none';
+            }
+
+            // Frames Favoritos en Perfil
+            const favs = JSON.parse(localStorage.getItem('butaca_fav_frames')) || [];
+            const favCont = document.getElementById('fav-frames-container'); favCont.innerHTML = "";
+            favs.forEach(path => {
+                favCont.innerHTML += `<div class="frame-card" style="aspect-ratio:1/1;"><img src="https://image.tmdb.org/t/p/w200${path}" onclick="openViewer('https://image.tmdb.org/t/p/original${path}')"></div>`;
+            });
         }
-        function renderSection(type, collId, genId, listKey, genKey) {
+
+        function uploadPhoto(input) {
+            if (input.files[0]) {
+                const r = new FileReader();
+                r.onload = (e) => {
+                    localStorage.setItem('butaca_custom_photo', e.target.result);
+                    localStorage.setItem('butaca_photo_settings', JSON.stringify({zoom:1, x:0, y:0}));
+                    updateProfile(); closeModals();
+                };
+                r.readAsDataURL(input.files[0]);
+            }
+        }
+        function applyPhotoAjust() {
+            let s = JSON.parse(localStorage.getItem('butaca_photo_settings')) || {zoom:1, x:0, y:0};
+            s.zoom = document.getElementById('zoomRange').value;
+            localStorage.setItem('butaca_photo_settings', JSON.stringify(s)); updateProfile();
+        }
+        function movePhoto(axis, val) {
+            let s = JSON.parse(localStorage.getItem('butaca_photo_settings')) || {zoom:1, x:0, y:0};
+            s[axis] += val; localStorage.setItem('butaca_photo_settings', JSON.stringify(s)); updateProfile();
+        }
+
+        /* --- FRAMES HD --- */
+        async function loadFrames() {
+            if(loadingFrames) return; loadingFrames = true;
+            document.getElementById('frames-loader').style.display = 'block';
+            const resp = await fetch(`https://api.themoviedb.org/3/trending/all/day?api_key=${API_KEY}&page=${framePage}`);
+            const data = await resp.json();
+            const container = document.getElementById('frames-container');
+            const favs = JSON.parse(localStorage.getItem('butaca_fav_frames')) || [];
+
+            data.results.forEach(item => { if(item.backdrop_path) {
+                const isF = favs.includes(item.backdrop_path);
+                container.innerHTML += `
+                    <div class="frame-card">
+                        <img src="https://image.tmdb.org/t/p/w780${item.backdrop_path}" onclick="openViewer('https://image.tmdb.org/t/p/original${item.backdrop_path}')">
+                        <button class="fav-frame-btn ${isF?'active':''}" onclick="toggleFavFrame('${item.backdrop_path}', this)"><i class="fas fa-heart"></i></button>
+                        <div class="frame-label">${item.title || item.name}</div>
+                    </div>`;
+            }});
+            framePage++; loadingFrames = false; document.getElementById('frames-loader').style.display = 'none';
+        }
+
+        function toggleFavFrame(path, btn) {
+            let favs = JSON.parse(localStorage.getItem('butaca_fav_frames')) || [];
+            if(favs.includes(path)) favs = favs.filter(p => p !== path);
+            else favs.push(path);
+            localStorage.setItem('butaca_fav_frames', JSON.stringify(favs));
+            btn.classList.toggle('active'); updateProfile();
+        }
+
+        /* --- CORE RENDER --- */
+        async function loadTrending() {
+            let url = `https://api.themoviedb.org/3/trending/${currentType}/day?api_key=${API_KEY}&language=es-ES`;
+            if(currentGenre) url = `https://api.themoviedb.org/3/discover/${currentType}?api_key=${API_KEY}&with_genres=${currentGenre}${currentGenre!==10751?'&without_genres=10751':''}&language=es-ES&sort_by=popularity.desc`;
+            const resp = await fetch(url); const data = await resp.json();
+            const grid = document.getElementById('trending-grid'); grid.innerHTML = "";
+            data.results.forEach(m => {
+                const card = document.createElement('div'); card.className = 'card';
+                card.innerHTML = `<img src="https://image.tmdb.org/t/p/w500${m.poster_path}" onclick="openDetails('${currentType}', ${m.id})"><div class="movie-title">${m.title || m.name}</div><button class="btn-action" style="border-radius:0" onclick="saveItem(this, '${(m.title || m.name).replace(/'/g,"")}', '${m.poster_path}', ${m.id}, '${currentType}')">+ AGREGAR</button>`;
+                grid.appendChild(card);
+            });
+        }
+
+        function renderSaved() {
+            renderSection('movie', 'movies-collections', 'saved-movies-grid', 'butaca_movies_gen', 'butaca_lists_movie');
+            renderSection('tv', 'series-collections', 'saved-series-grid', 'butaca_series_gen', 'butaca_lists_tv');
+        }
+
+        function renderSection(type, collId, genId, key, listKey) {
             const collCont = document.getElementById(collId), genCont = document.getElementById(genId);
             if(collCont) collCont.innerHTML = ""; if(genCont) genCont.innerHTML = "";
+            
+            // Render Carpetas
             const lists = JSON.parse(localStorage.getItem(listKey)) || [];
             lists.forEach((l, i) => {
                 let html = `<div class="collection-item" id="col-${type}-${i}"><button class="collection-trigger" onclick="toggleCollection('col-${type}-${i}')"><span><i class="fas fa-folder"></i> ${l.name} (${l.items.length})</span><i class="fas fa-chevron-down"></i></button><div class="collection-content">`;
-                l.items.forEach((item, itemIdx) => { html += `<div class="sub-movie-item" id="sub-${type}-${i}-${itemIdx}"><div class="sub-movie-header" onclick="expandMovie('sub-${type}-${i}-${itemIdx}')">${item.t} <i class="fas fa-chevron-right"></i></div><div class="sub-movie-details"><img src="https://image.tmdb.org/t/p/w500${item.p}" class="sub-movie-img"><div style="flex:1"><button class="btn-action" style="margin-bottom:8px" onclick="openDetails('${type}', ${item.id})">INFO</button><button class="btn-action" style="background:#333" onclick="markAsSeenDirect(${item.id}, '${type}', '${item.t.replace(/'/g,"")}', '${item.p}')">MARCAR VISTA</button><button class="btn-action" style="background:none; border:1px solid #333; color:#666; margin-top:5px" onclick="removeItem('${type}', ${i}, ${item.id})">QUITAR</button></div></div></div>`; });
+                l.items.forEach(item => { html += `<div class="sub-movie-item"><img src="https://image.tmdb.org/t/p/w200${item.p}" class="sub-movie-img"><span>${item.t}</span><button onclick="openDetails('${type}', ${item.id})" style="background:none; border:none; color:var(--rojo); margin-left:auto;"><i class="fas fa-info-circle"></i></button></div>`; });
                 collCont.innerHTML += html + `</div></div>`;
             });
-            const genList = JSON.parse(localStorage.getItem(genKey)) || [];
-            genList.forEach(m => {
-                const card = document.createElement('div'); card.className = 'card';
-                card.innerHTML = `<img src="https://image.tmdb.org/t/p/w500${m.p}" onclick="openDetails('${type}', ${m.id})"><div class="card-info"><div class="movie-title">${m.t}</div><button class="btn-action" style="background:#333" onclick="markAsSeenDirect(${m.id}, '${type}', '${m.t.replace(/'/g,"")}', '${m.p}')">MARCAR VISTA</button><button class="btn-action" style="background:var(--gris); margin-top:5px" onclick="removeItemGeneral('${type}', ${m.id})">QUITAR</button></div>`;
-                genCont.appendChild(card);
+            
+            // Render General
+            const list = JSON.parse(localStorage.getItem(key)) || [];
+            list.forEach(m => {
+                genCont.innerHTML += `<div class="card"><img src="https://image.tmdb.org/t/p/w500${m.p}" onclick="openDetails('${type}', ${m.id})"><div class="movie-title">${m.t}</div><button class="btn-action" style="background:#333; border-radius:0" onclick="removeItem('${key}', ${m.id})">QUITAR</button></div>`;
             });
         }
-        function markAsSeenDirect(id, type, t, p) {
-            let watched = JSON.parse(localStorage.getItem('butaca_watched')) || [];
-            if(!watched.some(m => m.id === id)) {
-                watched.push({id, type, t, p});
-                localStorage.setItem('butaca_watched', JSON.stringify(watched));
-                updateProfile(); alert("¡Añadida a vistas!");
-            }
-        }
-        function openAvatarSelector() {
-            const icons = ['🕵️','👽','🦸','🧛','🤖','🎬','👨‍🚀','👻','🍿','📽️'];
-            document.getElementById('avatar-grid').innerHTML = icons.map(i => `<div style="font-size:35px; padding:10px; cursor:pointer;" onclick="updateAvatar('${i}')">${i}</div>`).join("");
-            document.getElementById('avatarModal').style.display = 'flex';
-        }
-        function updateAvatar(icon) { localStorage.setItem('butaca_avatar', icon); localStorage.removeItem('butaca_custom_photo'); updateProfile(); closeModals(); }
-        function uploadPhoto(input) { if (input.files[0]) { const r = new FileReader(); r.onload = (e) => { localStorage.setItem('butaca_custom_photo', e.target.result); photoAjust = { zoom: 1, x: 0, y: 0 }; savePhotoSettings(); updateProfile(); closeModals(); }; r.readAsDataURL(input.files[0]); } }
-        function applyPhotoAjust() { const img = document.querySelector('#current-p-avatar img'); if(img) { photoAjust.zoom = document.getElementById('zoomRange').value; img.style.transform = `scale(${photoAjust.zoom}) translate(${photoAjust.x}px, ${photoAjust.y}px)`; savePhotoSettings(); } }
-        function movePhoto(axis, val) { photoAjust[axis] += val; applyPhotoAjust(); }
-        function savePhotoSettings() { localStorage.setItem('butaca_photo_settings', JSON.stringify(photoAjust)); }
-        function renderProfilePic() {
-            const custom = localStorage.getItem('butaca_custom_photo'), avatar = localStorage.getItem('butaca_avatar') || "🕵️", container = document.getElementById('current-p-avatar'), saved = JSON.parse(localStorage.getItem('butaca_photo_settings'));
-            if(saved) photoAjust = saved;
-            if(custom) { container.innerHTML = `<img src="${custom}" style="transform: scale(${photoAjust.zoom}) translate(${photoAjust.x}px, ${photoAjust.y}px)">`; document.getElementById('photo-edit-panel').style.display = 'block'; }
-            else { container.innerHTML = avatar; document.getElementById('photo-edit-panel').style.display = 'none'; }
-        }
+
+        function removeItem(key, id) { localStorage.setItem(key, JSON.stringify(JSON.parse(localStorage.getItem(key)).filter(x => x.id !== id))); renderSaved(); updateProfile(); }
+        function markSeen(id, type, t, p) { let w = JSON.parse(localStorage.getItem('butaca_watched')) || []; if(!w.some(x=>x.id===id)) { w.push({id, type, t, p}); localStorage.setItem('butaca_watched', JSON.stringify(w)); updateProfile(); alert("¡Vista!"); } }
+        function switchView(id, el) { document.querySelectorAll('.view').forEach(v => v.classList.remove('active')); document.getElementById(id).classList.add('active'); document.querySelectorAll('.nav-item').forEach(i => i.classList.remove('active')); el.classList.add('active'); if(id.includes('movie') || id.includes('series')) renderSaved(); }
+        function filterGenre(id, b) { currentGenre = id; document.querySelectorAll('.filter-btn').forEach(btn => btn.classList.remove('active')); b.classList.add('active'); loadTrending(); }
+        function switchHomeType(t, b) { currentType = t; document.querySelectorAll('#view-home .type-btn').forEach(btn => btn.classList.remove('active')); b.classList.add('active'); loadTrending(); }
         function toggleCollection(id) { document.getElementById(id).classList.toggle('open'); }
-        function expandMovie(id) { document.querySelectorAll('.sub-movie-item').forEach(x => { if(x.id !== id) x.classList.remove('expanded'); }); document.getElementById(id).classList.toggle('expanded'); }
-        function switchView(id, el) { document.querySelectorAll('.view').forEach(v => v.classList.remove('active')); document.getElementById(id).classList.add('active'); document.querySelectorAll('.nav-item').forEach(i => i.classList.remove('active')); el.classList.add('active'); if(id === 'view-movies' || id === 'view-series') loadSaved(); if(id === 'view-profile') updateProfile(); }
-        function switchHomeType(t, btn) { currentType = t; document.querySelectorAll('#view-home .type-btn').forEach(b => b.classList.remove('active')); btn.classList.add('active'); loadTrending(); }
-        function removeItem(type, listIdx, id) { const key = type === 'tv' ? 'butaca_lists_tv' : 'butaca_lists_movie'; let lists = JSON.parse(localStorage.getItem(key)); lists[listIdx].items = lists[listIdx].items.filter(m => m.id !== id); localStorage.setItem(key, JSON.stringify(lists)); loadSaved(); }
-        function removeItemGeneral(type, id) { const key = type === 'tv' ? 'butaca_series_gen' : 'butaca_movies_gen'; let list = JSON.parse(localStorage.getItem(key)); list = list.filter(m => m.id !== id); localStorage.setItem(key, JSON.stringify(list)); loadSaved(); }
+        function openViewer(src) { document.getElementById('viewer-img').src = src; document.getElementById('viewer-modal').style.display = 'flex'; }
+        function closeViewer() { document.getElementById('viewer-modal').style.display = 'none'; }
         function closeModals() { document.querySelectorAll('.modal').forEach(m => m.style.display = 'none'); }
         function logout() { localStorage.clear(); location.reload(); }
+        function openAvatarSelector() {
+            const icons = ['🕵️','👽','🦸','🧛','🤖','🎬','👨‍🚀','👻','🍿','📽️'];
+            document.getElementById('avatar-grid').innerHTML = icons.map(i => `<div style="font-size:25px; cursor:pointer;" onclick="localStorage.setItem('butaca_avatar','${i}'); localStorage.removeItem('butaca_custom_photo'); updateProfile(); closeModals();">${i}</div>`).join("");
+            document.getElementById('avatarModal').style.display = 'flex';
+        }
+        async function searchFrames() {
+            const q = document.getElementById('frame-query').value; if(!q) return;
+            const container = document.getElementById('frames-container'); container.innerHTML = "";
+            const resp = await fetch(`https://api.themoviedb.org/3/search/multi?api_key=${API_KEY}&query=${encodeURIComponent(q)}&language=es-ES`);
+            const data = await resp.json();
+            for(let item of data.results.slice(0, 3)) {
+                if(item.media_type !== 'person') {
+                    const imgResp = await fetch(`https://api.themoviedb.org/3/${item.media_type}/${item.id}/images?api_key=${API_KEY}`);
+                    const imgData = await imgResp.json();
+                    imgData.backdrops.slice(0, 9).forEach(img => {
+                        container.innerHTML += `<div class="frame-card"><img src="https://image.tmdb.org/t/p/original${img.file_path}" onclick="openViewer(this.src)"><div class="frame-label">${item.title || item.name}</div></div>`;
+                    });
+                }
+            }
+        }
     </script>
 </body>
 </html>
