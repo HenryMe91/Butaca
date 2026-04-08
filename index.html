@@ -8,7 +8,7 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <style>
         :root { --rojo: #e50914; --oro: #ffcc00; --fondo: #0a0a0a; --card: #181818; --azul: #0071eb; --verde: #46d369; --gris: #2a2a2a; --input-gris: #222; }
-        body { background: var(--fondo); color: white; font-family: 'Inter', sans-serif; margin: 0; padding-bottom: 110px; overflow-x: hidden; -webkit-tap-highlight-color: transparent; }
+        body { background: var(--fondo); color: white; font-family: 'Inter', sans-serif; margin: 0; padding-bottom: 120px; overflow-x: hidden; -webkit-tap-highlight-color: transparent; }
 
         /* SPLASH & LOGIN */
         #login-screen, #splash-screen { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: #000; display: flex; flex-direction: column; align-items: center; justify-content: center; z-index: 99999; }
@@ -25,7 +25,11 @@
         .view.active { display: block; }
         @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
 
-        /* FILTROS */
+        /* FILTROS STREAMING */
+        .platform-bar { display: flex; gap: 15px; overflow-x: auto; padding: 10px 0; margin: 0 -20px 10px; padding-left: 20px; scrollbar-width: none; }
+        .platform-icon { width: 45px; height: 45px; border-radius: 50%; object-fit: cover; cursor: pointer; border: 2px solid transparent; transition: 0.3s; filter: grayscale(0.7); flex-shrink: 0; }
+        .platform-icon.active { border-color: var(--oro); filter: grayscale(0); transform: scale(1.1); box-shadow: 0 0 15px rgba(255,204,0,0.4); }
+
         .filter-bar { display: flex; gap: 12px; overflow-x: auto; padding: 10px 0 20px; margin: 0 -20px; padding-left: 20px; scrollbar-width: none; }
         .filter-btn { background: var(--gris); color: #888; border: none; padding: 10px 22px; border-radius: 25px; font-size: 12px; font-weight: 700; cursor: pointer; white-space: nowrap; transition: 0.3s; }
         .filter-btn.active { background: white; color: black; box-shadow: 0 0 15px rgba(255,255,255,0.3); }
@@ -37,7 +41,7 @@
         .movie-title { font-size: 11px; font-weight: 700; height: 32px; overflow: hidden; margin: 10px 5px 5px; line-height: 1.2; text-align: center; }
         .rating-badge { position: absolute; top: 8px; left: 8px; background: rgba(0,0,0,0.85); padding: 4px 8px; border-radius: 6px; font-size: 10px; color: var(--oro); border: 1px solid var(--oro); z-index: 5; }
 
-        /* CARPETAS VERTICALES */
+        /* CARPETAS VERTICALES REORDENABLES */
         .abatible-item { background: #161616; border-radius: 14px; margin-bottom: 12px; border: 1px solid #222; overflow: hidden; }
         .abatible-trigger { width: 100%; padding: 15px; background: none; border: none; color: #eee; text-align: left; font-size: 14px; font-weight: 700; display: flex; justify-content: space-between; align-items: center; }
         .abatible-content { display: none; padding: 15px; background: #0b0b0b; border-top: 1px solid #222; flex-direction: column; gap: 15px; }
@@ -49,27 +53,30 @@
 
         /* FICHA TÉCNICA */
         .info-box { background: rgba(255,255,255,0.04); border-radius: 18px; padding: 18px; margin-top: 15px; text-align: left; border: 1px solid rgba(255,255,255,0.05); }
-        .info-section { margin-bottom: 15px; padding-bottom: 10px; border-bottom: 1px solid rgba(255,255,255,0.05); }
+        .info-section { margin-bottom: 15px; padding-bottom: 8px; border-bottom: 1px solid rgba(255,255,255,0.05); }
         .info-section:last-child { border: none; margin-bottom: 0; }
-        .info-title { color: var(--rojo); font-size: 10px; font-weight: 900; text-transform: uppercase; letter-spacing: 1.5px; margin-bottom: 4px; display: block; }
+        .info-title { color: var(--rojo); font-size: 10px; font-weight: 900; text-transform: uppercase; letter-spacing: 1.5px; margin-bottom: 6px; display: block; }
         .info-text { font-size: 14px; color: #eee; line-height: 1.5; }
+        .watch-providers { display: flex; gap: 8px; flex-wrap: wrap; margin: 10px 0; justify-content: center; }
+        .provider-icon { width: 35px; height: 35px; border-radius: 8px; border: 1px solid rgba(255,255,255,0.1); }
 
-        /* PERFIL */
+        /* PERFIL INTERACTIVO */
         .profile-card { background: linear-gradient(180deg, rgba(255,255,255,0.06) 0%, rgba(0,0,0,0) 100%); padding: 45px 20px; border-radius: 45px; text-align: center; border: 1px solid rgba(255,255,255,0.05); }
         .rank-tag { display: inline-block; padding: 6px 15px; background: var(--oro); color: black; border-radius: 20px; font-size: 10px; font-weight: 900; text-transform: uppercase; margin-bottom: 15px; border: 1px solid black; }
         .stats-xl { display: grid; grid-template-columns: repeat(2, 1fr); gap: 15px; margin-top: 25px; }
-        .stat-box-xl { background: rgba(255,255,255,0.04); padding: 25px 10px; border-radius: 20px; text-align: center; cursor: pointer; border: 1px solid rgba(255,255,255,0.05); }
+        .stat-box-xl { background: rgba(255,255,255,0.04); padding: 25px 10px; border-radius: 20px; text-align: center; cursor: pointer; transition: 0.2s; border: 1px solid rgba(255,255,255,0.05); }
         .stat-num-xl { font-size: 28px; font-weight: 900; color: var(--rojo); display: block; }
         .stat-label-xl { font-size: 11px; color: #888; text-transform: uppercase; font-weight: 800; }
 
-        /* NAV */
-        nav { position: fixed; bottom: 0; left: 0; right: 0; background: rgba(10,10,10,0.98); backdrop-filter: blur(25px); display: flex; justify-content: space-around; padding: 12px 0 35px; border-top: 1px solid #222; z-index: 50000; }
+        /* NAV BLINDADA */
+        nav { position: fixed; bottom: 0; left: 0; right: 0; width: 100%; background: rgba(10,10,10,0.98); backdrop-filter: blur(25px); display: flex; justify-content: space-around; padding: 12px 0 35px; border-top: 1px solid #222; z-index: 50000; box-sizing: border-box; }
         .nav-item { color: #555; text-align: center; font-size: 8px; font-weight: 800; flex: 1; cursor: pointer; }
-        .nav-item.active { color: var(--rojo); }
+        .nav-item.active { color: var(--rojo); transform: translateY(-2px); }
         .nav-item i { font-size: 22px; display: block; margin-bottom: 5px; }
 
         /* MODALES */
         .btn-action { background: var(--rojo); color: white; border: none; padding: 14px; border-radius: 12px; font-size: 11px; font-weight: 800; width: 100%; cursor: pointer; transition: 0.3s; display: block; text-align: center; text-decoration: none; box-sizing: border-box; }
+        .btn-added { background: var(--verde) !important; }
         .btn-mini { padding: 10px; font-size: 9px; font-weight: 800; border-radius: 8px; border: none; color: white; cursor: pointer; text-transform: uppercase; width: 100%; }
         .modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.96); z-index: 60000; justify-content: center; align-items: center; backdrop-filter: blur(15px); }
         .modal-content { background: #1c1c1e; width: 85%; max-width: 450px; border-radius: 35px; padding: 30px; text-align: center; overflow-y: auto; max-height: 85vh; border: 1px solid rgba(255,255,255,0.1); position: relative; }
@@ -97,12 +104,20 @@
         <span onclick="closeModals()" style="position:absolute; top:30px; right:20px; color:white; font-size:35px; cursor:pointer; z-index: 10;">&times;</span>
         <img id="viewer-img" src="" style="max-width:95%; max-height:60%; object-fit:contain; border-radius:12px; box-shadow: 0 0 50px rgba(0,0,0,1);">
         <div style="margin-top: 25px; display: flex; flex-direction: column; gap: 12px; align-items: center;">
-            <button class="btn-action" id="viewer-fav-btn" style="width:160px; padding:10px; font-size:9px; background:var(--gris); border:1px solid #444;" onclick="toggleViewerFav()">AGREGAR A FAVORITOS</button>
+            <button class="btn-action" id="viewer-fav-btn" style="width:160px; padding:10px; font-size:9px; background:var(--gris);" onclick="toggleViewerFav()">AGREGAR A FAVORITOS</button>
             <button class="btn-action" style="width:160px; padding:10px; font-size:9px; background:var(--azul);" onclick="setFrameAsAvatar()">SELECCIONAR COMO PERFIL</button>
         </div>
     </div>
 
     <div id="view-home" class="view active">
+        <div class="platform-bar" id="platform-container">
+            <img src="https://www.themoviedb.org/t/p/original/pTpxMqRbmvW6B6Gv0q6Ls4cyuht.jpg" class="platform-icon" onclick="filterPlatform(8, this)" title="Netflix">
+            <img src="https://www.themoviedb.org/t/p/original/dgPueS9ZpG7un0Y9T67D4noADNq.jpg" class="platform-icon" onclick="filterPlatform(337, this)" title="Disney+">
+            <img src="https://www.themoviedb.org/t/p/original/8O967YvUCuS7vXvS9S0p34ThC9W.jpg" class="platform-icon" onclick="filterPlatform(1899, this)" title="Max">
+            <img src="https://www.themoviedb.org/t/p/original/em98W59vM29X39WPTY7T7mve6Z7.jpg" class="platform-icon" onclick="filterPlatform(119, this)" title="Prime Video">
+            <img src="https://www.themoviedb.org/t/p/original/69ST68p9l16S6vOa0v43G6yR5iB.jpg" class="platform-icon" onclick="filterPlatform(350, this)" title="Apple TV+">
+            <img src="https://www.themoviedb.org/t/p/original/7rwSULjt0m268799S99p9t9Y99.jpg" class="platform-icon" onclick="filterPlatform(531, this)" title="Paramount+">
+        </div>
         <div class="filter-bar"><div id="filter-container" style="display:flex; gap:12px;"></div></div>
         <div id="trending-grid" class="grid"></div>
     </div>
@@ -127,7 +142,7 @@
 
     <div id="view-frames" class="view">
         <div class="search-wrapper" style="margin-bottom: 25px; display: flex; gap: 10px;">
-            <input type="text" id="frame-query" placeholder="Fotogramas de..." onkeydown="if(event.key==='Enter') searchFrames()">
+            <input type="text" id="frame-query" placeholder="Fotogramas (ej: Joker)" onkeydown="if(event.key==='Enter') searchFrames()">
             <button class="btn-action" style="width:auto; padding:0 20px;" onclick="searchFrames()">IR</button>
         </div>
         <div id="frames-container" class="grid"></div>
@@ -137,7 +152,7 @@
         <div class="profile-card">
             <div id="current-p-avatar" style="width:120px; height:120px; margin:0 auto; background:#111; border-radius:50%; border:3px solid var(--rojo); overflow:hidden; display:flex; align-items:center; justify-content:center; font-size:45px;" onclick="document.getElementById('fileInput').click()">🕵️</div>
             <h3 id="p-name" style="font-size: 32px; font-weight: 900; margin: 15px 0;">Usuario</h3>
-            <div id="rank-display" class="user-rank-box"></div>
+            <div id="rank-display"></div>
             <div class="stats-xl">
                 <div class="stat-box-xl" onclick="openTextList('por_ver', 'Películas Por Ver')">
                     <span class="stat-num-xl" id="stat-m-p">0</span>
@@ -190,7 +205,7 @@
     <div id="ratingModal" class="modal">
         <div class="modal-content">
             <span class="close-x" onclick="closeModals()">&times;</span>
-            <h3>¿Qué te pareció?</h3>
+            <h3>Calificar</h3>
             <div class="rating-stars" id="star-selector">
                 <i class="fas fa-star" onclick="setRating(1)"></i><i class="fas fa-star" onclick="setRating(2)"></i><i class="fas fa-star" onclick="setRating(3)"></i><i class="fas fa-star" onclick="setRating(4)"></i><i class="fas fa-star" onclick="setRating(5)"></i>
             </div>
@@ -208,15 +223,14 @@
 
     <script>
         const API_KEY = 'e7803f371057b32d0d0664e165bf78f1';
-        let currentGenre = null, currentItem = null, currentRating = 0;
+        let currentGenre = null, currentPlatform = null, currentItem = null, currentRating = 0;
         let pageHome = 1, pageSearch = 1, pageFrames = 1, loading = false, querySearch = "", currentViewerPath = "";
-        let isFromFolder = false, sourceFolderIdx = -1, openFolders = [];
-        let userID = ""; // Llave basada en el correo
+        let isFromFolder = false, sourceFolderIdx = -1, openFolders = [], userID = "";
 
         window.onload = () => {
             const savedEmail = localStorage.getItem('butaca_active_email');
             if(savedEmail) {
-                userID = btoa(savedEmail).replace(/=/g, ""); // Hash simple
+                userID = btoa(savedEmail).replace(/=/g, "");
                 document.getElementById('login-screen').style.display = 'none';
                 startIntro();
             }
@@ -227,17 +241,14 @@
         function handleLogin() {
             const name = document.getElementById('user-input').value;
             const email = document.getElementById('email-input').value;
-            if(!name || !email) return alert("Ingresa nombre y correo");
-            
+            if(!name || !email) return alert("Nombre y correo requeridos");
             localStorage.setItem('butaca_active_email', email);
             localStorage.setItem('butaca_user_' + btoa(email).replace(/=/g, ""), name);
             userID = btoa(email).replace(/=/g, "");
-            
             document.getElementById('login-screen').style.display = 'none';
             startIntro();
         }
 
-        // Helper para obtener datos del usuario actual
         function uData(key) { return JSON.parse(localStorage.getItem(`butaca_${key}_${userID}`)) || []; }
         function setUData(key, val) { localStorage.setItem(`butaca_${key}_${userID}`, JSON.stringify(val)); }
 
@@ -245,6 +256,15 @@
             document.getElementById('splash-screen').style.display = 'flex';
             setTimeout(() => { document.getElementById('splash-screen').style.display = 'none'; }, 2200);
             loadTrending(true); updateProfile(); loadFrames(true);
+        }
+
+        /* --- STREAMING FILTER --- */
+        async function filterPlatform(id, img) {
+            document.querySelectorAll('.platform-icon').forEach(i => i.classList.remove('active'));
+            if(currentPlatform === id) { currentPlatform = null; } 
+            else { currentPlatform = id; img.classList.add('active'); }
+            pageHome = 1; document.getElementById('trending-grid').innerHTML = "";
+            loadTrending();
         }
 
         async function openDetails(id) {
@@ -255,7 +275,7 @@
             ]);
             const providers = watch.results?.CL?.flatrate || [];
             const isSaved = uData('movies_gen').some(x => x.id === id);
-            const platformNames = providers.map(p => p.provider_name).join(', ') || 'Solo en Cines';
+            const pNames = providers.map(p => p.provider_name).join(', ') || 'Solo en Cines';
 
             document.getElementById('modalBody').innerHTML = `
                 <span class="close-x" onclick="closeModals()">&times;</span>
@@ -264,10 +284,14 @@
                 <div class="watch-providers">${providers.map(p => `<img class="provider-icon" src="https://image.tmdb.org/t/p/original${p.logo_path}" title="${p.provider_name}">`).join('') || '<p style="font-size:10px; color:#555">Disponible solo en Cines</p>'}</div>
                 <div class="info-box">
                     <div class="info-section"><span class="info-title">Sinopsis</span><p class="info-text">${details.overview || 'N/A'}</p></div>
-                    <div class="info-section"><span class="info-title">Producción</span><p class="info-text"><b>Dir:</b> ${credits.crew.find(c => c.job === 'Director')?.name || 'N/A'}<br><b>Cast:</b> ${credits.cast.slice(0,3).map(a=>a.name).join(", ")}</p></div>
+                    <div class="info-section">
+                        <span class="info-title">Producción</span>
+                        <p class="info-text"><b>Director:</b> ${credits.crew.find(c => c.job === 'Director')?.name || 'N/A'}<br><b>Música:</b> ${credits.crew.find(c => c.job.includes('Music'))?.name || 'N/A'}</p>
+                    </div>
+                    <div class="info-section"><span class="info-title">Cast</span><p class="info-text">${credits.cast.slice(0,5).map(a=>a.name).join(", ")}</p></div>
                 </div>
-                <div style="display:flex; gap:10px; margin-top:20px;">
-                    <a href="https://api.whatsapp.com/send?text=${encodeURIComponent('🎬 RECOMENDACIÓN BUTACA\n\n*' + details.title + '*\n\n' + (details.overview || '') + '\n\n📺 Ver en: ' + platformNames + '\n\n🖼️ ' + 'https://image.tmdb.org/t/p/w500' + details.poster_path)}" target="_blank" class="btn-action" style="flex:1; background:#25D366; display: flex; align-items: center; justify-content: center; height: 50px;"><i class="fab fa-whatsapp" style="font-size: 24px;"></i></a>
+                <div style="display:flex; gap:10px; margin-top:20px; align-items: stretch;">
+                    <a href="https://api.whatsapp.com/send?text=${encodeURIComponent('🎬 RECOMENDACIÓN BUTACA\n\n*' + details.title + '*\n\n' + (details.overview || '') + '\n\n📺 Ver en: ' + pNames + '\n\n🖼️ ' + 'https://image.tmdb.org/t/p/w500' + details.poster_path)}" target="_blank" class="btn-action" style="flex:1; background:#25D366; display: flex; align-items: center; justify-content: center; height: 50px;"><i class="fab fa-whatsapp" style="font-size: 24px;"></i></a>
                     <button class="btn-action" id="btn-add-${id}" style="flex:1; background:${isSaved ? 'var(--verde)' : 'var(--rojo)'}; height: 50px;" onclick="saveItem(this,'${details.title.replace(/'/g,"")}','${details.poster_path}',${id})">${isSaved ? 'AGREGADO' : '+ AGREGAR'}</button>
                 </div>`;
             document.getElementById('movieModal').style.display = 'flex';
@@ -297,6 +321,7 @@
                             <button class="btn-order" onclick="moveItemInFolder(${i}, ${idx}, -1, event)"><i class="fas fa-chevron-up"></i></button>
                             <button class="btn-order" onclick="moveItemInFolder(${i}, ${idx}, 1, event)"><i class="fas fa-chevron-down"></i></button>
                         </div>
+                        ${item.rating > 0 ? `<div class="rating-badge">⭐ ${item.rating}</div>` : ''}
                         <img src="https://image.tmdb.org/t/p/w200${item.p}" class="abatible-poster" onclick="openDetails(${item.id})">
                         <div class="abatible-actions">
                             <span style="font-size:13px; font-weight:800; text-align:left;">${item.t} ${item.rating > 0 ? '⭐'+item.rating : ''} ${item.watched ? '✅':''}</span>
@@ -309,8 +334,7 @@
                 coll.innerHTML += html;
             });
 
-            const gen = uData('movies_gen');
-            gen.forEach(m => {
+            uData('movies_gen').forEach(m => {
                 grid.innerHTML += `<div class="card">
                     ${m.rating > 0 ? `<div class="rating-badge">⭐ ${m.rating}</div>` : ''}
                     ${m.watched ? `<div class="rating-badge" style="left:auto; right:8px; border-color:var(--verde); color:var(--verde);">VISTA</div>` : ''}
@@ -332,10 +356,9 @@
         function moveItemInFolder(fIdx, iIdx, dir, event) {
             event.stopPropagation();
             let lists = uData('lists');
-            let items = lists[fIdx].items;
             let target = iIdx + dir;
-            if (target >= 0 && target < items.length) {
-                [items[iIdx], items[target]] = [items[target], items[iIdx]];
+            if (target >= 0 && target < lists[fIdx].items.length) {
+                [lists[fIdx].items[iIdx], lists[fIdx].items[target]] = [lists[fIdx].items[target], lists[fIdx].items[iIdx]];
                 setUData('lists', lists);
                 renderSaved();
             }
@@ -345,12 +368,10 @@
             const source = fromFolder ? uData('lists')[folderIdx].items : uData('movies_gen');
             const movie = source.find(x => x.id === id);
             currentItem = movie; isFromFolder = fromFolder; sourceFolderIdx = folderIdx;
-            
             const btnMark = document.getElementById('btn-mark-watched');
-            btnMark.innerText = currentItem.watched ? "YA LA VISTE" : "🎬 MARCAR COMO VISTA";
+            btnMark.innerText = currentItem.watched ? "YA LA VISTE" : "🎬 MARCADA COMO VISTA";
             btnMark.style.background = currentItem.watched ? "var(--oro)" : "var(--azul)";
             btnMark.style.color = currentItem.watched ? "black" : "white";
-
             document.getElementById('btn-return-general').style.display = fromFolder ? 'block' : 'none';
             document.getElementById('folder-options').style.display = 'none';
             document.getElementById('listMoveModal').style.display = 'flex';
@@ -358,16 +379,15 @@
 
         function markAsWatched() {
             currentItem.watched = !currentItem.watched;
-            if(isFromFolder) {
-                let lists = uData('lists');
-                lists[sourceFolderIdx].items.find(x => x.id === currentItem.id).watched = currentItem.watched;
-                setUData('lists', lists);
-            } else {
-                let gen = uData('movies_gen');
-                gen.find(x => x.id === currentItem.id).watched = currentItem.watched;
-                setUData('movies_gen', gen);
-            }
-            openMoveDialog(currentItem.id, currentItem.t, currentItem.p, isFromFolder, sourceFolderIdx);
+            const listKey = isFromFolder ? 'lists' : 'movies_gen';
+            let source = uData(listKey);
+            if(isFromFolder) source[sourceFolderIdx].items.find(x => x.id === currentItem.id).watched = currentItem.watched;
+            else source.find(x => x.id === currentItem.id).watched = currentItem.watched;
+            setUData(listKey, source);
+            const btnMark = document.getElementById('btn-mark-watched');
+            btnMark.innerText = currentItem.watched ? "YA LA VISTE" : "🎬 MARCADA COMO VISTA";
+            btnMark.style.background = currentItem.watched ? "var(--oro)" : "var(--azul)";
+            btnMark.style.color = currentItem.watched ? "black" : "white";
             renderSaved(); updateProfile();
         }
 
@@ -384,12 +404,8 @@
         function moveToFolder(idx) {
             let lists = uData('lists');
             lists[idx].items.push(currentItem);
-            if(isFromFolder) {
-                lists[sourceFolderIdx].items = lists[sourceFolderIdx].items.filter(x => x.id !== currentItem.id);
-            } else {
-                let gen = uData('movies_gen');
-                setUData('movies_gen', gen.filter(x => x.id !== currentItem.id));
-            }
+            if(isFromFolder) lists[sourceFolderIdx].items = lists[sourceFolderIdx].items.filter(x => x.id !== currentItem.id);
+            else setUData('movies_gen', uData('movies_gen').filter(x => x.id !== currentItem.id));
             setUData('lists', lists);
             renderSaved();
         }
@@ -407,13 +423,14 @@
 
         async function loadTrending(isRand = false) {
             loading = true; if(isRand) pageHome = Math.floor(Math.random() * 50) + 1;
-            let url = `https://api.themoviedb.org/3/discover/movie?api_key=${API_KEY}&language=es-ES&page=${pageHome}&sort_by=popularity.desc`;
-            if(currentGenre) url = `https://api.themoviedb.org/3/discover/movie?api_key=${API_KEY}&with_genres=${currentGenre}&language=es-ES&page=${pageHome}`;
+            let url = `https://api.themoviedb.org/3/discover/movie?api_key=${API_KEY}&language=es-ES&page=${pageHome}&watch_region=CL&sort_by=popularity.desc`;
+            if(currentGenre) url += `&with_genres=${currentGenre}`;
+            if(currentPlatform) url += `&with_watch_providers=${currentPlatform}`;
             const r = await fetch(url); const d = await r.json();
             const saved = uData('movies_gen');
             d.results.forEach(m => { if(m.poster_path) {
                 const isS = saved.some(x => x.id === m.id);
-                document.getElementById('trending-grid').innerHTML += `<div class="card"><img src="https://image.tmdb.org/t/p/w500${m.poster_path}" onclick="openDetails(${m.id})"><div class="movie-title">${m.title}</div><button class="btn-mini" style="margin:0 10px 10px; width:auto; background:${isS?'var(--verde)':'var(--rojo)'}" onclick="saveItem(this,'${m.title.replace(/'/g,"")}','${m.poster_path}',${m.id})">${isS?'AGREGADO':'+ AGREGAR'}</button></div>`;
+                document.getElementById('trending-grid').innerHTML += `<div class="card"><img src="https://image.tmdb.org/t/p/w500${m.poster_path}" onclick="openDetails(${m.id})"><div class="movie-title">${m.title}</div><button class="btn-mini ${isS?'btn-added':''}" style="margin:0 10px 10px; width:auto; background:${isS?'var(--verde)':'var(--rojo)'}" onclick="saveItem(this,'${m.title.replace(/'/g,"")}','${m.poster_path}',${m.id})">${isS?'AGREGADO':'+ AGREGAR'}</button></div>`;
             }});
             pageHome++; loading = false;
         }
@@ -431,8 +448,7 @@
         function openFrameViewer(src) {
             currentViewerPath = src; document.getElementById('viewer-img').src = src;
             const favs = uData('fav_frames');
-            const isF = favs.some(f => f.src === src);
-            document.getElementById('viewer-fav-btn').innerText = isF ? "QUITAR DE FAVORITOS" : "AGREGAR A FAVORITOS";
+            document.getElementById('viewer-fav-btn').innerText = favs.some(f => f.src === src) ? "QUITAR DE MIS FAVORITOS" : "AGREGAR A FAVORITOS";
             document.getElementById('viewer-modal').style.display = 'flex';
         }
 
@@ -440,22 +456,18 @@
             let favs = uData('fav_frames');
             const idx = favs.findIndex(f => f.src === currentViewerPath);
             if(idx > -1) favs.splice(idx, 1); else favs.push({src: currentViewerPath});
-            setUData('fav_frames', favs);
-            closeModals(); updateProfile();
+            setUData('fav_frames', favs); closeModals(); updateProfile();
         }
 
-        function setFrameAsAvatar() {
-            localStorage.setItem(`butaca_photo_${userID}`, currentViewerPath);
-            closeModals(); updateProfile();
-        }
+        function setFrameAsAvatar() { localStorage.setItem(`butaca_photo_${userID}`, currentViewerPath); closeModals(); updateProfile(); }
 
         function openTextList(type, title) {
+            const modal = document.getElementById('textListModal');
             const container = document.getElementById('text-list-container');
             document.getElementById('text-list-title').innerText = title;
             let titles = [];
             const gen = uData('movies_gen');
             const lists = uData('lists');
-
             if(type === 'por_ver') {
                 gen.filter(m => !m.watched).forEach(m => titles.push(m.t));
                 lists.forEach(l => l.items.filter(m => !m.watched).forEach(m => titles.push(m.t)));
@@ -463,52 +475,51 @@
                 gen.filter(m => m.watched).forEach(m => titles.push(m.t));
                 lists.forEach(l => l.items.filter(m => m.watched).forEach(m => titles.push(m.t)));
             }
-            container.innerHTML = titles.length > 0 ? titles.map((t, i) => `<b>${i+1}.</b> ${t}`).join('<br>') : "Vacío.";
-            document.getElementById('textListModal').style.display = 'flex';
+            container.innerHTML = titles.length > 0 ? titles.map((t, i) => `<b>${i+1}.</b> ${t}`).join('<br>') : "No hay títulos registrados.";
+            modal.style.display = 'flex';
         }
 
         function updateProfile() {
-            const gen = uData('movies_gen');
-            const lists = uData('lists');
+            const gen = uData('movies_gen'); const lists = uData('lists');
             const porVer = gen.filter(m => !m.watched).length + lists.reduce((a,b)=> a + b.items.filter(x => !x.watched).length, 0);
             const vistas = gen.filter(m => m.watched).length + lists.reduce((a,b)=> a + b.items.filter(x => x.watched).length, 0);
             const calif = gen.filter(m => m.rating > 0).length + lists.reduce((a,b)=> a + b.items.filter(x => x.rating > 0).length, 0);
-            
             document.getElementById('p-name').innerText = localStorage.getItem(`butaca_user_${userID}`) || "Usuario";
             document.getElementById('stat-m-p').innerText = porVer;
             document.getElementById('stat-m-v').innerText = vistas;
-            
             let rank = calif > 50 ? "MAESTRO" : calif > 20 ? "DIRECTOR" : calif > 10 ? "CRÍTICO" : calif > 5 ? "CINÉFILO" : "ESPECTADOR";
             document.getElementById('rank-display').innerHTML = `<span class="rank-tag">${rank}</span>`;
-            
             const favs = uData('fav_frames');
             document.getElementById('fav-frames-container').innerHTML = favs.map(f => `<div class="card" style="aspect-ratio:1/1;"><img src="${f.src}" onclick="openFrameViewer('${f.src}')"></div>`).join("");
             const photo = localStorage.getItem(`butaca_photo_${userID}`);
             if(photo) document.getElementById('current-p-avatar').innerHTML = `<img src="${photo}" style="width:100%; height:100%; object-fit:cover;">`;
         }
 
-        async function startSearch() { querySearch = document.getElementById('main-query').value; pageSearch = 1; document.getElementById('search-grid').innerHTML = ""; document.getElementById('autocomplete-results').innerHTML = ""; searchUniversal(); }
-        async function searchUniversal() {
-            if(!querySearch) return; loading = true;
-            const r = await fetch(`https://api.themoviedb.org/3/search/movie?api_key=${API_KEY}&query=${encodeURIComponent(querySearch)}&language=es-ES&page=${pageSearch}`);
-            const d = await r.json();
-            d.results.forEach(m => { if(m.poster_path) document.getElementById('search-grid').innerHTML += `<div class="card"><img src="https://image.tmdb.org/t/p/w500${m.poster_path}" onclick="openDetails(${m.id})"><div class="movie-title">${m.title}</div><button class="btn-mini" style="margin:0 10px 10px; width:auto; background:var(--rojo)" onclick="saveItem(this,'${m.title.replace(/'/g,"")}','${m.poster_path}',${m.id})">+ AGREGAR</button></div>`; });
-            pageSearch++; loading = false;
+        async function startSearch() { 
+            const q = document.getElementById('main-query').value; if(!q) return; 
+            document.getElementById('autocomplete-results').innerHTML = ""; // Nota Extra: Cerrar autocompletado
+            document.getElementById('search-grid').innerHTML = ""; 
+            const r = await fetch(`https://api.themoviedb.org/3/search/movie?api_key=${API_KEY}&query=${encodeURIComponent(q)}&language=es-ES`); 
+            const d = await r.json(); 
+            d.results.forEach(m => { if(m.poster_path) document.getElementById('search-grid').innerHTML += `<div class="card"><img src="https://image.tmdb.org/t/p/w500${m.poster_path}" onclick="openDetails(${m.id})"><div class="movie-title">${m.title}</div><button class="btn-mini" style="margin:0 10px 10px; width:auto; background:var(--rojo)" onclick="saveItem(this,'${m.title.replace(/'/g,"")}','${m.poster_path}',${m.id})">+ AGREGAR</button></div>`; }); 
         }
 
-        function handleInfiniteScroll() { if (loading) return; if (window.innerHeight + window.scrollY >= document.body.offsetHeight - 800) { const active = document.querySelector('.view.active').id; if (active === 'view-home') loadTrending(); if (active === 'view-frames') loadFrames(); } }
+        function handleAutocomplete(q, rId) { 
+            if(!q) return document.getElementById(rId).innerHTML = ""; 
+            fetch(`https://api.themoviedb.org/3/search/movie?api_key=${API_KEY}&query=${encodeURIComponent(q)}&language=es-ES`).then(r => r.json()).then(d => { 
+                document.getElementById(rId).innerHTML = d.results.slice(0, 5).map(m => `<div style="padding:15px; border-bottom:1px solid #222;" onclick="document.getElementById('main-query').value='${m.title}'; startSearch();">${m.title}</div>`).join(''); 
+            }); 
+        }
+
+        function handleInfiniteScroll() { if (loading) return; if (window.innerHeight + window.scrollY >= document.body.offsetHeight - 800) { if (document.querySelector('.view.active').id === 'view-home') loadTrending(); } }
         function triggerRatingFromMove() { currentRating = 0; document.querySelectorAll('#star-selector i').forEach(s => s.classList.remove('active')); document.getElementById('ratingModal').style.display = 'flex'; }
         function setRating(v) { currentRating = v; document.querySelectorAll('#star-selector i').forEach((s,i) => s.classList.toggle('active', i < v)); }
         function confirmSeen() {
-            if(isFromFolder) {
-                let lists = uData('lists');
-                lists[sourceFolderIdx].items.find(x => x.id === currentItem.id).rating = currentRating;
-                setUData('lists', lists);
-            } else {
-                let gen = uData('movies_gen');
-                gen.find(x => x.id === currentItem.id).rating = currentRating;
-                setUData('movies_gen', gen);
-            }
+            const listKey = isFromFolder ? 'lists' : 'movies_gen';
+            let source = uData(listKey);
+            if(isFromFolder) source[sourceFolderIdx].items.find(x => x.id === currentItem.id).rating = currentRating;
+            else source.find(x => x.id === currentItem.id).rating = currentRating;
+            setUData(listKey, source);
             document.getElementById('ratingModal').style.display = 'none'; renderSaved(); updateProfile();
         }
         function removeItem(key, id, fromFolder = false, fIdx = 0) { 
@@ -522,7 +533,6 @@
         function openCreateListDialogFromMove() { openCreateListDialog(); }
         function confirmCreateList() { const n = document.getElementById('new-list-name').value; if(!n) return; let l = uData('lists'); l.push({name:n, items:[]}); setUData('lists', l); renderSaved(); document.getElementById('createListModal').style.display = 'none'; if(document.getElementById('listMoveModal').style.display === 'flex') showFolderOptions(); }
         function showFolderOptions() { const lists = uData('lists'); document.getElementById('list-options-container').innerHTML = lists.map((l, i) => `<button class="btn-action" style="background:#222; border:1px solid #444;" onclick="moveToFolder(${i})">${l.name}</button>`).join(''); document.getElementById('folder-options').style.display = 'block'; }
-        function handleAutocomplete(q, rId) { if(!q) return document.getElementById(rId).innerHTML = ""; fetch(`https://api.themoviedb.org/3/search/movie?api_key=${API_KEY}&query=${encodeURIComponent(q)}&language=es-ES`).then(r => r.json()).then(d => { document.getElementById(rId).innerHTML = d.results.slice(0, 5).map(m => `<div style="padding:15px; border-bottom:1px solid #222;" onclick="document.getElementById('main-query').value='${m.title}'; startSearch();">${m.title}</div>`).join(''); }); }
         function switchView(id, el) { document.querySelectorAll('.view').forEach(v => v.classList.remove('active')); document.getElementById(id).classList.add('active'); document.querySelectorAll('.nav-item').forEach(i => i.classList.remove('active')); el.classList.add('active'); if(id === 'view-movies') renderSaved(); }
         function closeModals() { document.querySelectorAll('.modal').forEach(m => m.style.display = 'none'); }
         function logout() { localStorage.removeItem('butaca_active_email'); location.reload(); }
