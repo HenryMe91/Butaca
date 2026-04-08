@@ -62,7 +62,7 @@
         .stat-num-xl { font-size: 28px; font-weight: 900; color: var(--rojo); display: block; }
         .stat-label-xl { font-size: 11px; color: #888; text-transform: uppercase; font-weight: 800; }
 
-        /* NAV */
+        /* NAV BLINDADA */
         nav { position: fixed; bottom: 0; left: 0; right: 0; background: rgba(10,10,10,0.98); backdrop-filter: blur(25px); display: flex; justify-content: space-around; padding: 12px 0 35px; border-top: 1px solid #222; z-index: 50000; }
         .nav-item { color: #555; text-align: center; font-size: 8px; font-weight: 800; flex: 1; cursor: pointer; }
         .nav-item.active { color: var(--rojo); }
@@ -380,7 +380,6 @@
 
         function moveToFolder(idx) {
             let lists = uData('lists');
-            // INSERCIÓN 1: ALERTA DUPLICADO
             if (lists[idx].items.some(x => x.id === currentItem.id)) return alert("Ya se encuentra en esta carpeta");
             lists[idx].items.push(currentItem);
             if(isFromFolder) {
@@ -417,7 +416,6 @@
             pageHome++; loading = false;
         }
 
-        // INSERCIÓN 2: FRAMES DINÁMICOS
         async function loadFrames(isRand = false) {
             loading = true; if(isRand) pageFrames = Math.floor(Math.random() * 40) + 1;
             const r = await fetch(`https://api.themoviedb.org/3/trending/movie/week?api_key=${API_KEY}&page=${pageFrames}`);
@@ -490,7 +488,6 @@
         async function startSearch() { 
             querySearch = document.getElementById('main-query').value; pageSearch = 1; 
             document.getElementById('search-grid').innerHTML = ""; 
-            // INSERCIÓN 3: CIERRE AUTO SUGERENCIAS
             document.getElementById('autocomplete-results').innerHTML = ""; 
             searchUniversal(); 
         }
@@ -506,15 +503,11 @@
         function triggerRatingFromMove() { currentRating = 0; document.querySelectorAll('#star-selector i').forEach(s => s.classList.remove('active')); document.getElementById('ratingModal').style.display = 'flex'; }
         function setRating(v) { currentRating = v; document.querySelectorAll('#star-selector i').forEach((s,i) => s.classList.toggle('active', i < v)); }
         function confirmSeen() {
-            if(isFromFolder) {
-                let lists = uData('lists');
-                lists[sourceFolderIdx].items.find(x => x.id === currentItem.id).rating = currentRating;
-                setUData('lists', lists);
-            } else {
-                let gen = uData('movies_gen');
-                gen.find(x => x.id === currentItem.id).rating = currentRating;
-                setUData('movies_gen', gen);
-            }
+            const listKey = isFromFolder ? 'lists' : 'movies_gen';
+            let source = uData(listKey);
+            if(isFromFolder) source[sourceFolderIdx].items.find(x => x.id === currentItem.id).rating = currentRating;
+            else source.find(x => x.id === currentItem.id).rating = currentRating;
+            setUData(listKey, source);
             document.getElementById('ratingModal').style.display = 'none'; renderSaved(); updateProfile();
         }
         function removeItem(key, id, fromFolder = false, fIdx = 0) { 
