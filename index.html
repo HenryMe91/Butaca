@@ -25,14 +25,19 @@
         .view.active { display: block; }
         @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
 
-        /* FILTROS STREAMING */
-        .platform-bar { display: flex; gap: 15px; overflow-x: auto; padding: 10px 0; margin: 0 -20px 10px; padding-left: 20px; scrollbar-width: none; }
-        .platform-icon { width: 45px; height: 45px; border-radius: 50%; object-fit: cover; cursor: pointer; border: 2px solid transparent; transition: 0.3s; filter: grayscale(0.7); flex-shrink: 0; }
-        .platform-icon.active { border-color: var(--oro); filter: grayscale(0); transform: scale(1.1); box-shadow: 0 0 15px rgba(255,204,0,0.4); }
+        /* FILTROS ABATIBLES */
+        .dropdown-filter { margin-bottom: 15px; }
+        .dropdown-btn { width: 100%; background: var(--gris); border: 1px solid #333; color: white; padding: 12px; border-radius: 12px; font-weight: 800; display: flex; justify-content: space-between; align-items: center; cursor: pointer; }
+        .dropdown-content { display: none; background: #111; border-radius: 12px; margin-top: 5px; padding: 10px; grid-template-columns: repeat(4, 1fr); gap: 10px; border: 1px solid #222; }
+        .dropdown-content.active { display: grid; }
+        .plat-item { display: flex; flex-direction: column; align-items: center; gap: 5px; cursor: pointer; transition: 0.2s; }
+        .plat-item img { width: 40px; height: 40px; border-radius: 10px; filter: grayscale(0.8); border: 2px solid transparent; }
+        .plat-item.selected img { filter: grayscale(0); border-color: var(--oro); transform: scale(1.1); }
+        .plat-item span { font-size: 8px; color: #888; font-weight: 700; text-transform: uppercase; }
 
-        .filter-bar { display: flex; gap: 12px; overflow-x: auto; padding: 10px 0 20px; margin: 0 -20px; padding-left: 20px; scrollbar-width: none; }
-        .filter-btn { background: var(--gris); color: #888; border: none; padding: 10px 22px; border-radius: 25px; font-size: 12px; font-weight: 700; cursor: pointer; white-space: nowrap; transition: 0.3s; }
-        .filter-btn.active { background: white; color: black; box-shadow: 0 0 15px rgba(255,255,255,0.3); }
+        .filter-bar { display: flex; gap: 10px; overflow-x: auto; padding: 10px 0; margin: 0 -20px; padding-left: 20px; scrollbar-width: none; }
+        .filter-btn { background: var(--gris); color: #888; border: none; padding: 8px 18px; border-radius: 20px; font-size: 11px; font-weight: 700; cursor: pointer; white-space: nowrap; }
+        .filter-btn.active { background: white; color: black; }
 
         /* GRID POSTERS */
         .grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 15px; }
@@ -51,14 +56,11 @@
         .reorder-btns { display: flex; flex-direction: column; gap: 5px; }
         .btn-order { background: #333; color: white; border: none; padding: 8px; border-radius: 4px; font-size: 10px; cursor: pointer; }
 
-        /* FICHA TÉCNICA */
+        /* FICHA TÉCNICA MAESTRA */
         .info-box { background: rgba(255,255,255,0.04); border-radius: 18px; padding: 18px; margin-top: 15px; text-align: left; border: 1px solid rgba(255,255,255,0.05); }
         .info-section { margin-bottom: 15px; padding-bottom: 8px; border-bottom: 1px solid rgba(255,255,255,0.05); }
-        .info-section:last-child { border: none; margin-bottom: 0; }
-        .info-title { color: var(--rojo); font-size: 10px; font-weight: 900; text-transform: uppercase; letter-spacing: 1.5px; margin-bottom: 6px; display: block; }
+        .info-title { color: var(--rojo); font-size: 10px; font-weight: 900; text-transform: uppercase; letter-spacing: 1.5px; margin-bottom: 4px; display: block; }
         .info-text { font-size: 14px; color: #eee; line-height: 1.5; }
-        .watch-providers { display: flex; gap: 8px; flex-wrap: wrap; margin: 10px 0; justify-content: center; }
-        .provider-icon { width: 35px; height: 35px; border-radius: 8px; border: 1px solid rgba(255,255,255,0.1); }
 
         /* PERFIL INTERACTIVO */
         .profile-card { background: linear-gradient(180deg, rgba(255,255,255,0.06) 0%, rgba(0,0,0,0) 100%); padding: 45px 20px; border-radius: 45px; text-align: center; border: 1px solid rgba(255,255,255,0.05); }
@@ -110,15 +112,33 @@
     </div>
 
     <div id="view-home" class="view active">
-        <div class="platform-bar" id="platform-container">
-            <img src="https://www.themoviedb.org/t/p/original/pTpxMqRbmvW6B6Gv0q6Ls4cyuht.jpg" class="platform-icon" onclick="filterPlatform(8, this)" title="Netflix">
-            <img src="https://www.themoviedb.org/t/p/original/dgPueS9ZpG7un0Y9T67D4noADNq.jpg" class="platform-icon" onclick="filterPlatform(337, this)" title="Disney+">
-            <img src="https://www.themoviedb.org/t/p/original/8O967YvUCuS7vXvS9S0p34ThC9W.jpg" class="platform-icon" onclick="filterPlatform(1899, this)" title="Max">
-            <img src="https://www.themoviedb.org/t/p/original/em98W59vM29X39WPTY7T7mve6Z7.jpg" class="platform-icon" onclick="filterPlatform(119, this)" title="Prime Video">
-            <img src="https://www.themoviedb.org/t/p/original/69ST68p9l16S6vOa0v43G6yR5iB.jpg" class="platform-icon" onclick="filterPlatform(350, this)" title="Apple TV+">
-            <img src="https://www.themoviedb.org/t/p/original/7rwSULjt0m268799S99p9t9Y99.jpg" class="platform-icon" onclick="filterPlatform(531, this)" title="Paramount+">
+        <div class="dropdown-filter">
+            <button class="dropdown-btn" onclick="document.getElementById('plat-content').classList.toggle('active')">
+                <span><i class="fas fa-tv"></i> Filtrar por Plataforma</span>
+                <i class="fas fa-chevron-down"></i>
+            </button>
+            <div class="dropdown-content" id="plat-content">
+                <div class="plat-item" onclick="filterPlatform(8, this)">
+                    <img src="https://www.themoviedb.org/t/p/original/pTpxMqRbmvW6B6Gv0q6Ls4cyuht.jpg"><span>Netflix</span>
+                </div>
+                <div class="plat-item" onclick="filterPlatform(337, this)">
+                    <img src="https://www.themoviedb.org/t/p/original/dgPueS9ZpG7un0Y9T67D4noADNq.jpg"><span>Disney+</span>
+                </div>
+                <div class="plat-item" onclick="filterPlatform(1899, this)">
+                    <img src="https://www.themoviedb.org/t/p/original/8O967YvUCuS7vXvS9S0p34ThC9W.jpg"><span>Max</span>
+                </div>
+                <div class="plat-item" onclick="filterPlatform(119, this)">
+                    <img src="https://www.themoviedb.org/t/p/original/em98W59vM29X39WPTY7T7mve6Z7.jpg"><span>Prime Video</span>
+                </div>
+                <div class="plat-item" onclick="filterPlatform(350, this)">
+                    <img src="https://www.themoviedb.org/t/p/original/69ST68p9l16S6vOa0v43G6yR5iB.jpg"><span>Apple TV</span>
+                </div>
+                <div class="plat-item" onclick="filterPlatform(531, this)">
+                    <img src="https://www.themoviedb.org/t/p/original/7rwSULjt0m268799S99p9t9Y99.jpg"><span>Paramount+</span>
+                </div>
+            </div>
         </div>
-        <div class="filter-bar"><div id="filter-container" style="display:flex; gap:12px;"></div></div>
+        <div class="filter-bar"><div id="filter-container" style="display:flex; gap:10px;"></div></div>
         <div id="trending-grid" class="grid"></div>
     </div>
 
@@ -184,7 +204,7 @@
             <h3 id="manage-title">Gestionar Película</h3>
             <div id="dialog-main-actions" style="display:grid; gap:12px; margin-top:25px;">
                 <button class="btn-action" style="background:var(--verde)" onclick="triggerRatingFromMove()">⭐ CALIFICAR</button>
-                <button id="btn-mark-watched" class="btn-action" style="background:var(--azul)" onclick="markAsWatched()">🎬 MARCADA COMO VISTA</button>
+                <button id="btn-mark-watched" class="btn-action" style="background:var(--azul)" onclick="markAsWatched()">🎬 MARCAR COMO VISTA</button>
                 <button class="btn-action" style="background:var(--card); border:1px solid #444;" onclick="showFolderOptions()">📁 MOVER A CARPETA</button>
                 <button id="btn-return-general" class="btn-action" style="background:var(--oro); color:black; display:none;" onclick="returnToGeneral()">📦 DEVOLVER A GENERAL</button>
                 <button class="btn-action" style="background:#333" onclick="confirmRemove()">🗑️ QUITAR DE MI LISTA</button>
@@ -258,11 +278,11 @@
             loadTrending(true); updateProfile(); loadFrames(true);
         }
 
-        /* --- STREAMING FILTER --- */
-        async function filterPlatform(id, img) {
-            document.querySelectorAll('.platform-icon').forEach(i => i.classList.remove('active'));
+        /* --- FILTRO PLATAFORMAS --- */
+        async function filterPlatform(id, el) {
+            document.querySelectorAll('.plat-item').forEach(i => i.classList.remove('selected'));
             if(currentPlatform === id) { currentPlatform = null; } 
-            else { currentPlatform = id; img.classList.add('active'); }
+            else { currentPlatform = id; el.classList.add('selected'); }
             pageHome = 1; document.getElementById('trending-grid').innerHTML = "";
             loadTrending();
         }
@@ -275,7 +295,7 @@
             ]);
             const providers = watch.results?.CL?.flatrate || [];
             const isSaved = uData('movies_gen').some(x => x.id === id);
-            const pNames = providers.map(p => p.provider_name).join(', ') || 'Solo en Cines';
+            const platformNames = providers.map(p => p.provider_name).join(', ') || 'Solo en Cines';
 
             document.getElementById('modalBody').innerHTML = `
                 <span class="close-x" onclick="closeModals()">&times;</span>
@@ -284,14 +304,11 @@
                 <div class="watch-providers">${providers.map(p => `<img class="provider-icon" src="https://image.tmdb.org/t/p/original${p.logo_path}" title="${p.provider_name}">`).join('') || '<p style="font-size:10px; color:#555">Disponible solo en Cines</p>'}</div>
                 <div class="info-box">
                     <div class="info-section"><span class="info-title">Sinopsis</span><p class="info-text">${details.overview || 'N/A'}</p></div>
-                    <div class="info-section">
-                        <span class="info-title">Producción</span>
-                        <p class="info-text"><b>Director:</b> ${credits.crew.find(c => c.job === 'Director')?.name || 'N/A'}<br><b>Música:</b> ${credits.crew.find(c => c.job.includes('Music'))?.name || 'N/A'}</p>
-                    </div>
+                    <div class="info-section"><span class="info-title">Producción</span><p class="info-text"><b>Director:</b> ${credits.crew.find(c => c.job === 'Director')?.name || 'N/A'}<br><b>Música:</b> ${credits.crew.find(c => c.job.includes('Music'))?.name || 'N/A'}</p></div>
                     <div class="info-section"><span class="info-title">Cast</span><p class="info-text">${credits.cast.slice(0,5).map(a=>a.name).join(", ")}</p></div>
                 </div>
                 <div style="display:flex; gap:10px; margin-top:20px; align-items: stretch;">
-                    <a href="https://api.whatsapp.com/send?text=${encodeURIComponent('🎬 RECOMENDACIÓN BUTACA\n\n*' + details.title + '*\n\n' + (details.overview || '') + '\n\n📺 Ver en: ' + pNames + '\n\n🖼️ ' + 'https://image.tmdb.org/t/p/w500' + details.poster_path)}" target="_blank" class="btn-action" style="flex:1; background:#25D366; display: flex; align-items: center; justify-content: center; height: 50px;"><i class="fab fa-whatsapp" style="font-size: 24px;"></i></a>
+                    <a href="https://api.whatsapp.com/send?text=${encodeURIComponent('🎬 RECOMENDACIÓN BUTACA\n\n*' + details.title + '*\n\n' + (details.overview || '') + '\n\n📺 Ver en: ' + platformNames + '\n\n🖼️ ' + 'https://image.tmdb.org/t/p/w500' + details.poster_path)}" target="_blank" class="btn-action" style="flex:1; background:#25D366; display: flex; align-items: center; justify-content: center; height: 50px;"><i class="fab fa-whatsapp" style="font-size: 24px;"></i></a>
                     <button class="btn-action" id="btn-add-${id}" style="flex:1; background:${isSaved ? 'var(--verde)' : 'var(--rojo)'}; height: 50px;" onclick="saveItem(this,'${details.title.replace(/'/g,"")}','${details.poster_path}',${id})">${isSaved ? 'AGREGADO' : '+ AGREGAR'}</button>
                 </div>`;
             document.getElementById('movieModal').style.display = 'flex';
@@ -321,7 +338,6 @@
                             <button class="btn-order" onclick="moveItemInFolder(${i}, ${idx}, -1, event)"><i class="fas fa-chevron-up"></i></button>
                             <button class="btn-order" onclick="moveItemInFolder(${i}, ${idx}, 1, event)"><i class="fas fa-chevron-down"></i></button>
                         </div>
-                        ${item.rating > 0 ? `<div class="rating-badge">⭐ ${item.rating}</div>` : ''}
                         <img src="https://image.tmdb.org/t/p/w200${item.p}" class="abatible-poster" onclick="openDetails(${item.id})">
                         <div class="abatible-actions">
                             <span style="font-size:13px; font-weight:800; text-align:left;">${item.t} ${item.rating > 0 ? '⭐'+item.rating : ''} ${item.watched ? '✅':''}</span>
@@ -368,10 +384,12 @@
             const source = fromFolder ? uData('lists')[folderIdx].items : uData('movies_gen');
             const movie = source.find(x => x.id === id);
             currentItem = movie; isFromFolder = fromFolder; sourceFolderIdx = folderIdx;
+            
             const btnMark = document.getElementById('btn-mark-watched');
-            btnMark.innerText = currentItem.watched ? "YA LA VISTE" : "🎬 MARCADA COMO VISTA";
+            btnMark.innerText = currentItem.watched ? "YA LA VISTE" : "🎬 MARCAR COMO VISTA";
             btnMark.style.background = currentItem.watched ? "var(--oro)" : "var(--azul)";
             btnMark.style.color = currentItem.watched ? "black" : "white";
+
             document.getElementById('btn-return-general').style.display = fromFolder ? 'block' : 'none';
             document.getElementById('folder-options').style.display = 'none';
             document.getElementById('listMoveModal').style.display = 'flex';
@@ -385,7 +403,7 @@
             else source.find(x => x.id === currentItem.id).watched = currentItem.watched;
             setUData(listKey, source);
             const btnMark = document.getElementById('btn-mark-watched');
-            btnMark.innerText = currentItem.watched ? "YA LA VISTE" : "🎬 MARCADA COMO VISTA";
+            btnMark.innerText = currentItem.watched ? "YA LA VISTE" : "🎬 MARCAR COMO VISTA";
             btnMark.style.background = currentItem.watched ? "var(--oro)" : "var(--azul)";
             btnMark.style.color = currentItem.watched ? "black" : "white";
             renderSaved(); updateProfile();
@@ -448,7 +466,7 @@
         function openFrameViewer(src) {
             currentViewerPath = src; document.getElementById('viewer-img').src = src;
             const favs = uData('fav_frames');
-            document.getElementById('viewer-fav-btn').innerText = favs.some(f => f.src === src) ? "QUITAR DE MIS FAVORITOS" : "AGREGAR A FAVORITOS";
+            document.getElementById('viewer-fav-btn').innerText = favs.some(f => f.src === src) ? "QUITAR DE FAVORITOS" : "AGREGAR A FAVORITOS";
             document.getElementById('viewer-modal').style.display = 'flex';
         }
 
@@ -459,7 +477,10 @@
             setUData('fav_frames', favs); closeModals(); updateProfile();
         }
 
-        function setFrameAsAvatar() { localStorage.setItem(`butaca_photo_${userID}`, currentViewerPath); closeModals(); updateProfile(); }
+        function setFrameAsAvatar() {
+            localStorage.setItem(`butaca_photo_${userID}`, currentViewerPath);
+            closeModals(); updateProfile();
+        }
 
         function openTextList(type, title) {
             const modal = document.getElementById('textListModal');
@@ -497,7 +518,7 @@
 
         async function startSearch() { 
             const q = document.getElementById('main-query').value; if(!q) return; 
-            document.getElementById('autocomplete-results').innerHTML = ""; // Nota Extra: Cerrar autocompletado
+            document.getElementById('autocomplete-results').innerHTML = ""; 
             document.getElementById('search-grid').innerHTML = ""; 
             const r = await fetch(`https://api.themoviedb.org/3/search/movie?api_key=${API_KEY}&query=${encodeURIComponent(q)}&language=es-ES`); 
             const d = await r.json(); 
@@ -531,13 +552,12 @@
         }
         function openCreateListDialog() { document.getElementById('new-list-name').value = ""; document.getElementById('createListModal').style.display = 'flex'; }
         function openCreateListDialogFromMove() { openCreateListDialog(); }
-        function confirmCreateList() { const n = document.getElementById('new-list-name').value; if(!n) return; let l = uData('lists'); l.push({name:n, items:[]}); setUData('lists', l); renderSaved(); document.getElementById('createListModal').style.display = 'none'; if(document.getElementById('listMoveModal').style.display === 'flex') showFolderOptions(); }
+        function confirmCreateList() { const n = document.getElementById('new-list-name').value; if(!n) return; let l = uData('lists'); l.push({name:n, items:[]}); setUData('lists', l); renderSaved(); document.getElementById('createListModal').style.display = 'none'; }
         function showFolderOptions() { const lists = uData('lists'); document.getElementById('list-options-container').innerHTML = lists.map((l, i) => `<button class="btn-action" style="background:#222; border:1px solid #444;" onclick="moveToFolder(${i})">${l.name}</button>`).join(''); document.getElementById('folder-options').style.display = 'block'; }
         function switchView(id, el) { document.querySelectorAll('.view').forEach(v => v.classList.remove('active')); document.getElementById(id).classList.add('active'); document.querySelectorAll('.nav-item').forEach(i => i.classList.remove('active')); el.classList.add('active'); if(id === 'view-movies') renderSaved(); }
         function closeModals() { document.querySelectorAll('.modal').forEach(m => m.style.display = 'none'); }
         function logout() { localStorage.removeItem('butaca_active_email'); location.reload(); }
         async function searchFrames() { const q = document.getElementById('frame-query').value; if(!q) return; const r = await fetch(`https://api.themoviedb.org/3/search/movie?api_key=${API_KEY}&query=${encodeURIComponent(q)}&language=es-ES`); const d = await r.json(); const c = document.getElementById('frames-container'); c.innerHTML = ""; for(let item of d.results.slice(0, 3)) { const ir = await fetch(`https://api.themoviedb.org/3/movie/${item.id}/images?api_key=${API_KEY}`); const id = await ir.json(); id.backdrops.slice(0, 10).forEach(img => { c.innerHTML += `<div class="card"><img src="https://image.tmdb.org/t/p/original${img.file_path}" onclick="openFrameViewer(this.src)"></div>`; }); } }
-        function confirmRemove() { removeItem(isFromFolder ? 'lists' : 'movies_gen', currentItem.id, isFromFolder, sourceFolderIdx); closeModals(); }
         function deleteFolder(idx) { if(confirm("¿Eliminar carpeta?")) { let l = uData('lists'); l.splice(idx,1); setUData('lists', l); renderSaved(); } }
     </script>
     <input type="file" id="fileInput" hidden accept="image/*" onchange="const r=new FileReader(); r.onload=(e)=>{localStorage.setItem(`butaca_photo_${userID}`,e.target.result); updateProfile();}; r.readAsDataURL(this.files[0]);">
