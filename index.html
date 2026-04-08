@@ -78,9 +78,19 @@
         .rating-stars i.active { color: var(--oro); }
 
         input[type="text"], input[type="email"] { width: 100%; padding: 18px; border-radius: 12px; border: 1px solid #333; background: var(--input-gris); color: white; outline: none; box-sizing: border-box; font-size: 14px; margin-bottom: 10px; }
+
+        /* --- NUEVAS FUNCIONES --- */
+        .skeleton { background: #222; border-radius: 14px; aspect-ratio: 2/3; position: relative; overflow: hidden; }
+        .skeleton::after { content: ""; position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: linear-gradient(90deg, transparent, rgba(255,255,255,0.05), transparent); animation: shimmer 1.5s infinite; }
+        @keyframes shimmer { 0% { transform: translateX(-100%); } 100% { transform: translateX(100%); } }
+        .btn-yt { background: #FF0000 !important; margin-bottom: 10px; display: flex; align-items: center; justify-content: center; gap: 8px; }
+        #toast { position: fixed; bottom: 120px; left: 50%; transform: translateX(-50%); background: var(--verde); color: black; padding: 10px 25px; border-radius: 20px; font-weight: 800; font-size: 12px; z-index: 999999; display: none; animation: slideUp 0.3s ease; }
+        @keyframes slideUp { from { bottom: 80px; opacity: 0; } to { bottom: 120px; opacity: 1; } }
     </style>
 </head>
 <body>
+
+    <div id="toast">¡CALIFICADO! ⭐</div>
 
     <div id="login-screen">
         <div class="logo-header" style="margin-bottom: 30px;"><i class="fas fa-ticket-alt ticket-anim"></i><span>BUTACA</span></div>
@@ -121,7 +131,10 @@
     <div id="view-movies" class="view">
         <button class="btn-action" style="background:var(--gris); margin-bottom:25px;" onclick="openCreateListDialog()">+ NUEVA CARPETA</button>
         <div id="movies-collections"></div>
-        <h2 style="font-size:12px; color:#555; text-align:center; margin:25px 0; letter-spacing:1px; text-transform:uppercase;">Lista General</h2>
+        <div style="margin:25px 0;">
+            <h2 style="font-size:12px; color:#555; text-align:center; letter-spacing:1px; text-transform:uppercase; margin-bottom:15px;">Lista General</h2>
+            <input type="text" id="internal-search" placeholder="Filtrar en mis películas..." style="padding:15px; font-size:12px; background:#111;" oninput="filterInternalList(this.value)">
+        </div>
         <div id="saved-movies-grid" class="grid"></div>
     </div>
 
@@ -137,7 +150,7 @@
         <div class="profile-card">
             <div id="current-p-avatar" style="width:120px; height:120px; margin:0 auto; background:#111; border-radius:50%; border:3px solid var(--rojo); overflow:hidden; display:flex; align-items:center; justify-content:center; font-size:45px;" onclick="document.getElementById('fileInput').click()">🕵️</div>
             <h3 id="p-name" style="font-size: 32px; font-weight: 900; margin: 15px 0;">Usuario</h3>
-            <div id="rank-display" class="user-rank-box"></div>
+            <div id="rank-display"></div>
             <div class="stats-xl">
                 <div class="stat-box-xl" onclick="openTextList('por_ver', 'Películas Por Ver')">
                     <span class="stat-num-xl" id="stat-m-p">0</span>
@@ -245,26 +258,45 @@
         }
 
         async function openDetails(id) {
-            const [details, credits, watch] = await Promise.all([
+            const [details, credits, watch, videos] = await Promise.all([
                 fetch(`https://api.themoviedb.org/3/movie/${id}?api_key=${API_KEY}&language=es-ES`).then(r => r.json()),
                 fetch(`https://api.themoviedb.org/3/movie/${id}/credits?api_key=${API_KEY}`).then(r => r.json()),
-                fetch(`https://api.themoviedb.org/3/movie/${id}/watch/providers?api_key=${API_KEY}`).then(r => r.json())
+                fetch(`https://api.themoviedb.org/3/movie/${id}/watch/providers?api_key=${API_KEY}`).then(r => r.json()),
+                fetch(`https://api.themoviedb.org/3/movie/${id}/videos?api_key=${API_KEY}`).then(r => r.json())
             ]);
+            
+            const trailer = videos.results.find(v => v.type === 'Trailer' && v.site === 'YouTube');
             const providers = watch.results?.CL?.flatrate || [];
             const isSaved = uData('movies_gen').some(x => x.id === id);
-            const platformNames = providers.map(p => p.provider_name).join(', ') || 'Solo en Cines';
+            const pNames = providers.map(p => p.provider_name).join(', ') || 'Solo en Cines';
 
             document.getElementById('modalBody').innerHTML = `
                 <span class="close-x" onclick="closeModals()">&times;</span>
                 <img src="https://image.tmdb.org/t/p/w500${details.poster_path}" style="width:100%; border-radius:20px;">
                 <h3 style="margin:15px 0">${details.title}</h3>
-                <div class="watch-providers">${providers.map(p => `<img class="provider-icon" src="https://image.tmdb.org/t/p/original${p.logo_path}" title="${p.provider_name}">`).join('') || '<p style="font-size:10px; color:#555">Disponible solo en Cines</p>'}</div>
+                <div class="watch-providers">${providers.map(p => `<img class="provider-icon" src="https://image.tmdb.org/t/p/original${p.logo_path}" style="width:35px; border-radius:8px; margin:0 4px;">`).join('') || '<p style="font-size:10px; color:#555">Disponible solo en Cines</p>'}</div>
+                
+                ${trailer ? `<a href="https://www.youtube.com/watch?v=${trailer.key}" target="_blank" class="btn-action btn-yt"><i class="fab fa-youtube"></i> VER TRAILER</a>` : ''}
+
                 <div class="info-box">
-                    <div class="info-section"><span class="info-title">Sinopsis</span><p class="info-text">${details.overview || 'N/A'}</p></div>
-                    <div class="info-section"><span class="info-title">Producción</span><p class="info-text"><b>Dir:</b> ${credits.crew.find(c => c.job === 'Director')?.name || 'N/A'}<br><b>Cast:</b> ${credits.cast.slice(0,3).map(a=>a.name).join(", ")}</p></div>
+                    <div class="info-section">
+                        <span class="info-title">Sinopsis</span>
+                        <p class="info-text">${details.overview || 'Sin descripción disponible.'}</p>
+                    </div>
+                    <div class="info-section">
+                        <span class="info-title">Producción</span>
+                        <p class="info-text">
+                            <b>Director:</b> ${credits.crew.find(c => c.job === 'Director')?.name || 'N/A'}<br>
+                            <b>Música:</b> ${credits.crew.find(c => c.job.includes('Music'))?.name || 'N/A'}
+                        </p>
+                    </div>
+                    <div class="info-section">
+                        <span class="info-title">Casting Principal</span>
+                        <p class="info-text">${credits.cast.slice(0,5).map(a => a.name).join(", ")}</p>
+                    </div>
                 </div>
                 <div style="display:flex; gap:10px; margin-top:20px;">
-                    <a href="https://api.whatsapp.com/send?text=${encodeURIComponent('🎬 RECOMENDACIÓN BUTACA\n\n*' + details.title + '*\n\n' + (details.overview || '') + '\n\n📺 Ver en: ' + platformNames + '\n\n🖼️ ' + 'https://image.tmdb.org/t/p/w500' + details.poster_path)}" target="_blank" class="btn-action" style="flex:1; background:#25D366; display: flex; align-items: center; justify-content: center; height: 50px;"><i class="fab fa-whatsapp" style="font-size: 24px;"></i></a>
+                    <a href="https://api.whatsapp.com/send?text=${encodeURIComponent('🎬 ' + details.title + '\n\n' + details.overview + '\n\n📺 Ver en: ' + pNames)}" target="_blank" class="btn-action" style="flex:1; background:#25D366; display: flex; align-items: center; justify-content: center; height: 50px;"><i class="fab fa-whatsapp" style="font-size: 24px;"></i></a>
                     <button class="btn-action" id="btn-add-${id}" style="flex:1; background:${isSaved ? 'var(--verde)' : 'var(--rojo)'}; height: 50px;" onclick="saveItem(this,'${details.title.replace(/'/g,"")}','${details.poster_path}',${id})">${isSaved ? 'AGREGADO' : '+ AGREGAR'}</button>
                 </div>`;
             document.getElementById('movieModal').style.display = 'flex';
@@ -279,7 +311,7 @@
             updateProfile(); if(document.querySelector('.view.active').id === 'view-movies') renderSaved();
         }
 
-        function renderSaved() {
+        function renderSaved(filterText = "") {
             const grid = document.getElementById('saved-movies-grid');
             const coll = document.getElementById('movies-collections');
             grid.innerHTML = ""; coll.innerHTML = "";
@@ -290,24 +322,16 @@
                 let html = `<div class="abatible-item ${isActive ? 'active' : ''}"><button class="abatible-trigger" onclick="toggleFolder(${i})"><span><i class="fas fa-folder"></i> ${l.name}</span><i class="fas fa-chevron-down"></i></button><div class="abatible-content">`;
                 l.items.forEach((item, idx) => { 
                     html += `<div class="item-row">
-                        <div class="reorder-btns">
-                            <button class="btn-order" onclick="moveItemInFolder(${i}, ${idx}, -1, event)"><i class="fas fa-chevron-up"></i></button>
-                            <button class="btn-order" onclick="moveItemInFolder(${i}, ${idx}, 1, event)"><i class="fas fa-chevron-down"></i></button>
-                        </div>
+                        <div class="reorder-btns"><button class="btn-order" onclick="moveItemInFolder(${i}, ${idx}, -1, event)"><i class="fas fa-chevron-up"></i></button><button class="btn-order" onclick="moveItemInFolder(${i}, ${idx}, 1, event)"><i class="fas fa-chevron-down"></i></button></div>
                         <img src="https://image.tmdb.org/t/p/w200${item.p}" class="abatible-poster" onclick="openDetails(${item.id})">
-                        <div class="abatible-actions">
-                            <span style="font-size:13px; font-weight:800; text-align:left;">${item.t} ${item.rating > 0 ? '⭐'+item.rating : ''} ${item.watched ? '✅':''}</span>
-                            <button class="btn-mini" style="background:var(--verde)" onclick="openMoveDialog(${item.id},'${item.t}','${item.p}', true, ${i})">GESTIONAR</button>
-                            <button class="btn-mini" style="background:#333" onclick="removeItem('lists', ${item.id}, true, ${i})">QUITAR</button>
-                        </div>
-                    </div>`;
+                        <div class="abatible-actions" style="flex-grow:1;"><span style="font-size:13px; font-weight:800; display:block;">${item.t} ${item.rating > 0 ? '⭐'+item.rating : ''}</span><button class="btn-mini" style="background:var(--verde); width:auto; padding:5px 10px; margin-top:5px;" onclick="openMoveDialog(${item.id},'${item.t}','${item.p}', true, ${i})">GESTIONAR</button></div></div>`;
                 });
                 html += `<button class="btn-mini" style="background:#441111; margin-top:5px; width:auto; padding:5px 15px;" onclick="deleteFolder(${i})">ELIMINAR CARPETA</button></div></div>`;
                 coll.innerHTML += html;
             });
 
             const gen = uData('movies_gen');
-            gen.forEach(m => {
+            gen.filter(m => m.t.toLowerCase().includes(filterText.toLowerCase())).forEach(m => {
                 grid.innerHTML += `<div class="card">
                     ${m.rating > 0 ? `<div class="rating-badge">⭐ ${m.rating}</div>` : ''}
                     ${m.watched ? `<div class="rating-badge" style="left:auto; right:8px; border-color:var(--verde); color:var(--verde);">VISTA</div>` : ''}
@@ -320,34 +344,18 @@
             });
         }
 
-        function toggleFolder(idx) {
-            if(openFolders.includes(idx)) openFolders = openFolders.filter(i => i !== idx);
-            else openFolders.push(idx);
-            renderSaved();
-        }
+        function filterInternalList(val) { renderSaved(val); }
 
-        function moveItemInFolder(fIdx, iIdx, dir, event) {
-            event.stopPropagation();
-            let lists = uData('lists');
-            let items = lists[fIdx].items;
-            let target = iIdx + dir;
-            if (target >= 0 && target < items.length) {
-                [items[iIdx], items[target]] = [items[target], items[iIdx]];
-                setUData('lists', lists);
-                renderSaved();
-            }
-        }
+        function toggleFolder(idx) { if(openFolders.includes(idx)) openFolders = openFolders.filter(i => i !== idx); else openFolders.push(idx); renderSaved(); }
+        function moveItemInFolder(fIdx, iIdx, dir, event) { event.stopPropagation(); let lists = uData('lists'); let target = iIdx + dir; if (target >= 0 && target < lists[fIdx].items.length) { [lists[fIdx].items[iIdx], lists[fIdx].items[target]] = [lists[fIdx].items[target], lists[fIdx].items[iIdx]]; setUData('lists', lists); renderSaved(); } }
 
         function openMoveDialog(id, t, p, fromFolder, folderIdx = -1) {
             const source = fromFolder ? uData('lists')[folderIdx].items : uData('movies_gen');
             const movie = source.find(x => x.id === id);
             currentItem = movie; isFromFolder = fromFolder; sourceFolderIdx = folderIdx;
-            
             const btnMark = document.getElementById('btn-mark-watched');
             btnMark.innerText = currentItem.watched ? "YA LA VISTE" : "🎬 MARCAR COMO VISTA";
             btnMark.style.background = currentItem.watched ? "var(--oro)" : "var(--azul)";
-            btnMark.style.color = currentItem.watched ? "black" : "white";
-
             document.getElementById('btn-return-general').style.display = fromFolder ? 'block' : 'none';
             document.getElementById('folder-options').style.display = 'none';
             document.getElementById('listMoveModal').style.display = 'flex';
@@ -355,16 +363,14 @@
 
         function markAsWatched() {
             currentItem.watched = !currentItem.watched;
-            if(isFromFolder) {
-                let lists = uData('lists');
-                lists[sourceFolderIdx].items.find(x => x.id === currentItem.id).watched = currentItem.watched;
-                setUData('lists', lists);
-            } else {
-                let gen = uData('movies_gen');
-                gen.find(x => x.id === currentItem.id).watched = currentItem.watched;
-                setUData('movies_gen', gen);
-            }
-            openMoveDialog(currentItem.id, currentItem.t, currentItem.p, isFromFolder, sourceFolderIdx);
+            const listKey = isFromFolder ? 'lists' : 'movies_gen';
+            let source = uData(listKey);
+            if(isFromFolder) source[sourceFolderIdx].items.find(x => x.id === currentItem.id).watched = currentItem.watched;
+            else source.find(x => x.id === currentItem.id).watched = currentItem.watched;
+            setUData(listKey, source);
+            const btnMark = document.getElementById('btn-mark-watched');
+            btnMark.innerText = currentItem.watched ? "YA LA VISTE" : "🎬 MARCAR COMO VISTA";
+            btnMark.style.background = currentItem.watched ? "var(--oro)" : "var(--azul)";
             renderSaved(); updateProfile();
         }
 
@@ -375,21 +381,16 @@
             let gen = uData('movies_gen');
             if(!gen.some(x => x.id === currentItem.id)) gen.push(currentItem);
             setUData('movies_gen', gen);
-            renderSaved();
+            renderSaved(); closeModals();
         }
 
         function moveToFolder(idx) {
             let lists = uData('lists');
             if (lists[idx].items.some(x => x.id === currentItem.id)) return alert("Ya se encuentra en esta carpeta");
             lists[idx].items.push(currentItem);
-            if(isFromFolder) {
-                lists[sourceFolderIdx].items = lists[sourceFolderIdx].items.filter(x => x.id !== currentItem.id);
-            } else {
-                let gen = uData('movies_gen');
-                setUData('movies_gen', gen.filter(x => x.id !== currentItem.id));
-            }
-            setUData('lists', lists);
-            renderSaved();
+            if(isFromFolder) lists[sourceFolderIdx].items = lists[sourceFolderIdx].items.filter(x => x.id !== currentItem.id);
+            else setUData('movies_gen', uData('movies_gen').filter(x => x.id !== currentItem.id));
+            setUData('lists', lists); renderSaved(); closeModals();
         }
 
         function renderGenreFilters() {
@@ -405,55 +406,56 @@
 
         async function loadTrending(isRand = false) {
             loading = true; if(isRand) pageHome = Math.floor(Math.random() * 50) + 1;
-            let url = `https://api.themoviedb.org/3/discover/movie?api_key=${API_KEY}&language=es-ES&page=${pageHome}&sort_by=popularity.desc`;
-            if(currentGenre) url = `https://api.themoviedb.org/3/discover/movie?api_key=${API_KEY}&with_genres=${currentGenre}&language=es-ES&page=${pageHome}`;
+            const grid = document.getElementById('trending-grid');
+            if(pageHome === 1) grid.innerHTML = '<div class="skeleton"></div><div class="skeleton"></div>';
+            
+            let url = `https://api.themoviedb.org/3/discover/movie?api_key=${API_KEY}&language=es-ES&page=${pageHome}&watch_region=CL&sort_by=popularity.desc`;
+            if(currentGenre) url += `&with_genres=${currentGenre}`;
+            
             const r = await fetch(url); const d = await r.json();
+            if(pageHome === 1) grid.innerHTML = "";
             const saved = uData('movies_gen');
             d.results.forEach(m => { if(m.poster_path) {
                 const isS = saved.some(x => x.id === m.id);
-                document.getElementById('trending-grid').innerHTML += `<div class="card"><img src="https://image.tmdb.org/t/p/w500${m.poster_path}" onclick="openDetails(${m.id})"><div class="movie-title">${m.title}</div><button class="btn-mini" style="margin:0 10px 10px; width:auto; background:${isS?'var(--verde)':'var(--rojo)'}" onclick="saveItem(this,'${m.title.replace(/'/g,"")}','${m.poster_path}',${m.id})">${isS?'AGREGADO':'+ AGREGAR'}</button></div>`;
+                grid.innerHTML += `<div class="card"><img src="https://image.tmdb.org/t/p/w500${m.poster_path}" onclick="openDetails(${m.id})"><div class="movie-title">${m.title}</div><button class="btn-mini" style="margin:0 10px 10px; width:auto; background:${isS?'var(--verde)':'var(--rojo)'}" onclick="saveItem(this,'${m.title.replace(/'/g,"")}','${m.poster_path}',${m.id})">${isS?'AGREGADO':'+ AGREGAR'}</button></div>`;
             }});
             pageHome++; loading = false;
         }
 
         async function loadFrames(isRand = false) {
             loading = true; if(isRand) pageFrames = Math.floor(Math.random() * 40) + 1;
+            const container = document.getElementById('frames-container');
+            if(pageFrames === 1) container.innerHTML = '<div class="skeleton" style="aspect-ratio:16/9"></div>';
+            
             const r = await fetch(`https://api.themoviedb.org/3/trending/movie/week?api_key=${API_KEY}&page=${pageFrames}`);
             const d = await r.json();
+            if(pageFrames === 1) container.innerHTML = "";
             d.results.forEach(item => { if(item.backdrop_path) {
-                document.getElementById('frames-container').innerHTML += `<div class="card" style="border-radius:10px;"><img src="https://image.tmdb.org/t/p/w780${item.backdrop_path}" onclick="openFrameViewer('https://image.tmdb.org/t/p/original${item.backdrop_path}')"><div style="background:#111; padding:8px; font-size:8px; text-align:center;">${item.title}</div></div>`;
+                container.innerHTML += `<div class="card" style="border-radius:10px;"><img src="https://image.tmdb.org/t/p/w780${item.backdrop_path}" onclick="openFrameViewer('https://image.tmdb.org/t/p/original${item.backdrop_path}')"><div style="background:#111; padding:8px; font-size:8px; text-align:center; font-weight:700;">${item.title}</div></div>`;
             }});
             pageFrames++; loading = false;
         }
 
-        function openFrameViewer(src) {
-            currentViewerPath = src; document.getElementById('viewer-img').src = src;
+        function updateProfile() {
+            const gen = uData('movies_gen'); const lists = uData('lists');
+            const porVer = gen.filter(m => !m.watched).length + lists.reduce((a,b)=> a + b.items.filter(x => !x.watched).length, 0);
+            const vistas = gen.filter(m => m.watched).length + lists.reduce((a,b)=> a + b.items.filter(x => x.watched).length, 0);
+            const calif = gen.filter(m => m.rating > 0).length + lists.reduce((a,b)=> a + b.items.filter(x => x.rating > 0).length, 0);
+            document.getElementById('p-name').innerText = localStorage.getItem(`butaca_user_${userID}`) || "Usuario";
+            document.getElementById('stat-m-p').innerText = porVer; document.getElementById('stat-m-v').innerText = vistas;
+            let rank = calif > 50 ? "MAESTRO" : calif > 20 ? "DIRECTOR" : calif > 10 ? "CRÍTICO" : calif > 5 ? "CINÉFILO" : "ESPECTADOR";
+            document.getElementById('rank-display').innerHTML = `<span class="rank-tag">${rank}</span>`;
             const favs = uData('fav_frames');
-            const isF = favs.some(f => f.src === src);
-            document.getElementById('viewer-fav-btn').innerText = isF ? "QUITAR DE FAVORITOS" : "AGREGAR A FAVORITOS";
-            document.getElementById('viewer-modal').style.display = 'flex';
-        }
-
-        function toggleViewerFav() {
-            let favs = uData('fav_frames');
-            const idx = favs.findIndex(f => f.src === currentViewerPath);
-            if(idx > -1) favs.splice(idx, 1); else favs.push({src: currentViewerPath});
-            setUData('fav_frames', favs);
-            closeModals(); updateProfile();
-        }
-
-        function setFrameAsAvatar() {
-            localStorage.setItem(`butaca_photo_${userID}`, currentViewerPath);
-            closeModals(); updateProfile();
+            document.getElementById('fav-frames-container').innerHTML = favs.map(f => `<div class="card" style="aspect-ratio:1/1;"><img src="${f.src}" onclick="openFrameViewer('${f.src}')"></div>`).join("");
+            const photo = localStorage.getItem(`butaca_photo_${userID}`);
+            if(photo) document.getElementById('current-p-avatar').innerHTML = `<img src="${photo}" style="width:100%; height:100%; object-fit:cover;">`;
         }
 
         function openTextList(type, title) {
             const container = document.getElementById('text-list-container');
             document.getElementById('text-list-title').innerText = title;
             let titles = [];
-            const gen = uData('movies_gen');
-            const lists = uData('lists');
-
+            const gen = uData('movies_gen'); const lists = uData('lists');
             if(type === 'por_ver') {
                 gen.filter(m => !m.watched).forEach(m => titles.push(m.t));
                 lists.forEach(l => l.items.filter(m => !m.watched).forEach(m => titles.push(m.t)));
@@ -465,41 +467,15 @@
             document.getElementById('textListModal').style.display = 'flex';
         }
 
-        function updateProfile() {
-            const gen = uData('movies_gen');
-            const lists = uData('lists');
-            const porVer = gen.filter(m => !m.watched).length + lists.reduce((a,b)=> a + b.items.filter(x => !x.watched).length, 0);
-            const vistas = gen.filter(m => m.watched).length + lists.reduce((a,b)=> a + b.items.filter(x => x.watched).length, 0);
-            const calif = gen.filter(m => m.rating > 0).length + lists.reduce((a,b)=> a + b.items.filter(x => x.rating > 0).length, 0);
-            
-            document.getElementById('p-name').innerText = localStorage.getItem(`butaca_user_${userID}`) || "Usuario";
-            document.getElementById('stat-m-p').innerText = porVer;
-            document.getElementById('stat-m-v').innerText = vistas;
-            
-            let rank = calif > 50 ? "MAESTRO" : calif > 20 ? "DIRECTOR" : calif > 10 ? "CRÍTICO" : calif > 5 ? "CINÉFILO" : "ESPECTADOR";
-            document.getElementById('rank-display').innerHTML = `<span class="rank-tag">${rank}</span>`;
-            
-            const favs = uData('fav_frames');
-            document.getElementById('fav-frames-container').innerHTML = favs.map(f => `<div class="card" style="aspect-ratio:1/1;"><img src="${f.src}" onclick="openFrameViewer('${f.src}')"></div>`).join("");
-            const photo = localStorage.getItem(`butaca_photo_${userID}`);
-            if(photo) document.getElementById('current-p-avatar').innerHTML = `<img src="${photo}" style="width:100%; height:100%; object-fit:cover;">`;
-        }
-
-        async function startSearch() { 
-            querySearch = document.getElementById('main-query').value; pageSearch = 1; 
-            document.getElementById('search-grid').innerHTML = ""; 
-            document.getElementById('autocomplete-results').innerHTML = ""; 
-            searchUniversal(); 
-        }
-        async function searchUniversal() {
-            if(!querySearch) return; loading = true;
-            const r = await fetch(`https://api.themoviedb.org/3/search/movie?api_key=${API_KEY}&query=${encodeURIComponent(querySearch)}&language=es-ES&page=${pageSearch}`);
-            const d = await r.json();
-            d.results.forEach(m => { if(m.poster_path) document.getElementById('search-grid').innerHTML += `<div class="card"><img src="https://image.tmdb.org/t/p/w500${m.poster_path}" onclick="openDetails(${m.id})"><div class="movie-title">${m.title}</div><button class="btn-mini" style="margin:0 10px 10px; width:auto; background:var(--rojo)" onclick="saveItem(this,'${m.title.replace(/'/g,"")}','${m.poster_path}',${m.id})">+ AGREGAR</button></div>`; });
-            pageSearch++; loading = false;
-        }
-
-        function handleInfiniteScroll() { if (loading) return; if (window.innerHeight + window.scrollY >= document.body.offsetHeight - 800) { const active = document.querySelector('.view.active').id; if (active === 'view-home') loadTrending(); } }
+        async function startSearch() { querySearch = document.getElementById('main-query').value; pageSearch = 1; document.getElementById('search-grid').innerHTML = ""; document.getElementById('autocomplete-results').innerHTML = ""; searchUniversal(); }
+        async function searchUniversal() { if(!querySearch) return; loading = true; const r = await fetch(`https://api.themoviedb.org/3/search/movie?api_key=${API_KEY}&query=${encodeURIComponent(querySearch)}&language=es-ES&page=${pageSearch}`); const d = await r.json(); d.results.forEach(m => { if(m.poster_path) document.getElementById('search-grid').innerHTML += `<div class="card"><img src="https://image.tmdb.org/t/p/w500${m.poster_path}" onclick="openDetails(${m.id})"><div class="movie-title">${m.title}</div><button class="btn-mini" style="margin:0 10px 10px; width:auto; background:var(--rojo)" onclick="saveItem(this,'${m.title.replace(/'/g,"")}','${m.poster_path}',${m.id})">+ AGREGAR</button></div>`; }); pageSearch++; loading = false; }
+        function handleAutocomplete(q, rId) { if(!q) return document.getElementById(rId).innerHTML = ""; fetch(`https://api.themoviedb.org/3/search/movie?api_key=${API_KEY}&query=${encodeURIComponent(q)}&language=es-ES`).then(r => r.json()).then(d => { document.getElementById(rId).innerHTML = d.results.slice(0, 5).map(m => `<div style="padding:15px; border-bottom:1px solid #222;" onclick="document.getElementById('main-query').value='${m.title}'; startSearch();">${m.title}</div>`).join(''); }); }
+        function switchView(id, el) { document.querySelectorAll('.view').forEach(v => v.classList.remove('active')); document.getElementById(id).classList.add('active'); document.querySelectorAll('.nav-item').forEach(i => i.classList.remove('active')); el.classList.add('active'); if(id === 'view-movies') renderSaved(); if(id === 'view-frames') loadFrames(true); }
+        function closeModals() { document.querySelectorAll('.modal').forEach(m => m.style.display = 'none'); }
+        function logout() { localStorage.removeItem('butaca_active_email'); location.reload(); }
+        async function searchFrames() { const q = document.getElementById('frame-query').value; if(!q) return loadFrames(true); document.getElementById('frames-container').innerHTML = ""; const r = await fetch(`https://api.themoviedb.org/3/search/movie?api_key=${API_KEY}&query=${encodeURIComponent(q)}&language=es-ES`); const d = await r.json(); for(let item of d.results.slice(0, 3)) { const ir = await fetch(`https://api.themoviedb.org/3/movie/${item.id}/images?api_key=${API_KEY}`); const id = await ir.json(); id.backdrops.slice(0, 10).forEach(img => { document.getElementById('frames-container').innerHTML += `<div class="card"><img src="https://image.tmdb.org/t/p/original${img.file_path}" onclick="openFrameViewer(this.src)"></div>`; }); } }
+        function confirmRemove() { removeItem(isFromFolder ? 'lists' : 'movies_gen', currentItem.id, isFromFolder, sourceFolderIdx); closeModals(); }
+        function deleteFolder(idx) { if(confirm("¿Eliminar carpeta?")) { let l = uData('lists'); l.splice(idx,1); setUData('lists', l); renderSaved(); } }
         function triggerRatingFromMove() { currentRating = 0; document.querySelectorAll('#star-selector i').forEach(s => s.classList.remove('active')); document.getElementById('ratingModal').style.display = 'flex'; }
         function setRating(v) { currentRating = v; document.querySelectorAll('#star-selector i').forEach((s,i) => s.classList.toggle('active', i < v)); }
         function confirmSeen() {
@@ -508,26 +484,16 @@
             if(isFromFolder) source[sourceFolderIdx].items.find(x => x.id === currentItem.id).rating = currentRating;
             else source.find(x => x.id === currentItem.id).rating = currentRating;
             setUData(listKey, source);
+            const toast = document.getElementById('toast'); toast.style.display = 'block'; setTimeout(() => toast.style.display = 'none', 1500);
             document.getElementById('ratingModal').style.display = 'none'; renderSaved(); updateProfile();
         }
-        function removeItem(key, id, fromFolder = false, fIdx = 0) { 
-            let data = uData(key);
-            if(fromFolder) data[fIdx].items = data[fIdx].items.filter(x => x.id !== id);
-            else data = data.filter(x => x.id !== id);
-            setUData(key, data);
-            renderSaved(); updateProfile();
-        }
-        function openCreateListDialog() { document.getElementById('new-list-name').value = ""; document.getElementById('createListModal').style.display = 'flex'; }
-        function openCreateListDialogFromMove() { openCreateListDialog(); showFolderOptions(); }
-        function confirmCreateList() { const n = document.getElementById('new-list-name').value; if(!n) return; let l = uData('lists'); l.push({name:n, items:[]}); setUData('lists', l); renderSaved(); document.getElementById('createListModal').style.display = 'none'; if(document.getElementById('listMoveModal').style.display === 'flex') showFolderOptions(); }
+        function openCreateListDialog() { const n = prompt("Nombre Carpeta:"); if(!n) return; let l = uData('lists'); l.push({name:n, items:[]}); setUData('lists', l); renderSaved(); }
         function showFolderOptions() { const lists = uData('lists'); document.getElementById('list-options-container').innerHTML = lists.map((l, i) => `<button class="btn-action" style="background:#222; border:1px solid #444;" onclick="moveToFolder(${i})">${l.name}</button>`).join(''); document.getElementById('folder-options').style.display = 'block'; }
-        function handleAutocomplete(q, rId) { if(!q) return document.getElementById(rId).innerHTML = ""; fetch(`https://api.themoviedb.org/3/search/movie?api_key=${API_KEY}&query=${encodeURIComponent(q)}&language=es-ES`).then(r => r.json()).then(d => { document.getElementById(rId).innerHTML = d.results.slice(0, 5).map(m => `<div style="padding:15px; border-bottom:1px solid #222;" onclick="document.getElementById('main-query').value='${m.title}'; startSearch();">${m.title}</div>`).join(''); }); }
-        function switchView(id, el) { document.querySelectorAll('.view').forEach(v => v.classList.remove('active')); document.getElementById(id).classList.add('active'); document.querySelectorAll('.nav-item').forEach(i => i.classList.remove('active')); el.classList.add('active'); if(id === 'view-movies') renderSaved(); if(id === 'view-frames') loadFrames(true); }
-        function closeModals() { document.querySelectorAll('.modal').forEach(m => m.style.display = 'none'); }
-        function logout() { localStorage.removeItem('butaca_active_email'); location.reload(); }
-        async function searchFrames() { const q = document.getElementById('frame-query').value; if(!q) return loadFrames(true); document.getElementById('frames-container').innerHTML = ""; const r = await fetch(`https://api.themoviedb.org/3/search/movie?api_key=${API_KEY}&query=${encodeURIComponent(q)}&language=es-ES`); const d = await r.json(); const c = document.getElementById('frames-container'); for(let item of d.results.slice(0, 3)) { const ir = await fetch(`https://api.themoviedb.org/3/movie/${item.id}/images?api_key=${API_KEY}`); const id = await ir.json(); id.backdrops.slice(0, 10).forEach(img => { c.innerHTML += `<div class="card"><img src="https://image.tmdb.org/t/p/original${img.file_path}" onclick="openFrameViewer(this.src)"></div>`; }); } }
-        function confirmRemove() { removeItem(isFromFolder ? 'lists' : 'movies_gen', currentItem.id, isFromFolder, sourceFolderIdx); closeModals(); }
-        function deleteFolder(idx) { if(confirm("¿Eliminar carpeta?")) { let l = uData('lists'); l.splice(idx,1); setUData('lists', l); renderSaved(); } }
+        function toggleViewerFav() { let favs = uData('fav_frames'); const idx = favs.findIndex(f => f.src === currentViewerPath); if(idx > -1) favs.splice(idx, 1); else favs.push({src: currentViewerPath}); setUData('fav_frames', favs); closeModals(); updateProfile(); }
+        function openFrameViewer(src) { currentViewerPath = src; document.getElementById('viewer-img').src = src; const favs = uData('fav_frames'); const isF = favs.some(f => f.src === src); document.getElementById('viewer-fav-btn').innerText = isF ? "QUITAR DE MIS FAVORITOS" : "AGREGAR A FAVORITOS"; document.getElementById('viewer-modal').style.display = 'flex'; }
+        function setFrameAsAvatar() { localStorage.setItem(`butaca_photo_${userID}`, currentViewerPath); closeModals(); updateProfile(); }
+        function removeItem(key, id, fromFolder = false, fIdx = 0) { let data = uData(key); if(fromFolder) data[fIdx].items = data[fIdx].items.filter(x => x.id !== id); else data = data.filter(x => x.id !== id); setUData(key, data); renderSaved(); updateProfile(); }
+        function handleInfiniteScroll() { if (loading) return; if (window.innerHeight + window.scrollY >= document.body.offsetHeight - 800) { if (document.querySelector('.view.active').id === 'view-home') loadTrending(); } }
     </script>
     <input type="file" id="fileInput" hidden accept="image/*" onchange="const r=new FileReader(); r.onload=(e)=>{localStorage.setItem(`butaca_photo_${userID}`,e.target.result); updateProfile();}; r.readAsDataURL(this.files[0]);">
 </body>
