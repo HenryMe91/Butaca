@@ -7,26 +7,27 @@
     <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2280%22>🎞️</text></svg>">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <style>
-        :root { --rojo: #e50914; --oro: #ffcc00; --fondo: #0a0a0a; --card: #181818; --azul: #0071eb; --verde: #46d369; --gris: #2f2f2f; --input-gris: #252525; }
+        :root { --rojo: #e50914; --oro: #ffcc00; --fondo: #0a0a0a; --card: #181818; --azul: #0071eb; --verde: #46d369; --gris: #2a2a2a; --input-gris: #222; }
         body { background: var(--fondo); color: white; font-family: 'Inter', sans-serif; margin: 0; padding-bottom: 110px; overflow-x: hidden; -webkit-tap-highlight-color: transparent; }
 
         /* SPLASH & ANIM */
         #login-screen, #splash-screen { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: #000; display: flex; flex-direction: column; align-items: center; justify-content: center; z-index: 60000; }
         #splash-screen { display: none; z-index: 55000; }
         .ticket-anim { color: var(--oro); font-size: 80px; animation: ticketBounce 2s infinite ease-in-out; }
-        @keyframes ticketBounce { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-15px) rotate(10deg); } }
+        @keyframes ticketBounce { 0%, 100% { transform: translateY(0) rotate(0deg); } 50% { transform: translateY(-15px) rotate(10deg); } }
 
         header { padding: 18px; background: rgba(0,0,0,0.95); backdrop-filter: blur(20px); text-align: center; border-bottom: 1px solid rgba(255,255,255,0.05); position: sticky; top: 0; z-index: 100; }
-        .logo-header i { color: var(--oro); font-size: 24px; margin-right: 8px; }
+        .logo-header { display: flex; align-items: center; justify-content: center; gap: 10px; }
         .logo-header span { color: var(--rojo); font-size: 24px; font-weight: 900; letter-spacing: 2px; }
+        .logo-header i { color: var(--oro); font-size: 24px; }
 
         .view { display: none; padding: 20px; animation: fadeIn 0.4s; }
         .view.active { display: block; }
         @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
 
-        /* CATEGORIAS */
+        /* FILTROS */
         .filter-bar { display: flex; gap: 12px; overflow-x: auto; padding: 10px 0 20px; margin: 0 -20px; padding-left: 20px; scrollbar-width: none; }
-        .filter-btn { background: var(--gris); color: #888; border: none; padding: 10px 22px; border-radius: 25px; font-size: 12px; font-weight: 700; cursor: pointer; transition: 0.3s; white-space: nowrap; }
+        .filter-btn { background: var(--gris); color: #888; border: none; padding: 10px 22px; border-radius: 25px; font-size: 12px; font-weight: 700; cursor: pointer; white-space: nowrap; transition: 0.3s; }
         .filter-btn.active { background: white; color: black; box-shadow: 0 0 15px rgba(255,255,255,0.3); }
 
         /* GRID POSTERS */
@@ -34,22 +35,29 @@
         .card { background: var(--card); border-radius: 14px; overflow: hidden; display: flex; flex-direction: column; position: relative; border: 1px solid rgba(255,255,255,0.03); }
         .card img { width: 100%; aspect-ratio: 2/3; object-fit: cover; cursor: pointer; }
         .movie-title { font-size: 11px; font-weight: 700; height: 32px; overflow: hidden; margin: 10px 5px 5px; line-height: 1.2; text-align: center; }
+        .rating-badge { position: absolute; top: 8px; left: 8px; background: rgba(0,0,0,0.85); padding: 4px 8px; border-radius: 6px; font-size: 10px; color: var(--oro); border: 1px solid var(--oro); z-index: 5; }
 
-        /* ABATIBLE HORIZONTAL */
+        /* CARPETAS VERTICALES CORREGIDAS */
         .abatible-item { background: #161616; border-radius: 14px; margin-bottom: 12px; border: 1px solid #222; overflow: hidden; }
         .abatible-trigger { width: 100%; padding: 15px; background: none; border: none; color: #eee; text-align: left; font-size: 14px; font-weight: 700; display: flex; justify-content: space-between; align-items: center; }
-        .abatible-content { display: none; padding: 15px; background: #0b0b0b; border-top: 1px solid #222; }
-        .abatible-item.active .abatible-content { display: flex; gap: 15px; align-items: center; }
-        .abatible-poster { width: 90px; border-radius: 8px; flex-shrink: 0; box-shadow: 0 5px 15px rgba(0,0,0,0.5); }
-        .abatible-actions { flex-grow: 1; display: flex; flex-direction: column; gap: 8px; }
+        .abatible-content { display: none; padding: 15px; background: #0b0b0b; border-top: 1px solid #222; flex-direction: column; gap: 15px; }
+        .abatible-item.active .abatible-content { display: flex; }
+        .item-row { display: flex; gap: 15px; align-items: center; border-bottom: 1px solid #222; padding-bottom: 15px; width: 100%; position: relative; }
+        .abatible-poster { width: 80px; border-radius: 6px; flex-shrink: 0; }
+        .abatible-actions { flex-grow: 1; display: flex; flex-direction: column; gap: 8px; text-align: left; }
 
         /* FICHA TÉCNICA */
         .info-box { background: rgba(255,255,255,0.04); border-radius: 18px; padding: 15px; margin-top: 15px; text-align: left; }
         .info-section { margin-bottom: 12px; padding-bottom: 8px; border-bottom: 1px solid rgba(255,255,255,0.05); }
-        .info-title { color: var(--rojo); font-size: 9px; font-weight: 900; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 4px; display: block; }
+        .info-title { color: var(--rojo); font-size: 9px; font-weight: 900; text-transform: uppercase; letter-spacing: 1.5px; margin-bottom: 4px; display: block; }
         .info-text { font-size: 13px; color: #ccc; line-height: 1.4; }
         .watch-providers { display: flex; gap: 8px; flex-wrap: wrap; margin: 10px 0; justify-content: center; }
-        .provider-icon { width: 38px; height: 38px; border-radius: 8px; border: 1px solid rgba(255,255,255,0.1); }
+        .provider-icon { width: 35px; height: 35px; border-radius: 8px; border: 1px solid rgba(255,255,255,0.1); }
+
+        /* PERFIL XL */
+        .profile-card { background: linear-gradient(180deg, rgba(255,255,255,0.06) 0%, rgba(0,0,0,0) 100%); padding: 45px 20px; border-radius: 45px; text-align: center; border: 1px solid rgba(255,255,255,0.05); }
+        .p-name-xl { font-size: 32px; font-weight: 900; margin: 15px 0; }
+        .user-rank { display: inline-block; padding: 8px 18px; background: var(--oro); color: black; border-radius: 25px; font-size: 11px; font-weight: 900; text-transform: uppercase; margin-bottom: 20px; box-shadow: 0 4px 15px rgba(255,204,0,0.3); }
 
         /* NAV */
         nav { position: fixed; bottom: 0; width: 100%; background: rgba(10,10,10,0.95); backdrop-filter: blur(25px); display: flex; justify-content: space-around; padding: 12px 0 35px; border-top: 1px solid #222; z-index: 15000; }
@@ -57,46 +65,33 @@
         .nav-item.active { color: var(--rojo); transform: translateY(-2px); }
         .nav-item i { font-size: 22px; display: block; margin-bottom: 5px; }
 
-        /* PERFIL XL */
-        .profile-card { background: linear-gradient(180deg, rgba(255,255,255,0.06) 0%, rgba(0,0,0,0) 100%); padding: 45px 20px; border-radius: 45px; text-align: center; border: 1px solid rgba(255,255,255,0.05); }
-        .p-name-xl { font-size: 32px; font-weight: 900; margin: 15px 0; color: white; }
-        .stats-xl { display: grid; grid-template-columns: repeat(2, 1fr); gap: 15px; margin-top: 25px; }
-        .stat-box-xl { background: rgba(255,255,255,0.04); padding: 25px 10px; border-radius: 20px; text-align: center; }
-        .stat-num-xl { font-size: 28px; font-weight: 900; color: var(--rojo); display: block; }
-        .stat-label-xl { font-size: 11px; color: #888; text-transform: uppercase; font-weight: 800; }
-
         /* MODALES */
-        .btn-action { background: var(--rojo); color: white; border: none; padding: 14px; border-radius: 12px; font-size: 11px; font-weight: 800; width: 100%; cursor: pointer; transition: 0.3s; display: block; text-align: center; text-decoration: none; }
-        .btn-mini { padding: 9px; font-size: 9px; font-weight: 800; border-radius: 6px; border: none; color: white; cursor: pointer; text-transform: uppercase; width: 100%; }
+        .btn-action { background: var(--rojo); color: white; border: none; padding: 14px; border-radius: 12px; font-size: 11px; font-weight: 800; width: 100%; cursor: pointer; transition: 0.3s; display: block; text-align: center; text-decoration: none; box-sizing: border-box; }
+        .btn-added { background: var(--verde) !important; }
+        .btn-mini { padding: 10px; font-size: 9px; font-weight: 800; border-radius: 8px; border: none; color: white; cursor: pointer; text-transform: uppercase; width: 100%; }
         .modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.96); z-index: 30000; justify-content: center; align-items: center; backdrop-filter: blur(15px); }
         .modal-content { background: #1c1c1e; width: 85%; max-width: 450px; border-radius: 35px; padding: 30px; text-align: center; overflow-y: auto; max-height: 85vh; border: 1px solid rgba(255,255,255,0.1); position: relative; }
         .close-x { position: absolute; top: 15px; right: 20px; font-size: 28px; color: #555; cursor: pointer; }
         .rating-stars { display: flex; gap: 10px; justify-content: center; margin: 20px 0; font-size: 32px; color: #333; }
         .rating-stars i.active { color: var(--oro); }
 
-        /* SEARCH UI */
-        .search-wrapper { position: relative; width: 100%; margin-bottom: 25px; display: flex; gap: 10px; }
         input[type="text"] { width: 100%; padding: 18px; border-radius: 12px; border: 1px solid #333; background: var(--input-gris); color: white; outline: none; box-sizing: border-box; font-size: 14px; }
-        #autocomplete-results { position: absolute; top: 100%; left: 0; width: 100%; background: #1c1c1e; border-radius: 0 0 14px 14px; z-index: 5000; max-height: 250px; overflow-y: auto; border: 1px solid #333; }
-        .suggestion-item { padding: 15px; border-bottom: 1px solid #222; font-size: 14px; cursor: pointer; text-align: left; }
     </style>
 </head>
 <body>
 
     <div id="login-screen">
-        <i class="fas fa-ticket-alt ticket-anim"></i>
-        <h2 style="color:var(--rojo); font-weight:900; letter-spacing:4px; margin-top:20px;">BUTACA</h2>
-        <input type="text" id="user-input" placeholder="Nombre de usuario..." style="width:280px; margin-bottom:15px; text-align:center;">
+        <div class="logo-header" style="margin-bottom: 30px;"><i class="fas fa-ticket-alt ticket-anim"></i><span>BUTACA</span></div>
+        <input type="text" id="user-input" placeholder="Tu nombre artístico..." style="width:280px; margin-bottom:15px; text-align:center;">
         <button class="btn-action" style="width:280px; padding:20px;" onclick="handleLogin()">INICIAR PROYECTO</button>
     </div>
-    <div id="splash-screen"><div class="intro-content"><i class="fas fa-ticket-alt ticket-anim"></i></div></div>
+    <div id="splash-screen"><div class="intro-content"><div class="logo-header"><i class="fas fa-ticket-alt ticket-anim"></i><span>BUTACA</span></div></div></div>
     <header><div class="logo-header"><i class="fas fa-ticket-alt"></i><span>BUTACA</span></div></header>
 
     <div id="viewer-modal" class="modal">
         <span onclick="closeModals()" style="position:absolute; top:30px; right:20px; color:white; font-size:35px; cursor:pointer; z-index: 10;">&times;</span>
-        <img id="viewer-img" src="" style="max-width:95%; max-height:70%; object-fit:contain; border-radius:12px;">
-        <h3 id="viewer-name" style="margin-top:20px; font-size:16px; color:#fff; font-weight: 800; text-align:center;"></h3>
-        <button class="btn-action" id="viewer-fav-btn" style="width:240px; margin: 25px auto; background: var(--gris); border: 1px solid #444;" onclick="toggleViewerFav()">AGREGAR A FAVORITOS</button>
+        <img id="viewer-img" src="" style="max-width:95%; max-height:70%; object-fit:contain; border-radius:12px; box-shadow: 0 0 30px rgba(0,0,0,1);">
+        <button class="btn-action" id="viewer-fav-btn" style="width:160px; margin: 25px auto; background: var(--gris); border: 1px solid #444; padding:8px; font-size:9px;" onclick="toggleViewerFav()">AGREGAR A FAVORITOS</button>
     </div>
 
     <div id="view-home" class="view active">
@@ -105,10 +100,10 @@
     </div>
 
     <div id="view-search" class="view">
-        <div class="search-wrapper">
+        <div class="search-wrapper" style="margin-bottom: 25px; display: flex; gap: 10px;">
             <div style="flex-grow:1; position:relative;">
                 <input type="text" id="main-query" placeholder="Buscar película..." oninput="handleAutocomplete(this.value, 'autocomplete-results', startSearch)" onkeydown="if(event.key==='Enter') startSearch()">
-                <div id="autocomplete-results"></div>
+                <div id="autocomplete-results" style="position: absolute; top:100%; left:0; width:100%; background:#1c1c1e; z-index: 5000; border-radius: 0 0 14px 14px; max-height: 250px; overflow-y: auto; border: 1px solid #333;"></div>
             </div>
             <button class="btn-action" style="width:auto; padding:0 25px;" onclick="startSearch()">BUSCAR</button>
         </div>
@@ -123,8 +118,8 @@
     </div>
 
     <div id="view-frames" class="view">
-        <div class="search-wrapper">
-            <input type="text" id="frame-query" placeholder="Fotogramas de... (ej: Gladiator)" onkeydown="if(event.key==='Enter') searchFrames()">
+        <div class="search-wrapper" style="margin-bottom: 25px; display: flex; gap: 10px;">
+            <input type="text" id="frame-query" placeholder="Fotogramas (ej: Gladiador)" onkeydown="if(event.key==='Enter') searchFrames()">
             <button class="btn-action" style="width:auto; padding:0 20px;" onclick="searchFrames()">IR</button>
         </div>
         <div id="frames-container" class="grid"></div>
@@ -134,9 +129,10 @@
         <div class="profile-card">
             <div id="current-p-avatar" style="width:120px; height:120px; margin:0 auto; background:#111; border-radius:50%; border:3px solid var(--rojo); overflow:hidden; display:flex; align-items:center; justify-content:center; font-size:45px;" onclick="document.getElementById('fileInput').click()">🕵️</div>
             <h3 id="p-name" class="p-name-xl">Usuario</h3>
+            <span id="user-rank" class="user-rank">ESPECTADOR</span>
             <div class="stats-xl">
-                <div class="stat-box-xl"><span class="stat-num-xl" id="stat-m-p">0</span><span class="stat-label-xl">Películas Por Ver</span></div>
-                <div class="stat-box-xl"><span class="stat-num-xl" id="stat-m-v">0</span><span class="stat-label-xl">Películas Vistas</span></div>
+                <div class="stat-box-xl"><span class="stat-num-xl" id="stat-m-p">0</span><span class="stat-label-xl">Por Ver</span></div>
+                <div class="stat-box-xl"><span class="stat-num-xl" id="stat-m-v">0</span><span class="stat-label-xl">Vistas</span></div>
             </div>
             <h4 style="font-size:16px; color:var(--oro); margin-top:40px; text-align:left; font-weight:900;">MOODBOARD FAVORITOS</h4>
             <div id="fav-frames-container" class="grid" style="grid-template-columns:repeat(3,1fr); margin-top:15px;"></div>
@@ -157,7 +153,7 @@
     <div id="listMoveModal" class="modal">
         <div class="modal-content">
             <span class="close-x" onclick="closeModals()">&times;</span>
-            <h3>Gestionar Título</h3>
+            <h3>Gestionar Película</h3>
             <div id="dialog-main-actions" style="display:grid; gap:12px; margin-top:25px;">
                 <button class="btn-action" style="background:var(--verde)" onclick="triggerRatingFromMove()">⭐ CALIFICAR</button>
                 <button class="btn-action" style="background:var(--azul)" onclick="showFolderOptions()">📁 MOVER A CARPETA</button>
@@ -178,7 +174,7 @@
             <div class="rating-stars" id="star-selector">
                 <i class="fas fa-star" onclick="setRating(1)"></i><i class="fas fa-star" onclick="setRating(2)"></i><i class="fas fa-star" onclick="setRating(3)"></i><i class="fas fa-star" onclick="setRating(4)"></i><i class="fas fa-star" onclick="setRating(5)"></i>
             </div>
-            <button class="btn-action" onclick="confirmSeen()">GUARDAR VALORACIÓN</button>
+            <button class="btn-action" onclick="confirmSeen()">GUARDAR CALIFICACIÓN</button>
         </div>
     </div>
 
@@ -198,10 +194,7 @@
         let isFromFolder = false, sourceFolderIdx = -1;
 
         window.onload = () => {
-            if(localStorage.getItem('butaca_user')) { 
-                document.getElementById('login-screen').style.display = 'none'; 
-                startIntro(); 
-            }
+            if(localStorage.getItem('butaca_user')) { document.getElementById('login-screen').style.display = 'none'; startIntro(); }
             window.addEventListener('scroll', handleInfiniteScroll);
             renderGenreFilters();
         };
@@ -230,6 +223,7 @@
             const isSaved = (JSON.parse(localStorage.getItem('butaca_movies_gen')) || []).some(x => x.id === id);
             const release = details.release_date ? new Date(details.release_date).toLocaleDateString() : 'Por anunciar';
             const isFuture = new Date(details.release_date) > new Date();
+            const platformNames = providers.map(p => p.provider_name).join(', ') || 'Solo en Cines';
 
             document.getElementById('modalBody').innerHTML = `
                 <span class="close-x" onclick="closeModals()">&times;</span>
@@ -238,12 +232,15 @@
                 <div class="watch-providers">${providers.map(p => `<img class="provider-icon" src="https://image.tmdb.org/t/p/original${p.logo_path}" title="${p.provider_name}">`).join('') || (isFuture ? `<p style="font-size:11px; color:var(--oro)">ESTRENO: ${release}</p>` : '<p style="font-size:10px; color:#555">Disponible solo en Cines</p>')}</div>
                 <div class="info-box">
                     <div class="info-section"><span class="info-title">Sinopsis</span><p class="info-text">${details.overview || 'Sin descripción.'}</p></div>
-                    <div class="info-section"><span class="info-title">Producción</span><p class="info-text"><b>Dir:</b> ${credits.crew.find(c => c.job === 'Director')?.name || 'N/A'}<br><b>Mus:</b> ${credits.crew.find(c => c.job.includes('Music'))?.name || 'N/A'}</p></div>
+                    <div class="info-section">
+                        <span class="info-title">Producción</span>
+                        <p class="info-text"><b>Dir:</b> ${credits.crew.find(c => c.job === 'Director')?.name || 'N/A'}<br><b>Mus:</b> ${credits.crew.find(c => c.job.includes('Music'))?.name || 'N/A'}</p>
+                    </div>
                     <div class="info-section"><span class="info-title">Cast</span><p class="info-text">${credits.cast.slice(0,4).map(a=>a.name).join(", ")}</p></div>
                 </div>
                 <div style="display:flex; gap:10px; margin-top:20px; align-items: stretch;">
-                    <a href="https://api.whatsapp.com/send?text=Mira esta película en Butaca: ${details.title}" target="_blank" class="btn-action" style="flex:1; background:#25D366; display: flex; align-items: center; justify-content: center; height: 45px;"><i class="fab fa-whatsapp"></i></a>
-                    <button class="btn-action" id="btn-add-${id}" style="flex:3; background:${isSaved ? 'var(--verde)' : 'var(--rojo)'}; height: 45px;" onclick="saveItem(this,'${details.title.replace(/'/g,"")}','${details.poster_path}',${id})">${isSaved ? 'YA ESTÁ EN TU LISTA' : '+ AGREGAR'}</button>
+                    <a href="https://api.whatsapp.com/send?text=${encodeURIComponent('🎬 RECOMENDACIÓN BUTACA\n\n*' + details.title + '*\n\n' + (details.overview || '') + '\n\n📺 Ver en: ' + platformNames)}" target="_blank" class="btn-action" style="flex:1; background:#25D366; display: flex; align-items: center; justify-content: center; height: 50px;"><i class="fab fa-whatsapp" style="font-size: 22px;"></i></a>
+                    <button class="btn-action" id="btn-add-${id}" style="flex:1; background:${isSaved ? 'var(--verde)' : 'var(--rojo)'}; height: 50px;" onclick="saveItem(this,'${details.title.replace(/'/g,"")}','${details.poster_path}',${id})">${isSaved ? 'YA ESTÁ EN TU LISTA' : '+ AGREGAR'}</button>
                 </div>
             `;
             document.getElementById('movieModal').style.display = 'flex';
@@ -253,7 +250,7 @@
         function saveItem(btn, t, p, id) {
             let list = JSON.parse(localStorage.getItem('butaca_movies_gen')) || [];
             if(list.some(x => x.id === id)) return;
-            list.push({id, t, p});
+            list.push({id, t, p, rating: 0});
             localStorage.setItem('butaca_movies_gen', JSON.stringify(list));
             btn.innerText = "AGREGADO"; btn.style.background = "var(--verde)";
             updateProfile(); if(document.querySelector('.view.active').id === 'view-movies') renderSaved();
@@ -268,30 +265,42 @@
             userLists.forEach((l, i) => {
                 let html = `<div class="abatible-item"><button class="abatible-trigger" onclick="this.parentElement.classList.toggle('active')"><span><i class="fas fa-folder"></i> ${l.name}</span><i class="fas fa-chevron-down"></i></button><div class="abatible-content">`;
                 l.items.forEach(item => { 
-                    html += `<div style="display:flex; width:100%; gap:15px; border-bottom:1px solid #222; padding-bottom:15px; margin-bottom:15px; text-align:left;">
+                    html += `<div class="item-row">
+                        ${item.rating > 0 ? `<div class="rating-badge">⭐ ${item.rating}</div>` : ''}
                         <img src="https://image.tmdb.org/t/p/w200${item.p}" class="abatible-poster" onclick="openDetails(${item.id})">
                         <div class="abatible-actions">
-                            <span style="font-size:14px; font-weight:800;">${item.t}</span>
+                            <span style="font-size:13px; font-weight:800; text-align:left;">${item.t}</span>
                             <button class="btn-mini" style="background:var(--verde)" onclick="openMoveDialog(${item.id},'${item.t}','${item.p}', true, ${i})">GESTIONAR</button>
                             <button class="btn-mini" style="background:#333" onclick="removeItem('butaca_lists', ${item.id}, true, ${i})">QUITAR</button>
                         </div>
                     </div>`;
                 });
-                html += `<button class="btn-mini" style="background:#441111; margin-top:10px; width:auto; padding:5px 15px;" onclick="deleteFolder(${i})">BORRAR CARPETA</button></div></div>`;
+                html += `<button class="btn-mini" style="background:#441111; margin-top:5px; width:auto; padding:5px 15px;" onclick="deleteFolder(${i})">ELIMINAR CARPETA</button></div></div>`;
                 coll.innerHTML += html;
             });
 
             const gen = JSON.parse(localStorage.getItem('butaca_movies_gen')) || [];
             gen.forEach(m => {
-                grid.innerHTML += `<div class="card"><img src="https://image.tmdb.org/t/p/w500${m.p}" onclick="openDetails(${m.id})"><div class="movie-title">${m.t}</div><div style="padding:0 10px 10px; display:grid; gap:5px;"><button class="btn-mini" style="background:var(--azul)" onclick="openMoveDialog(${m.id},'${m.t}','${m.p}', false)">GESTIONAR</button><button class="btn-mini" style="background:#333" onclick="removeItem('butaca_movies_gen', ${m.id})">QUITAR</button></div></div>`;
+                grid.innerHTML += `<div class="card">
+                    ${m.rating > 0 ? `<div class="rating-badge">⭐ ${m.rating}</div>` : ''}
+                    <img src="https://image.tmdb.org/t/p/w500${m.p}" onclick="openDetails(${m.id})">
+                    <div class="movie-title">${m.t}</div>
+                    <div style="padding:0 10px 10px; display:grid; gap:5px;">
+                        <button class="btn-mini" style="background:var(--azul)" onclick="openMoveDialog(${m.id},'${m.t}','${m.p}', false)">GESTIONAR</button>
+                        <button class="btn-mini" style="background:#333" onclick="removeItem('butaca_movies_gen', ${m.id})">QUITAR</button>
+                    </div>
+                </div>`;
             });
         }
 
         /* --- MOVIMIENTOS --- */
         function openMoveDialog(id, t, p, fromFolder, folderIdx = -1) {
-            currentItem = {id, t, p}; isFromFolder = fromFolder; sourceFolderIdx = folderIdx;
-            document.getElementById('folder-options').style.display = 'none';
+            const listKey = fromFolder ? 'butaca_lists' : 'butaca_movies_gen';
+            const source = JSON.parse(localStorage.getItem(listKey));
+            const movie = fromFolder ? source[folderIdx].items.find(x => x.id === id) : source.find(x => x.id === id);
+            currentItem = movie; isFromFolder = fromFolder; sourceFolderIdx = folderIdx;
             document.getElementById('btn-return-general').style.display = fromFolder ? 'block' : 'none';
+            document.getElementById('folder-options').style.display = 'none';
             document.getElementById('listMoveModal').style.display = 'flex';
         }
 
@@ -331,7 +340,6 @@
             btn.classList.add('active'); loadTrending();
         }
 
-        /* --- INICIO ALEATORIO DINÁMICO --- */
         async function loadTrending(isRand = false) {
             loading = true; if(isRand) pageHome = Math.floor(Math.random() * 50) + 1;
             let url = `https://api.themoviedb.org/3/discover/movie?api_key=${API_KEY}&language=es-ES&page=${pageHome}&sort_by=popularity.desc`;
@@ -340,25 +348,24 @@
             const saved = JSON.parse(localStorage.getItem('butaca_movies_gen')) || [];
             d.results.forEach(m => { if(m.poster_path) {
                 const isS = saved.some(x => x.id === m.id);
-                document.getElementById('trending-grid').innerHTML += `<div class="card"><img src="https://image.tmdb.org/t/p/w500${m.poster_path}" onclick="openDetails(${m.id})"><div class="movie-title">${m.title}</div><button class="btn-mini" style="margin:0 10px 10px; width:auto; background:${isS?'var(--verde)':'var(--rojo)'}" onclick="saveItem(this,'${m.title.replace(/'/g,"")}','${m.poster_path}',${m.id})">${isS?'AGREGADO':'+ AGREGAR'}</button></div>`;
+                document.getElementById('trending-grid').innerHTML += `<div class="card"><img src="https://image.tmdb.org/t/p/w500${m.poster_path}" onclick="openDetails(${m.id})"><div class="movie-title">${m.title}</div><button class="btn-mini ${isS?'btn-added':''}" style="margin:0 10px 10px; width:auto; background:${isS?'var(--verde)':'var(--rojo)'}" onclick="saveItem(this,'${m.title.replace(/'/g,"")}','${m.poster_path}',${m.id})">${isS?'AGREGADO':'+ AGREGAR'}</button></div>`;
             }});
             pageHome++; loading = false;
         }
 
-        /* --- MOTOR DE FRAMES --- */
+        /* --- FRAMES --- */
         async function loadFrames(isRand = false) {
-            loading = true; if(isRand) pageFrames = Math.floor(Math.random() * 30) + 1;
+            loading = true; if(isRand) pageFrames = Math.floor(Math.random() * 40) + 1;
             const r = await fetch(`https://api.themoviedb.org/3/trending/movie/week?api_key=${API_KEY}&page=${pageFrames}`);
             const d = await r.json();
             d.results.forEach(item => { if(item.backdrop_path) {
-                document.getElementById('frames-container').innerHTML += `<div class="card" style="border-radius:10px;"><img src="https://image.tmdb.org/t/p/w780${item.backdrop_path}" onclick="openFrameViewer('https://image.tmdb.org/t/p/original${item.backdrop_path}', '${item.title}')"><div style="background:#111; padding:8px; font-size:9px; text-align:center; font-weight:700;">${item.title}</div></div>`;
+                document.getElementById('frames-container').innerHTML += `<div class="card" style="border-radius:10px;"><img src="https://image.tmdb.org/t/p/w780${item.backdrop_path}" onclick="openFrameViewer('https://image.tmdb.org/t/p/original${item.backdrop_path}')"><div style="background:#111; padding:8px; font-size:8px; text-align:center; font-weight:700;">${item.title}</div></div>`;
             }});
             pageFrames++; loading = false;
         }
 
-        function openFrameViewer(src, name) {
+        function openFrameViewer(src) {
             currentViewerPath = src; document.getElementById('viewer-img').src = src;
-            document.getElementById('viewer-name').innerText = name;
             const favs = JSON.parse(localStorage.getItem('butaca_fav_frames')) || [];
             updateFavBtnUI(favs.some(f => f.src === src));
             document.getElementById('viewer-modal').style.display = 'flex';
@@ -368,24 +375,19 @@
             let favs = JSON.parse(localStorage.getItem('butaca_fav_frames')) || [];
             const idx = favs.findIndex(f => f.src === currentViewerPath);
             if(idx > -1) { favs.splice(idx, 1); updateFavBtnUI(false); } 
-            else { favs.push({src: currentViewerPath, name: document.getElementById('viewer-name').innerText}); updateFavBtnUI(true); }
+            else { favs.push({src: currentViewerPath}); updateFavBtnUI(true); }
             localStorage.setItem('butaca_fav_frames', JSON.stringify(favs)); updateProfile();
         }
 
         function updateFavBtnUI(isFav) {
             const btn = document.getElementById('viewer-fav-btn');
             btn.innerText = isFav ? "QUITAR DE MIS FAVORITOS" : "AGREGAR A FAVORITOS";
-            btn.style.background = isFav ? "rgba(255,255,255,0.05)" : "var(--rojo)";
+            btn.style.background = isFav ? "rgba(255,255,255,0.15)" : "var(--rojo)";
             btn.style.border = isFav ? "1px solid var(--rojo)" : "none";
         }
 
         /* --- SYSTEM HELPERS --- */
-        async function startSearch() { 
-            querySearch = document.getElementById('main-query').value; 
-            pageSearch = 1; document.getElementById('search-grid').innerHTML = ""; 
-            document.getElementById('autocomplete-results').innerHTML = ""; 
-            searchUniversal(); 
-        }
+        async function startSearch() { querySearch = document.getElementById('main-query').value; pageSearch = 1; document.getElementById('search-grid').innerHTML = ""; document.getElementById('autocomplete-results').innerHTML = ""; searchUniversal(); }
         async function searchUniversal() {
             if(!querySearch) return; loading = true;
             const r = await fetch(`https://api.themoviedb.org/3/search/movie?api_key=${API_KEY}&query=${encodeURIComponent(querySearch)}&language=es-ES&page=${pageSearch}`);
@@ -404,16 +406,38 @@
         }
 
         function updateProfile() {
-            const gen = (JSON.parse(localStorage.getItem('butaca_movies_gen')) || []).length;
-            const favs = JSON.parse(localStorage.getItem('butaca_fav_frames')) || [];
+            const gen = JSON.parse(localStorage.getItem('butaca_movies_gen')) || [];
+            const lists = JSON.parse(localStorage.getItem('butaca_lists')) || [];
+            const calif = gen.filter(m => m.rating > 0).length + lists.reduce((a,b)=> a + b.items.filter(x => x.rating > 0).length, 0);
+            
             document.getElementById('p-name').innerText = localStorage.getItem('butaca_user') || "Usuario";
-            document.getElementById('stat-m-p').innerText = gen;
-            document.getElementById('fav-frames-container').innerHTML = favs.map(f => `<div class="card" style="aspect-ratio:1/1; position:relative;"><img src="${f.src}" onclick="openFrameViewer('${f.src}', '${f.name}')"></div>`).join("");
+            document.getElementById('stat-m-p').innerText = gen.length + lists.reduce((a,b)=> a + b.items.length, 0);
+            document.getElementById('stat-m-v').innerText = calif;
+            
+            let rank = "ESPECTADOR";
+            if(calif > 5) rank = "CINÉFILO";
+            if(calif > 20) rank = "CRÍTICO";
+            if(calif > 50) rank = "DIRECTOR";
+            document.getElementById('user-rank').innerText = rank;
+
+            const favs = JSON.parse(localStorage.getItem('butaca_fav_frames')) || [];
+            document.getElementById('fav-frames-container').innerHTML = favs.map(f => `<div class="card" style="aspect-ratio:1/1;"><img src="${f.src}" onclick="openFrameViewer('${f.src}')"></div>`).join("");
+            const savedPhoto = localStorage.getItem('butaca_custom_photo');
+            if(savedPhoto) document.getElementById('current-p-avatar').innerHTML = `<img src="${savedPhoto}" style="width:100%; height:100%; object-fit:cover;">`;
         }
 
         function triggerRatingFromMove() { closeModals(); currentRating = 0; document.querySelectorAll('#star-selector i').forEach(s => s.classList.remove('active')); document.getElementById('ratingModal').style.display = 'flex'; }
         function setRating(v) { currentRating = v; document.querySelectorAll('#star-selector i').forEach((s,i) => s.classList.toggle('active', i < v)); }
-        function confirmSeen() { closeModals(); updateProfile(); }
+        
+        function confirmSeen() {
+            const listKey = isFromFolder ? 'butaca_lists' : 'butaca_movies_gen';
+            let source = JSON.parse(localStorage.getItem(listKey));
+            if(isFromFolder) source[sourceFolderIdx].items.find(x => x.id === currentItem.id).rating = currentRating;
+            else source.find(x => x.id === currentItem.id).rating = currentRating;
+            localStorage.setItem(listKey, JSON.stringify(source));
+            closeModals(); renderSaved(); updateProfile();
+        }
+
         function confirmRemove() { removeItem(isFromFolder ? 'butaca_lists' : 'butaca_movies_gen', currentItem.id, isFromFolder, sourceFolderIdx); closeModals(); }
         function removeItem(key, id, fromFolder = false, folderIdx = 0) { 
             if(fromFolder) { let l = JSON.parse(localStorage.getItem(key)); l[folderIdx].items = l[folderIdx].items.filter(x => x.id !== id); localStorage.setItem(key, JSON.stringify(l)); }
@@ -423,22 +447,18 @@
         function openCreateListDialog() { document.getElementById('new-list-name').value = ""; document.getElementById('createListModal').style.display = 'flex'; }
         function openCreateListDialogFromMove() { closeModals(); openCreateListDialog(); }
         function confirmCreateList() { const n = document.getElementById('new-list-name').value; if(!n) return; let l = JSON.parse(localStorage.getItem('butaca_lists')) || []; l.push({name:n, items:[]}); localStorage.setItem('butaca_lists', JSON.stringify(l)); renderSaved(); closeModals(); }
-        function deleteFolder(idx) { if(confirm("¿Eliminar carpeta?")) { let l = JSON.parse(localStorage.getItem('butaca_lists')); l.splice(idx,1); localStorage.setItem('butaca_lists', JSON.stringify(l)); renderSaved(); } }
         function showFolderOptions() {
             const lists = JSON.parse(localStorage.getItem('butaca_lists')) || [];
             document.getElementById('list-options-container').innerHTML = lists.map((l, i) => `<button class="btn-action" style="background:#222; border:1px solid #444;" onclick="moveToFolder(${i})">${l.name}</button>`).join('');
             document.getElementById('folder-options').style.display = 'block';
         }
         function handleAutocomplete(q, resId) { if(!q) return document.getElementById(resId).innerHTML = ""; fetch(`https://api.themoviedb.org/3/search/movie?api_key=${API_KEY}&query=${encodeURIComponent(q)}&language=es-ES`).then(r => r.json()).then(d => { document.getElementById(resId).innerHTML = d.results.slice(0, 5).map(m => `<div class="suggestion-item" onclick="document.getElementById('main-query').value='${m.title}'; startSearch();">${m.title}</div>`).join(''); }); }
-        function switchView(id, el) { 
-            document.querySelectorAll('.view').forEach(v => v.classList.remove('active')); document.getElementById(id).classList.add('active'); 
-            document.querySelectorAll('.nav-item').forEach(i => i.classList.remove('active')); el.classList.add('active');
-            if(id === 'view-movies') renderSaved(); 
-        }
+        function switchView(id, el) { document.querySelectorAll('.view').forEach(v => v.classList.remove('active')); document.getElementById(id).classList.add('active'); document.querySelectorAll('.nav-item').forEach(i => i.classList.remove('active')); el.classList.add('active'); if(id === 'view-movies') renderSaved(); }
         function closeModals() { document.querySelectorAll('.modal').forEach(m => m.style.display = 'none'); }
         function logout() { localStorage.clear(); location.reload(); }
-        async function searchFrames() { const q = document.getElementById('frame-query').value; if(!q) return; const r = await fetch(`https://api.themoviedb.org/3/search/movie?api_key=${API_KEY}&query=${encodeURIComponent(q)}&language=es-ES`); const d = await r.json(); const c = document.getElementById('frames-container'); c.innerHTML = ""; for(let item of d.results.slice(0, 3)) { const ir = await fetch(`https://api.themoviedb.org/3/movie/${item.id}/images?api_key=${API_KEY}`); const id = await ir.json(); id.backdrops.slice(0, 10).forEach(img => { c.innerHTML += `<div class="card"><img src="https://image.tmdb.org/t/p/original${img.file_path}" onclick="openFrameViewer(this.src, '${item.title}')"></div>`; }); } }
+        async function searchFrames() { const q = document.getElementById('frame-query').value; if(!q) return; const r = await fetch(`https://api.themoviedb.org/3/search/movie?api_key=${API_KEY}&query=${encodeURIComponent(q)}&language=es-ES`); const d = await r.json(); const c = document.getElementById('frames-container'); c.innerHTML = ""; for(let item of d.results.slice(0, 3)) { const ir = await fetch(`https://api.themoviedb.org/3/movie/${item.id}/images?api_key=${API_KEY}`); const id = await ir.json(); id.backdrops.slice(0, 10).forEach(img => { c.innerHTML += `<div class="card"><img src="https://image.tmdb.org/t/p/original${img.file_path}" onclick="openFrameViewer(this.src)"></div>`; }); } }
+        function deleteFolder(idx) { if(confirm("¿Eliminar carpeta?")) { let l = JSON.parse(localStorage.getItem('butaca_lists')); l.splice(idx,1); localStorage.setItem('butaca_lists', JSON.stringify(l)); renderSaved(); } }
     </script>
-    <input type="file" id="fileInput" hidden accept="image/*" onchange="const r = new FileReader(); r.onload=(e)=>{localStorage.setItem('butaca_custom_photo', e.target.result); location.reload();}; r.readAsDataURL(this.files[0]);">
+    <input type="file" id="fileInput" hidden accept="image/*" onchange="const r=new FileReader(); r.onload=(e)=>{localStorage.setItem('butaca_custom_photo',e.target.result); location.reload();}; r.readAsDataURL(this.files[0]);">
 </body>
 </html>
