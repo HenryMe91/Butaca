@@ -10,13 +10,13 @@
         :root { --rojo: #e50914; --oro: #ffcc00; --fondo: #0a0a0a; --card: #181818; --azul: #0071eb; --verde: #46d369; --gris: #2a2a2a; --input-gris: #222; }
         body { background: var(--fondo); color: white; font-family: 'Inter', sans-serif; margin: 0; padding-bottom: 110px; overflow-x: hidden; -webkit-tap-highlight-color: transparent; }
 
-        /* SPLASH & ANIM */
-        #login-screen, #splash-screen { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: #000; display: flex; flex-direction: column; align-items: center; justify-content: center; z-index: 60000; }
-        #splash-screen { display: none; z-index: 55000; }
+        /* SPLASH & LOGIN */
+        #login-screen, #splash-screen { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: #000; display: flex; flex-direction: column; align-items: center; justify-content: center; z-index: 99999; }
+        #splash-screen { display: none; z-index: 99998; }
         .ticket-anim { color: var(--oro); font-size: 80px; animation: ticketBounce 2s infinite ease-in-out; }
         @keyframes ticketBounce { 0%, 100% { transform: translateY(0) rotate(0deg); } 50% { transform: translateY(-15px) rotate(10deg); } }
 
-        header { padding: 18px; background: rgba(0,0,0,0.95); backdrop-filter: blur(20px); text-align: center; border-bottom: 1px solid rgba(255,255,255,0.05); position: sticky; top: 0; z-index: 100; }
+        header { padding: 18px; background: rgba(0,0,0,0.95); backdrop-filter: blur(20px); text-align: center; border-bottom: 1px solid rgba(255,255,255,0.05); position: sticky; top: 0; z-index: 1000; }
         .logo-header { display: flex; align-items: center; justify-content: center; gap: 10px; }
         .logo-header span { color: var(--rojo); font-size: 24px; font-weight: 900; letter-spacing: 2px; }
         .logo-header i { color: var(--oro); font-size: 24px; }
@@ -25,7 +25,7 @@
         .view.active { display: block; }
         @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
 
-        /* FILTROS */
+        /* CATEGORIAS */
         .filter-bar { display: flex; gap: 12px; overflow-x: auto; padding: 10px 0 20px; margin: 0 -20px; padding-left: 20px; scrollbar-width: none; }
         .filter-btn { background: var(--gris); color: #888; border: none; padding: 10px 22px; border-radius: 25px; font-size: 12px; font-weight: 700; cursor: pointer; white-space: nowrap; transition: 0.3s; }
         .filter-btn.active { background: white; color: black; box-shadow: 0 0 15px rgba(255,255,255,0.3); }
@@ -37,30 +37,33 @@
         .movie-title { font-size: 11px; font-weight: 700; height: 32px; overflow: hidden; margin: 10px 5px 5px; line-height: 1.2; text-align: center; }
         .rating-badge { position: absolute; top: 8px; left: 8px; background: rgba(0,0,0,0.85); padding: 4px 8px; border-radius: 6px; font-size: 10px; color: var(--oro); border: 1px solid var(--oro); z-index: 5; }
 
-        /* CARPETAS VERTICALES CORREGIDAS */
+        /* CARPETAS VERTICALES */
         .abatible-item { background: #161616; border-radius: 14px; margin-bottom: 12px; border: 1px solid #222; overflow: hidden; }
         .abatible-trigger { width: 100%; padding: 15px; background: none; border: none; color: #eee; text-align: left; font-size: 14px; font-weight: 700; display: flex; justify-content: space-between; align-items: center; }
         .abatible-content { display: none; padding: 15px; background: #0b0b0b; border-top: 1px solid #222; flex-direction: column; gap: 15px; }
         .abatible-item.active .abatible-content { display: flex; }
-        .item-row { display: flex; gap: 15px; align-items: center; border-bottom: 1px solid #222; padding-bottom: 15px; width: 100%; position: relative; }
-        .abatible-poster { width: 80px; border-radius: 6px; flex-shrink: 0; }
-        .abatible-actions { flex-grow: 1; display: flex; flex-direction: column; gap: 8px; text-align: left; }
+        .item-row { display: flex; gap: 12px; align-items: center; border-bottom: 1px solid #222; padding-bottom: 15px; width: 100%; }
+        .abatible-poster { width: 75px; border-radius: 6px; flex-shrink: 0; }
+        .reorder-btns { display: flex; flex-direction: column; gap: 5px; }
+        .btn-order { background: #333; color: white; border: none; padding: 8px; border-radius: 4px; font-size: 10px; cursor: pointer; }
 
-        /* FICHA TÉCNICA */
-        .info-box { background: rgba(255,255,255,0.04); border-radius: 18px; padding: 15px; margin-top: 15px; text-align: left; }
-        .info-section { margin-bottom: 12px; padding-bottom: 8px; border-bottom: 1px solid rgba(255,255,255,0.05); }
-        .info-title { color: var(--rojo); font-size: 9px; font-weight: 900; text-transform: uppercase; letter-spacing: 1.5px; margin-bottom: 4px; display: block; }
-        .info-text { font-size: 13px; color: #ccc; line-height: 1.4; }
-        .watch-providers { display: flex; gap: 8px; flex-wrap: wrap; margin: 10px 0; justify-content: center; }
-        .provider-icon { width: 35px; height: 35px; border-radius: 8px; border: 1px solid rgba(255,255,255,0.1); }
+        /* FICHA TÉCNICA MAESTRA */
+        .info-box { background: rgba(255,255,255,0.04); border-radius: 18px; padding: 18px; margin-top: 15px; text-align: left; border: 1px solid rgba(255,255,255,0.05); }
+        .info-section { margin-bottom: 15px; padding-bottom: 10px; border-bottom: 1px solid rgba(255,255,255,0.05); }
+        .info-section:last-child { border: none; margin-bottom: 0; }
+        .info-title { color: var(--rojo); font-size: 10px; font-weight: 900; text-transform: uppercase; letter-spacing: 1.5px; margin-bottom: 4px; display: block; }
+        .info-text { font-size: 14px; color: #eee; line-height: 1.5; }
 
-        /* PERFIL XL */
+        /* PERFIL INTERACTIVO */
         .profile-card { background: linear-gradient(180deg, rgba(255,255,255,0.06) 0%, rgba(0,0,0,0) 100%); padding: 45px 20px; border-radius: 45px; text-align: center; border: 1px solid rgba(255,255,255,0.05); }
-        .p-name-xl { font-size: 32px; font-weight: 900; margin: 15px 0; }
-        .user-rank { display: inline-block; padding: 8px 18px; background: var(--oro); color: black; border-radius: 25px; font-size: 11px; font-weight: 900; text-transform: uppercase; margin-bottom: 20px; box-shadow: 0 4px 15px rgba(255,204,0,0.3); }
+        .rank-tag { display: inline-block; padding: 6px 15px; background: var(--oro); color: black; border-radius: 20px; font-size: 10px; font-weight: 900; text-transform: uppercase; margin-bottom: 15px; border: 1px solid black; }
+        .stats-xl { display: grid; grid-template-columns: repeat(2, 1fr); gap: 15px; margin-top: 25px; }
+        .stat-box-xl { background: rgba(255,255,255,0.04); padding: 25px 10px; border-radius: 20px; text-align: center; cursor: pointer; transition: 0.2s; border: 1px solid rgba(255,255,255,0.05); }
+        .stat-num-xl { font-size: 28px; font-weight: 900; color: var(--rojo); display: block; }
+        .stat-label-xl { font-size: 11px; color: #888; text-transform: uppercase; font-weight: 800; }
 
-        /* NAV */
-        nav { position: fixed; bottom: 0; width: 100%; background: rgba(10,10,10,0.95); backdrop-filter: blur(25px); display: flex; justify-content: space-around; padding: 12px 0 35px; border-top: 1px solid #222; z-index: 15000; }
+        /* BARRA DE NAVEGACIÓN BLINDADA */
+        nav { position: fixed; bottom: 0; left: 0; right: 0; width: 100%; background: rgba(10,10,10,0.98); backdrop-filter: blur(25px); display: flex; justify-content: space-around; padding: 12px 0 35px; border-top: 1px solid #222; z-index: 50000; box-sizing: border-box; }
         .nav-item { color: #555; text-align: center; font-size: 8px; font-weight: 800; flex: 1; cursor: pointer; transition: 0.2s; }
         .nav-item.active { color: var(--rojo); transform: translateY(-2px); }
         .nav-item i { font-size: 22px; display: block; margin-bottom: 5px; }
@@ -69,20 +72,20 @@
         .btn-action { background: var(--rojo); color: white; border: none; padding: 14px; border-radius: 12px; font-size: 11px; font-weight: 800; width: 100%; cursor: pointer; transition: 0.3s; display: block; text-align: center; text-decoration: none; box-sizing: border-box; }
         .btn-added { background: var(--verde) !important; }
         .btn-mini { padding: 10px; font-size: 9px; font-weight: 800; border-radius: 8px; border: none; color: white; cursor: pointer; text-transform: uppercase; width: 100%; }
-        .modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.96); z-index: 30000; justify-content: center; align-items: center; backdrop-filter: blur(15px); }
+        .modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.96); z-index: 60000; justify-content: center; align-items: center; backdrop-filter: blur(15px); }
         .modal-content { background: #1c1c1e; width: 85%; max-width: 450px; border-radius: 35px; padding: 30px; text-align: center; overflow-y: auto; max-height: 85vh; border: 1px solid rgba(255,255,255,0.1); position: relative; }
         .close-x { position: absolute; top: 15px; right: 20px; font-size: 28px; color: #555; cursor: pointer; }
         .rating-stars { display: flex; gap: 10px; justify-content: center; margin: 20px 0; font-size: 32px; color: #333; }
         .rating-stars i.active { color: var(--oro); }
 
-        input[type="text"] { width: 100%; padding: 18px; border-radius: 12px; border: 1px solid #333; background: var(--input-gris); color: white; outline: none; box-sizing: border-box; font-size: 14px; }
+        input[type="text"] { width: 100%; padding: 18px; border-radius: 12px; border: 1px solid #333; background: var(--gris); color: white; outline: none; box-sizing: border-box; font-size: 14px; }
     </style>
 </head>
 <body>
 
     <div id="login-screen">
         <div class="logo-header" style="margin-bottom: 30px;"><i class="fas fa-ticket-alt ticket-anim"></i><span>BUTACA</span></div>
-        <input type="text" id="user-input" placeholder="Tu nombre artístico..." style="width:280px; margin-bottom:15px; text-align:center;">
+        <input type="text" id="user-input" placeholder="Nombre artístico..." style="width:280px; margin-bottom:15px; text-align:center;">
         <button class="btn-action" style="width:280px; padding:20px;" onclick="handleLogin()">INICIAR PROYECTO</button>
     </div>
     <div id="splash-screen"><div class="intro-content"><div class="logo-header"><i class="fas fa-ticket-alt ticket-anim"></i><span>BUTACA</span></div></div></div>
@@ -90,8 +93,11 @@
 
     <div id="viewer-modal" class="modal">
         <span onclick="closeModals()" style="position:absolute; top:30px; right:20px; color:white; font-size:35px; cursor:pointer; z-index: 10;">&times;</span>
-        <img id="viewer-img" src="" style="max-width:95%; max-height:70%; object-fit:contain; border-radius:12px; box-shadow: 0 0 30px rgba(0,0,0,1);">
-        <button class="btn-action" id="viewer-fav-btn" style="width:160px; margin: 25px auto; background: var(--gris); border: 1px solid #444; padding:8px; font-size:9px;" onclick="toggleViewerFav()">AGREGAR A FAVORITOS</button>
+        <img id="viewer-img" src="" style="max-width:95%; max-height:60%; object-fit:contain; border-radius:12px; box-shadow: 0 0 50px rgba(0,0,0,1);">
+        <div style="margin-top: 25px; display: flex; flex-direction: column; gap: 12px; align-items: center;">
+            <button class="btn-action" id="viewer-fav-btn" style="width:160px; padding:10px; font-size:9px; background:var(--gris); border:1px solid #444;" onclick="toggleViewerFav()">AGREGAR A FAVORITOS</button>
+            <button class="btn-action" style="width:160px; padding:10px; font-size:9px; background:var(--azul);" onclick="setFrameAsAvatar()">SELECCIONAR COMO PERFIL</button>
+        </div>
     </div>
 
     <div id="view-home" class="view active">
@@ -102,8 +108,8 @@
     <div id="view-search" class="view">
         <div class="search-wrapper" style="margin-bottom: 25px; display: flex; gap: 10px;">
             <div style="flex-grow:1; position:relative;">
-                <input type="text" id="main-query" placeholder="Buscar película..." oninput="handleAutocomplete(this.value, 'autocomplete-results', startSearch)" onkeydown="if(event.key==='Enter') startSearch()">
-                <div id="autocomplete-results" style="position: absolute; top:100%; left:0; width:100%; background:#1c1c1e; z-index: 5000; border-radius: 0 0 14px 14px; max-height: 250px; overflow-y: auto; border: 1px solid #333;"></div>
+                <input type="text" id="main-query" placeholder="Buscar película..." oninput="handleAutocomplete(this.value, 'autocomplete-results')" onkeydown="if(event.key==='Enter') startSearch()">
+                <div id="autocomplete-results" style="position: absolute; top:100%; left:0; width:100%; background:#1c1c1e; z-index: 5000; border-radius: 0 0 14px 14px; max-height: 250px; overflow-y: auto;"></div>
             </div>
             <button class="btn-action" style="width:auto; padding:0 25px;" onclick="startSearch()">BUSCAR</button>
         </div>
@@ -119,7 +125,7 @@
 
     <div id="view-frames" class="view">
         <div class="search-wrapper" style="margin-bottom: 25px; display: flex; gap: 10px;">
-            <input type="text" id="frame-query" placeholder="Fotogramas (ej: Gladiador)" onkeydown="if(event.key==='Enter') searchFrames()">
+            <input type="text" id="frame-query" placeholder="Fotogramas (ej: Joker)" onkeydown="if(event.key==='Enter') searchFrames()">
             <button class="btn-action" style="width:auto; padding:0 20px;" onclick="searchFrames()">IR</button>
         </div>
         <div id="frames-container" class="grid"></div>
@@ -128,11 +134,17 @@
     <div id="view-profile" class="view">
         <div class="profile-card">
             <div id="current-p-avatar" style="width:120px; height:120px; margin:0 auto; background:#111; border-radius:50%; border:3px solid var(--rojo); overflow:hidden; display:flex; align-items:center; justify-content:center; font-size:45px;" onclick="document.getElementById('fileInput').click()">🕵️</div>
-            <h3 id="p-name" class="p-name-xl">Usuario</h3>
-            <span id="user-rank" class="user-rank">ESPECTADOR</span>
+            <h3 id="p-name" style="font-size: 32px; font-weight: 900; margin: 15px 0;">Usuario</h3>
+            <div id="rank-display" class="user-rank-box"></div>
             <div class="stats-xl">
-                <div class="stat-box-xl"><span class="stat-num-xl" id="stat-m-p">0</span><span class="stat-label-xl">Por Ver</span></div>
-                <div class="stat-box-xl"><span class="stat-num-xl" id="stat-m-v">0</span><span class="stat-label-xl">Vistas</span></div>
+                <div class="stat-box-xl" onclick="openTextList('por_ver', 'Películas Por Ver')">
+                    <span class="stat-num-xl" id="stat-m-p">0</span>
+                    <span class="stat-label-xl">Por Ver</span>
+                </div>
+                <div class="stat-box-xl" onclick="openTextList('vistas', 'Películas Vistas')">
+                    <span class="stat-num-xl" id="stat-m-v">0</span>
+                    <span class="stat-label-xl">Vistas</span>
+                </div>
             </div>
             <h4 style="font-size:16px; color:var(--oro); margin-top:40px; text-align:left; font-weight:900;">MOODBOARD FAVORITOS</h4>
             <div id="fav-frames-container" class="grid" style="grid-template-columns:repeat(3,1fr); margin-top:15px;"></div>
@@ -140,7 +152,7 @@
         <button onclick="logout()" style="color:#444; background:none; border:none; width:100%; font-size:13px; margin-top:50px; font-weight:900;">CERRAR SESIÓN</button>
     </div>
 
-    <nav>
+    <nav id="main-nav">
         <div class="nav-item active" onclick="switchView('view-home', this)"><i class="fas fa-home"></i>Inicio</div>
         <div class="nav-item" onclick="switchView('view-search', this)"><i class="fas fa-search"></i>Buscar</div>
         <div class="nav-item" onclick="switchView('view-movies', this)"><i class="fas fa-film"></i>Películas</div>
@@ -149,14 +161,14 @@
     </nav>
 
     <div id="movieModal" class="modal"><div class="modal-content" id="modalBody"></div></div>
-    
     <div id="listMoveModal" class="modal">
         <div class="modal-content">
             <span class="close-x" onclick="closeModals()">&times;</span>
-            <h3>Gestionar Película</h3>
+            <h3 id="manage-title">Gestionar Película</h3>
             <div id="dialog-main-actions" style="display:grid; gap:12px; margin-top:25px;">
                 <button class="btn-action" style="background:var(--verde)" onclick="triggerRatingFromMove()">⭐ CALIFICAR</button>
-                <button class="btn-action" style="background:var(--azul)" onclick="showFolderOptions()">📁 MOVER A CARPETA</button>
+                <button id="btn-mark-watched" class="btn-action" style="background:var(--azul)" onclick="markAsWatched()">🎬 MARCADA COMO VISTA</button>
+                <button class="btn-action" style="background:var(--card); border:1px solid #444;" onclick="showFolderOptions()">📁 MOVER A CARPETA</button>
                 <button id="btn-return-general" class="btn-action" style="background:var(--oro); color:black; display:none;" onclick="returnToGeneral()">📦 DEVOLVER A GENERAL</button>
                 <button class="btn-action" style="background:#333" onclick="confirmRemove()">🗑️ QUITAR DE MI LISTA</button>
             </div>
@@ -166,7 +178,13 @@
             </div>
         </div>
     </div>
-
+    <div id="textListModal" class="modal">
+        <div class="modal-content">
+            <span class="close-x" onclick="closeModals()">&times;</span>
+            <h3 id="text-list-title">Lista</h3>
+            <div id="text-list-container" style="text-align:left; margin-top:20px; font-size:14px; line-height:2.2; color:#ccc; max-height: 50vh; overflow-y: auto;"></div>
+        </div>
+    </div>
     <div id="ratingModal" class="modal">
         <div class="modal-content">
             <span class="close-x" onclick="closeModals()">&times;</span>
@@ -174,10 +192,9 @@
             <div class="rating-stars" id="star-selector">
                 <i class="fas fa-star" onclick="setRating(1)"></i><i class="fas fa-star" onclick="setRating(2)"></i><i class="fas fa-star" onclick="setRating(3)"></i><i class="fas fa-star" onclick="setRating(4)"></i><i class="fas fa-star" onclick="setRating(5)"></i>
             </div>
-            <button class="btn-action" onclick="confirmSeen()">GUARDAR CALIFICACIÓN</button>
+            <button class="btn-action" onclick="confirmSeen()">GUARDAR PUNTUACIÓN</button>
         </div>
     </div>
-
     <div id="createListModal" class="modal">
         <div class="modal-content">
             <span class="close-x" onclick="closeModals()">&times;</span>
@@ -191,7 +208,7 @@
         const API_KEY = 'e7803f371057b32d0d0664e165bf78f1';
         let currentGenre = null, currentItem = null, currentRating = 0;
         let pageHome = 1, pageSearch = 1, pageFrames = 1, loading = false, querySearch = "", currentViewerPath = "";
-        let isFromFolder = false, sourceFolderIdx = -1;
+        let isFromFolder = false, sourceFolderIdx = -1, openFolders = [];
 
         window.onload = () => {
             if(localStorage.getItem('butaca_user')) { document.getElementById('login-screen').style.display = 'none'; startIntro(); }
@@ -212,7 +229,7 @@
             loadTrending(true); updateProfile(); loadFrames(true);
         }
 
-        /* --- FICHA TÉCNICA MAESTRA --- */
+        /* --- FICHA TÉCNICA PRO --- */
         async function openDetails(id) {
             const [details, credits, watch] = await Promise.all([
                 fetch(`https://api.themoviedb.org/3/movie/${id}?api_key=${API_KEY}&language=es-ES`).then(r => r.json()),
@@ -221,36 +238,30 @@
             ]);
             const providers = watch.results?.CL?.flatrate || [];
             const isSaved = (JSON.parse(localStorage.getItem('butaca_movies_gen')) || []).some(x => x.id === id);
-            const release = details.release_date ? new Date(details.release_date).toLocaleDateString() : 'Por anunciar';
-            const isFuture = new Date(details.release_date) > new Date();
             const platformNames = providers.map(p => p.provider_name).join(', ') || 'Solo en Cines';
 
             document.getElementById('modalBody').innerHTML = `
                 <span class="close-x" onclick="closeModals()">&times;</span>
                 <img src="https://image.tmdb.org/t/p/w500${details.poster_path}" style="width:100%; border-radius:20px;">
                 <h3 style="margin:15px 0">${details.title}</h3>
-                <div class="watch-providers">${providers.map(p => `<img class="provider-icon" src="https://image.tmdb.org/t/p/original${p.logo_path}" title="${p.provider_name}">`).join('') || (isFuture ? `<p style="font-size:11px; color:var(--oro)">ESTRENO: ${release}</p>` : '<p style="font-size:10px; color:#555">Disponible solo en Cines</p>')}</div>
+                <div class="watch-providers">${providers.map(p => `<img class="provider-icon" src="https://image.tmdb.org/t/p/original${p.logo_path}" title="${p.provider_name}">`).join('') || '<p style="font-size:10px; color:#555">Disponible solo en Cines</p>'}</div>
                 <div class="info-box">
-                    <div class="info-section"><span class="info-title">Sinopsis</span><p class="info-text">${details.overview || 'Sin descripción.'}</p></div>
-                    <div class="info-section">
-                        <span class="info-title">Producción</span>
-                        <p class="info-text"><b>Dir:</b> ${credits.crew.find(c => c.job === 'Director')?.name || 'N/A'}<br><b>Mus:</b> ${credits.crew.find(c => c.job.includes('Music'))?.name || 'N/A'}</p>
-                    </div>
-                    <div class="info-section"><span class="info-title">Cast</span><p class="info-text">${credits.cast.slice(0,4).map(a=>a.name).join(", ")}</p></div>
+                    <div class="info-section"><span class="info-title">Sinopsis</span><p class="info-text">${details.overview || 'N/A'}</p></div>
+                    <div class="info-section"><span class="info-title">Producción</span><p class="info-text"><b>Director:</b> ${credits.crew.find(c => c.job === 'Director')?.name || 'N/A'}<br><b>Productor:</b> ${credits.crew.find(c => c.job === 'Producer')?.name || 'N/A'}<br><b>Música:</b> ${credits.crew.find(c => c.job.includes('Music'))?.name || 'N/A'}</p></div>
+                    <div class="info-section"><span class="info-title">Casting Principal</span><p class="info-text">${credits.cast.slice(0,5).map(a=>a.name).join(", ")}</p></div>
                 </div>
-                <div style="display:flex; gap:10px; margin-top:20px; align-items: stretch;">
-                    <a href="https://api.whatsapp.com/send?text=${encodeURIComponent('🎬 RECOMENDACIÓN BUTACA\n\n*' + details.title + '*\n\n' + (details.overview || '') + '\n\n📺 Ver en: ' + platformNames)}" target="_blank" class="btn-action" style="flex:1; background:#25D366; display: flex; align-items: center; justify-content: center; height: 50px;"><i class="fab fa-whatsapp" style="font-size: 22px;"></i></a>
-                    <button class="btn-action" id="btn-add-${id}" style="flex:1; background:${isSaved ? 'var(--verde)' : 'var(--rojo)'}; height: 50px;" onclick="saveItem(this,'${details.title.replace(/'/g,"")}','${details.poster_path}',${id})">${isSaved ? 'YA ESTÁ EN TU LISTA' : '+ AGREGAR'}</button>
-                </div>
-            `;
+                <div style="display:flex; gap:10px; margin-top:20px;">
+                    <a href="https://api.whatsapp.com/send?text=${encodeURIComponent('🎬 RECOMENDACIÓN BUTACA\n\n*' + details.title + '*\n\n' + (details.overview || '') + '\n\n📺 Ver en: ' + platformNames + '\n\n🖼️ ' + 'https://image.tmdb.org/t/p/w500' + details.poster_path)}" target="_blank" class="btn-action" style="flex:1; background:#25D366; display: flex; align-items: center; justify-content: center; height: 50px;"><i class="fab fa-whatsapp" style="font-size: 24px;"></i></a>
+                    <button class="btn-action" id="btn-add-${id}" style="flex:1; background:${isSaved ? 'var(--verde)' : 'var(--rojo)'}; height: 50px;" onclick="saveItem(this,'${details.title.replace(/'/g,"")}','${details.poster_path}',${id})">${isSaved ? 'AGREGADO' : '+ AGREGAR'}</button>
+                </div>`;
             document.getElementById('movieModal').style.display = 'flex';
         }
 
-        /* --- MOTOR DE LISTAS PERSISTENTE --- */
+        /* --- MOTOR PERSISTENCIA --- */
         function saveItem(btn, t, p, id) {
             let list = JSON.parse(localStorage.getItem('butaca_movies_gen')) || [];
             if(list.some(x => x.id === id)) return;
-            list.push({id, t, p, rating: 0});
+            list.push({id, t, p, rating: 0, watched: false});
             localStorage.setItem('butaca_movies_gen', JSON.stringify(list));
             btn.innerText = "AGREGADO"; btn.style.background = "var(--verde)";
             updateProfile(); if(document.querySelector('.view.active').id === 'view-movies') renderSaved();
@@ -263,13 +274,17 @@
             const userLists = JSON.parse(localStorage.getItem('butaca_lists')) || [];
             
             userLists.forEach((l, i) => {
-                let html = `<div class="abatible-item"><button class="abatible-trigger" onclick="this.parentElement.classList.toggle('active')"><span><i class="fas fa-folder"></i> ${l.name}</span><i class="fas fa-chevron-down"></i></button><div class="abatible-content">`;
-                l.items.forEach(item => { 
+                const isActive = openFolders.includes(i);
+                let html = `<div class="abatible-item ${isActive ? 'active' : ''}"><button class="abatible-trigger" onclick="toggleFolder(${i})"><span><i class="fas fa-folder"></i> ${l.name}</span><i class="fas fa-chevron-down"></i></button><div class="abatible-content">`;
+                l.items.forEach((item, idx) => { 
                     html += `<div class="item-row">
-                        ${item.rating > 0 ? `<div class="rating-badge">⭐ ${item.rating}</div>` : ''}
+                        <div class="reorder-btns">
+                            <button class="btn-order" onclick="moveItemInFolder(${i}, ${idx}, -1, event)"><i class="fas fa-chevron-up"></i></button>
+                            <button class="btn-order" onclick="moveItemInFolder(${i}, ${idx}, 1, event)"><i class="fas fa-chevron-down"></i></button>
+                        </div>
                         <img src="https://image.tmdb.org/t/p/w200${item.p}" class="abatible-poster" onclick="openDetails(${item.id})">
                         <div class="abatible-actions">
-                            <span style="font-size:13px; font-weight:800; text-align:left;">${item.t}</span>
+                            <span style="font-size:13px; font-weight:800; text-align:left;">${item.t} ${item.rating > 0 ? '⭐'+item.rating : ''} ${item.watched ? '✅':''}</span>
                             <button class="btn-mini" style="background:var(--verde)" onclick="openMoveDialog(${item.id},'${item.t}','${item.p}', true, ${i})">GESTIONAR</button>
                             <button class="btn-mini" style="background:#333" onclick="removeItem('butaca_lists', ${item.id}, true, ${i})">QUITAR</button>
                         </div>
@@ -283,25 +298,65 @@
             gen.forEach(m => {
                 grid.innerHTML += `<div class="card">
                     ${m.rating > 0 ? `<div class="rating-badge">⭐ ${m.rating}</div>` : ''}
+                    ${m.watched ? `<div class="rating-badge" style="left:auto; right:8px; border-color:var(--verde); color:var(--verde);">VISTA</div>` : ''}
                     <img src="https://image.tmdb.org/t/p/w500${m.p}" onclick="openDetails(${m.id})">
                     <div class="movie-title">${m.t}</div>
                     <div style="padding:0 10px 10px; display:grid; gap:5px;">
                         <button class="btn-mini" style="background:var(--azul)" onclick="openMoveDialog(${m.id},'${m.t}','${m.p}', false)">GESTIONAR</button>
                         <button class="btn-mini" style="background:#333" onclick="removeItem('butaca_movies_gen', ${m.id})">QUITAR</button>
-                    </div>
-                </div>`;
+                    </div></div>`;
             });
         }
 
-        /* --- MOVIMIENTOS --- */
+        function toggleFolder(idx) {
+            if(openFolders.includes(idx)) openFolders = openFolders.filter(i => i !== idx);
+            else openFolders.push(idx);
+            renderSaved();
+        }
+
+        function moveItemInFolder(fIdx, iIdx, dir, event) {
+            event.stopPropagation();
+            let lists = JSON.parse(localStorage.getItem('butaca_lists'));
+            let items = lists[fIdx].items;
+            let target = iIdx + dir;
+            if (target >= 0 && target < items.length) {
+                [items[iIdx], items[target]] = [items[target], items[iIdx]];
+                localStorage.setItem('butaca_lists', JSON.stringify(lists));
+                renderSaved();
+            }
+        }
+
+        /* --- GESTIÓN DIALOGO --- */
         function openMoveDialog(id, t, p, fromFolder, folderIdx = -1) {
             const listKey = fromFolder ? 'butaca_lists' : 'butaca_movies_gen';
             const source = JSON.parse(localStorage.getItem(listKey));
             const movie = fromFolder ? source[folderIdx].items.find(x => x.id === id) : source.find(x => x.id === id);
             currentItem = movie; isFromFolder = fromFolder; sourceFolderIdx = folderIdx;
+            
+            const btnMark = document.getElementById('btn-mark-watched');
+            btnMark.innerText = currentItem.watched ? "YA LA VISTE" : "🎬 MARCAR COMO VISTA";
+            btnMark.style.background = currentItem.watched ? "var(--oro)" : "var(--azul)";
+            btnMark.style.color = currentItem.watched ? "black" : "white";
+
             document.getElementById('btn-return-general').style.display = fromFolder ? 'block' : 'none';
             document.getElementById('folder-options').style.display = 'none';
             document.getElementById('listMoveModal').style.display = 'flex';
+        }
+
+        function markAsWatched() {
+            currentItem.watched = !currentItem.watched;
+            const listKey = isFromFolder ? 'butaca_lists' : 'butaca_movies_gen';
+            let source = JSON.parse(localStorage.getItem(listKey));
+            if(isFromFolder) source[sourceFolderIdx].items.find(x => x.id === currentItem.id).watched = currentItem.watched;
+            else source.find(x => x.id === currentItem.id).watched = currentItem.watched;
+            localStorage.setItem(listKey, JSON.stringify(source));
+            
+            const btnMark = document.getElementById('btn-mark-watched');
+            btnMark.innerText = currentItem.watched ? "YA LA VISTE" : "🎬 MARCAR COMO VISTA";
+            btnMark.style.background = currentItem.watched ? "var(--oro)" : "var(--azul)";
+            btnMark.style.color = currentItem.watched ? "black" : "white";
+            
+            renderSaved(); updateProfile();
         }
 
         function returnToGeneral() {
@@ -311,7 +366,7 @@
             let gen = JSON.parse(localStorage.getItem('butaca_movies_gen')) || [];
             if(!gen.some(x => x.id === currentItem.id)) gen.push(currentItem);
             localStorage.setItem('butaca_movies_gen', JSON.stringify(gen));
-            closeModals(); renderSaved();
+            renderSaved();
         }
 
         function moveToFolder(idx) {
@@ -325,10 +380,10 @@
                 }
                 localStorage.setItem('butaca_lists', JSON.stringify(lists));
             }
-            closeModals(); renderSaved();
+            renderSaved();
         }
 
-        /* --- CATEGORIAS API REAL --- */
+        /* --- CATEGORIAS --- */
         function renderGenreFilters() {
             const genres = [{id:null,n:'Todo'},{id:10751,n:'Infantil'},{id:878,n:'Sci-Fi'},{id:35,n:'Comedia'},{id:28,n:'Acción'},{id:27,n:'Terror'}];
             document.getElementById('filter-container').innerHTML = genres.map(g => `<button class="filter-btn" onclick="filterGenre(${g.id}, this)">${g.n}</button>`).join('');
@@ -359,7 +414,7 @@
             const r = await fetch(`https://api.themoviedb.org/3/trending/movie/week?api_key=${API_KEY}&page=${pageFrames}`);
             const d = await r.json();
             d.results.forEach(item => { if(item.backdrop_path) {
-                document.getElementById('frames-container').innerHTML += `<div class="card" style="border-radius:10px;"><img src="https://image.tmdb.org/t/p/w780${item.backdrop_path}" onclick="openFrameViewer('https://image.tmdb.org/t/p/original${item.backdrop_path}')"><div style="background:#111; padding:8px; font-size:8px; text-align:center; font-weight:700;">${item.title}</div></div>`;
+                document.getElementById('frames-container').innerHTML += `<div class="card" style="border-radius:10px;"><img src="https://image.tmdb.org/t/p/w780${item.backdrop_path}" onclick="openFrameViewer('https://image.tmdb.org/t/p/original${item.backdrop_path}')"><div style="background:#111; padding:8px; font-size:8px; text-align:center;">${item.title}</div></div>`;
             }});
             pageFrames++; loading = false;
         }
@@ -367,26 +422,70 @@
         function openFrameViewer(src) {
             currentViewerPath = src; document.getElementById('viewer-img').src = src;
             const favs = JSON.parse(localStorage.getItem('butaca_fav_frames')) || [];
-            updateFavBtnUI(favs.some(f => f.src === src));
+            const isF = favs.some(f => f.src === src);
+            document.getElementById('viewer-fav-btn').innerText = isF ? "QUITAR DE FAVORITOS" : "AGREGAR A FAVORITOS";
             document.getElementById('viewer-modal').style.display = 'flex';
         }
 
         function toggleViewerFav() {
             let favs = JSON.parse(localStorage.getItem('butaca_fav_frames')) || [];
             const idx = favs.findIndex(f => f.src === currentViewerPath);
-            if(idx > -1) { favs.splice(idx, 1); updateFavBtnUI(false); } 
-            else { favs.push({src: currentViewerPath}); updateFavBtnUI(true); }
-            localStorage.setItem('butaca_fav_frames', JSON.stringify(favs)); updateProfile();
+            if(idx > -1) favs.splice(idx, 1); else favs.push({src: currentViewerPath});
+            localStorage.setItem('butaca_fav_frames', JSON.stringify(favs));
+            closeModals(); updateProfile();
         }
 
-        function updateFavBtnUI(isFav) {
-            const btn = document.getElementById('viewer-fav-btn');
-            btn.innerText = isFav ? "QUITAR DE MIS FAVORITOS" : "AGREGAR A FAVORITOS";
-            btn.style.background = isFav ? "rgba(255,255,255,0.15)" : "var(--rojo)";
-            btn.style.border = isFav ? "1px solid var(--rojo)" : "none";
+        function setFrameAsAvatar() {
+            localStorage.setItem('butaca_custom_photo', currentViewerPath);
+            closeModals(); updateProfile();
         }
 
-        /* --- SYSTEM HELPERS --- */
+        /* --- PERFIL INTERACTIVO --- */
+        function openTextList(type, title) {
+            const modal = document.getElementById('textListModal');
+            const container = document.getElementById('text-list-container');
+            document.getElementById('text-list-title').innerText = title;
+            
+            let titles = [];
+            const gen = JSON.parse(localStorage.getItem('butaca_movies_gen')) || [];
+            const lists = JSON.parse(localStorage.getItem('butaca_lists')) || [];
+
+            if(type === 'por_ver') {
+                gen.filter(m => !m.watched).forEach(m => titles.push(m.t));
+                lists.forEach(l => l.items.filter(m => !m.watched).forEach(m => titles.push(m.t)));
+            } else {
+                gen.filter(m => m.watched).forEach(m => titles.push(m.t));
+                lists.forEach(l => l.items.filter(m => m.watched).forEach(m => titles.push(m.t)));
+            }
+
+            container.innerHTML = titles.length > 0 ? titles.map((t, i) => `<b>${i+1}.</b> ${t}`).join('<br>') : "No hay títulos registrados.";
+            modal.style.display = 'flex';
+        }
+
+        function updateProfile() {
+            const gen = JSON.parse(localStorage.getItem('butaca_movies_gen')) || [];
+            const lists = JSON.parse(localStorage.getItem('butaca_lists')) || [];
+            const porVer = gen.filter(m => !m.watched).length + lists.reduce((a,b)=> a + b.items.filter(x => !x.watched).length, 0);
+            const vistas = gen.filter(m => m.watched).length + lists.reduce((a,b)=> a + b.items.filter(x => x.watched).length, 0);
+            const calif = gen.filter(m => m.rating > 0).length + lists.reduce((a,b)=> a + b.items.filter(x => x.rating > 0).length, 0);
+            
+            document.getElementById('p-name').innerText = localStorage.getItem('butaca_user') || "Usuario";
+            document.getElementById('stat-m-p').innerText = porVer;
+            document.getElementById('stat-m-v').innerText = vistas;
+            
+            let rank = "ESPECTADOR";
+            if(calif > 5) rank = "CINÉFILO";
+            if(calif > 20) rank = "CRÍTICO";
+            if(calif > 50) rank = "DIRECTOR";
+            document.getElementById('rank-display').innerHTML = `<span class="rank-tag">${rank}</span>`;
+
+            const favs = JSON.parse(localStorage.getItem('butaca_fav_frames')) || [];
+            document.getElementById('fav-frames-container').innerHTML = favs.map(f => `<div class="card" style="aspect-ratio:1/1;"><img src="${f.src}" onclick="openFrameViewer('${f.src}')"></div>`).join("");
+            const photo = localStorage.getItem('butaca_custom_photo');
+            if(photo) document.getElementById('current-p-avatar').innerHTML = `<img src="${photo}" style="width:100%; height:100%; object-fit:cover;">`;
+        }
+
+        /* --- SISTEMA HELPERS --- */
         async function startSearch() { querySearch = document.getElementById('main-query').value; pageSearch = 1; document.getElementById('search-grid').innerHTML = ""; document.getElementById('autocomplete-results').innerHTML = ""; searchUniversal(); }
         async function searchUniversal() {
             if(!querySearch) return; loading = true;
@@ -405,60 +504,40 @@
             }
         }
 
-        function updateProfile() {
-            const gen = JSON.parse(localStorage.getItem('butaca_movies_gen')) || [];
-            const lists = JSON.parse(localStorage.getItem('butaca_lists')) || [];
-            const calif = gen.filter(m => m.rating > 0).length + lists.reduce((a,b)=> a + b.items.filter(x => x.rating > 0).length, 0);
-            
-            document.getElementById('p-name').innerText = localStorage.getItem('butaca_user') || "Usuario";
-            document.getElementById('stat-m-p').innerText = gen.length + lists.reduce((a,b)=> a + b.items.length, 0);
-            document.getElementById('stat-m-v').innerText = calif;
-            
-            let rank = "ESPECTADOR";
-            if(calif > 5) rank = "CINÉFILO";
-            if(calif > 20) rank = "CRÍTICO";
-            if(calif > 50) rank = "DIRECTOR";
-            document.getElementById('user-rank').innerText = rank;
-
-            const favs = JSON.parse(localStorage.getItem('butaca_fav_frames')) || [];
-            document.getElementById('fav-frames-container').innerHTML = favs.map(f => `<div class="card" style="aspect-ratio:1/1;"><img src="${f.src}" onclick="openFrameViewer('${f.src}')"></div>`).join("");
-            const savedPhoto = localStorage.getItem('butaca_custom_photo');
-            if(savedPhoto) document.getElementById('current-p-avatar').innerHTML = `<img src="${savedPhoto}" style="width:100%; height:100%; object-fit:cover;">`;
-        }
-
-        function triggerRatingFromMove() { closeModals(); currentRating = 0; document.querySelectorAll('#star-selector i').forEach(s => s.classList.remove('active')); document.getElementById('ratingModal').style.display = 'flex'; }
+        function triggerRatingFromMove() { currentRating = 0; document.querySelectorAll('#star-selector i').forEach(s => s.classList.remove('active')); document.getElementById('ratingModal').style.display = 'flex'; }
         function setRating(v) { currentRating = v; document.querySelectorAll('#star-selector i').forEach((s,i) => s.classList.toggle('active', i < v)); }
-        
         function confirmSeen() {
             const listKey = isFromFolder ? 'butaca_lists' : 'butaca_movies_gen';
             let source = JSON.parse(localStorage.getItem(listKey));
             if(isFromFolder) source[sourceFolderIdx].items.find(x => x.id === currentItem.id).rating = currentRating;
             else source.find(x => x.id === currentItem.id).rating = currentRating;
             localStorage.setItem(listKey, JSON.stringify(source));
-            closeModals(); renderSaved(); updateProfile();
+            document.getElementById('ratingModal').style.display = 'none'; renderSaved(); updateProfile();
         }
 
-        function confirmRemove() { removeItem(isFromFolder ? 'butaca_lists' : 'butaca_movies_gen', currentItem.id, isFromFolder, sourceFolderIdx); closeModals(); }
-        function removeItem(key, id, fromFolder = false, folderIdx = 0) { 
-            if(fromFolder) { let l = JSON.parse(localStorage.getItem(key)); l[folderIdx].items = l[folderIdx].items.filter(x => x.id !== id); localStorage.setItem(key, JSON.stringify(l)); }
-            else { let l = JSON.parse(localStorage.getItem(key)); localStorage.setItem(key, JSON.stringify(l.filter(x => x.id !== id))); }
+        function removeItem(key, id, fromFolder = false, fIdx = 0) { 
+            let data = JSON.parse(localStorage.getItem(key));
+            if(fromFolder) data[fIdx].items = data[fIdx].items.filter(x => x.id !== id);
+            else data = data.filter(x => x.id !== id);
+            localStorage.setItem(key, JSON.stringify(data));
             renderSaved(); updateProfile();
         }
         function openCreateListDialog() { document.getElementById('new-list-name').value = ""; document.getElementById('createListModal').style.display = 'flex'; }
-        function openCreateListDialogFromMove() { closeModals(); openCreateListDialog(); }
-        function confirmCreateList() { const n = document.getElementById('new-list-name').value; if(!n) return; let l = JSON.parse(localStorage.getItem('butaca_lists')) || []; l.push({name:n, items:[]}); localStorage.setItem('butaca_lists', JSON.stringify(l)); renderSaved(); closeModals(); }
+        function openCreateListDialogFromMove() { openCreateListDialog(); }
+        function confirmCreateList() { const n = document.getElementById('new-list-name').value; if(!n) return; let l = JSON.parse(localStorage.getItem('butaca_lists')) || []; l.push({name:n, items:[]}); localStorage.setItem('butaca_lists', JSON.stringify(l)); renderSaved(); document.getElementById('createListModal').style.display = 'none'; if(document.getElementById('listMoveModal').style.display === 'flex') showFolderOptions(); }
         function showFolderOptions() {
             const lists = JSON.parse(localStorage.getItem('butaca_lists')) || [];
             document.getElementById('list-options-container').innerHTML = lists.map((l, i) => `<button class="btn-action" style="background:#222; border:1px solid #444;" onclick="moveToFolder(${i})">${l.name}</button>`).join('');
             document.getElementById('folder-options').style.display = 'block';
         }
-        function handleAutocomplete(q, resId) { if(!q) return document.getElementById(resId).innerHTML = ""; fetch(`https://api.themoviedb.org/3/search/movie?api_key=${API_KEY}&query=${encodeURIComponent(q)}&language=es-ES`).then(r => r.json()).then(d => { document.getElementById(resId).innerHTML = d.results.slice(0, 5).map(m => `<div class="suggestion-item" onclick="document.getElementById('main-query').value='${m.title}'; startSearch();">${m.title}</div>`).join(''); }); }
+        function handleAutocomplete(q, rId) { if(!q) return document.getElementById(rId).innerHTML = ""; fetch(`https://api.themoviedb.org/3/search/movie?api_key=${API_KEY}&query=${encodeURIComponent(q)}&language=es-ES`).then(r => r.json()).then(d => { document.getElementById(rId).innerHTML = d.results.slice(0, 5).map(m => `<div style="padding:15px; border-bottom:1px solid #222; cursor:pointer;" onclick="document.getElementById('main-query').value='${m.title}'; startSearch();">${m.title}</div>`).join(''); }); }
         function switchView(id, el) { document.querySelectorAll('.view').forEach(v => v.classList.remove('active')); document.getElementById(id).classList.add('active'); document.querySelectorAll('.nav-item').forEach(i => i.classList.remove('active')); el.classList.add('active'); if(id === 'view-movies') renderSaved(); }
         function closeModals() { document.querySelectorAll('.modal').forEach(m => m.style.display = 'none'); }
         function logout() { localStorage.clear(); location.reload(); }
         async function searchFrames() { const q = document.getElementById('frame-query').value; if(!q) return; const r = await fetch(`https://api.themoviedb.org/3/search/movie?api_key=${API_KEY}&query=${encodeURIComponent(q)}&language=es-ES`); const d = await r.json(); const c = document.getElementById('frames-container'); c.innerHTML = ""; for(let item of d.results.slice(0, 3)) { const ir = await fetch(`https://api.themoviedb.org/3/movie/${item.id}/images?api_key=${API_KEY}`); const id = await ir.json(); id.backdrops.slice(0, 10).forEach(img => { c.innerHTML += `<div class="card"><img src="https://image.tmdb.org/t/p/original${img.file_path}" onclick="openFrameViewer(this.src)"></div>`; }); } }
+        function confirmRemove() { removeItem(isFromFolder ? 'butaca_lists' : 'butaca_movies_gen', currentItem.id, isFromFolder, sourceFolderIdx); closeModals(); }
         function deleteFolder(idx) { if(confirm("¿Eliminar carpeta?")) { let l = JSON.parse(localStorage.getItem('butaca_lists')); l.splice(idx,1); localStorage.setItem('butaca_lists', JSON.stringify(l)); renderSaved(); } }
     </script>
-    <input type="file" id="fileInput" hidden accept="image/*" onchange="const r=new FileReader(); r.onload=(e)=>{localStorage.setItem('butaca_custom_photo',e.target.result); location.reload();}; r.readAsDataURL(this.files[0]);">
+    <input type="file" id="fileInput" hidden accept="image/*" onchange="const r=new FileReader(); r.onload=(e)=>{localStorage.setItem('butaca_custom_photo',e.target.result); updateProfile();}; r.readAsDataURL(this.files[0]);">
 </body>
 </html>
