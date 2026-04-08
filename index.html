@@ -127,7 +127,7 @@
 
     <div id="view-frames" class="view">
         <div class="search-wrapper" style="margin-bottom: 25px; display: flex; gap: 10px;">
-            <input type="text" id="frame-query" placeholder="Fotogramas de..." onkeydown="if(event.key==='Enter') searchFrames()">
+            <input type="text" id="frame-query" placeholder="Fotogramas de..." oninput="if(!this.value) loadFrames(true)" onkeydown="if(event.key==='Enter') searchFrames()">
             <button class="btn-action" style="width:auto; padding:0 20px;" onclick="searchFrames()">IR</button>
         </div>
         <div id="frames-container" class="grid"></div>
@@ -166,7 +166,7 @@
     <div id="listMoveModal" class="modal">
         <div class="modal-content">
             <span class="close-x" onclick="closeModals()">&times;</span>
-            <h3 id="manage-title">Gestionar Película</h3>
+            <h3>Gestionar Película</h3>
             <div id="dialog-main-actions" style="display:grid; gap:12px; margin-top:25px;">
                 <button class="btn-action" style="background:var(--verde)" onclick="triggerRatingFromMove()">⭐ CALIFICAR</button>
                 <button id="btn-mark-watched" class="btn-action" style="background:var(--azul)" onclick="markAsWatched()">🎬 MARCADA COMO VISTA</button>
@@ -211,12 +211,12 @@
         let currentGenre = null, currentItem = null, currentRating = 0;
         let pageHome = 1, pageSearch = 1, pageFrames = 1, loading = false, querySearch = "", currentViewerPath = "";
         let isFromFolder = false, sourceFolderIdx = -1, openFolders = [];
-        let userID = ""; // Llave basada en el correo
+        let userID = ""; 
 
         window.onload = () => {
             const savedEmail = localStorage.getItem('butaca_active_email');
             if(savedEmail) {
-                userID = btoa(savedEmail).replace(/=/g, ""); // Hash simple
+                userID = btoa(savedEmail).replace(/=/g, ""); 
                 document.getElementById('login-screen').style.display = 'none';
                 startIntro();
             }
@@ -228,16 +228,13 @@
             const name = document.getElementById('user-input').value;
             const email = document.getElementById('email-input').value;
             if(!name || !email) return alert("Ingresa nombre y correo");
-            
             localStorage.setItem('butaca_active_email', email);
             localStorage.setItem('butaca_user_' + btoa(email).replace(/=/g, ""), name);
             userID = btoa(email).replace(/=/g, "");
-            
             document.getElementById('login-screen').style.display = 'none';
             startIntro();
         }
 
-        // Helper para obtener datos del usuario actual
         function uData(key) { return JSON.parse(localStorage.getItem(`butaca_${key}_${userID}`)) || []; }
         function setUData(key, val) { localStorage.setItem(`butaca_${key}_${userID}`, JSON.stringify(val)); }
 
@@ -383,6 +380,8 @@
 
         function moveToFolder(idx) {
             let lists = uData('lists');
+            // INSERCIÓN 1: ALERTA DUPLICADO
+            if (lists[idx].items.some(x => x.id === currentItem.id)) return alert("Ya se encuentra en esta carpeta");
             lists[idx].items.push(currentItem);
             if(isFromFolder) {
                 lists[sourceFolderIdx].items = lists[sourceFolderIdx].items.filter(x => x.id !== currentItem.id);
@@ -418,6 +417,7 @@
             pageHome++; loading = false;
         }
 
+        // INSERCIÓN 2: FRAMES DINÁMICOS
         async function loadFrames(isRand = false) {
             loading = true; if(isRand) pageFrames = Math.floor(Math.random() * 40) + 1;
             const r = await fetch(`https://api.themoviedb.org/3/trending/movie/week?api_key=${API_KEY}&page=${pageFrames}`);
@@ -487,7 +487,13 @@
             if(photo) document.getElementById('current-p-avatar').innerHTML = `<img src="${photo}" style="width:100%; height:100%; object-fit:cover;">`;
         }
 
-        async function startSearch() { querySearch = document.getElementById('main-query').value; pageSearch = 1; document.getElementById('search-grid').innerHTML = ""; document.getElementById('autocomplete-results').innerHTML = ""; searchUniversal(); }
+        async function startSearch() { 
+            querySearch = document.getElementById('main-query').value; pageSearch = 1; 
+            document.getElementById('search-grid').innerHTML = ""; 
+            // INSERCIÓN 3: CIERRE AUTO SUGERENCIAS
+            document.getElementById('autocomplete-results').innerHTML = ""; 
+            searchUniversal(); 
+        }
         async function searchUniversal() {
             if(!querySearch) return; loading = true;
             const r = await fetch(`https://api.themoviedb.org/3/search/movie?api_key=${API_KEY}&query=${encodeURIComponent(querySearch)}&language=es-ES&page=${pageSearch}`);
@@ -496,7 +502,7 @@
             pageSearch++; loading = false;
         }
 
-        function handleInfiniteScroll() { if (loading) return; if (window.innerHeight + window.scrollY >= document.body.offsetHeight - 800) { const active = document.querySelector('.view.active').id; if (active === 'view-home') loadTrending(); if (active === 'view-frames') loadFrames(); } }
+        function handleInfiniteScroll() { if (loading) return; if (window.innerHeight + window.scrollY >= document.body.offsetHeight - 800) { const active = document.querySelector('.view.active').id; if (active === 'view-home') loadTrending(); } }
         function triggerRatingFromMove() { currentRating = 0; document.querySelectorAll('#star-selector i').forEach(s => s.classList.remove('active')); document.getElementById('ratingModal').style.display = 'flex'; }
         function setRating(v) { currentRating = v; document.querySelectorAll('#star-selector i').forEach((s,i) => s.classList.toggle('active', i < v)); }
         function confirmSeen() {
@@ -519,14 +525,14 @@
             renderSaved(); updateProfile();
         }
         function openCreateListDialog() { document.getElementById('new-list-name').value = ""; document.getElementById('createListModal').style.display = 'flex'; }
-        function openCreateListDialogFromMove() { openCreateListDialog(); }
+        function openCreateListDialogFromMove() { openCreateListDialog(); showFolderOptions(); }
         function confirmCreateList() { const n = document.getElementById('new-list-name').value; if(!n) return; let l = uData('lists'); l.push({name:n, items:[]}); setUData('lists', l); renderSaved(); document.getElementById('createListModal').style.display = 'none'; if(document.getElementById('listMoveModal').style.display === 'flex') showFolderOptions(); }
         function showFolderOptions() { const lists = uData('lists'); document.getElementById('list-options-container').innerHTML = lists.map((l, i) => `<button class="btn-action" style="background:#222; border:1px solid #444;" onclick="moveToFolder(${i})">${l.name}</button>`).join(''); document.getElementById('folder-options').style.display = 'block'; }
         function handleAutocomplete(q, rId) { if(!q) return document.getElementById(rId).innerHTML = ""; fetch(`https://api.themoviedb.org/3/search/movie?api_key=${API_KEY}&query=${encodeURIComponent(q)}&language=es-ES`).then(r => r.json()).then(d => { document.getElementById(rId).innerHTML = d.results.slice(0, 5).map(m => `<div style="padding:15px; border-bottom:1px solid #222;" onclick="document.getElementById('main-query').value='${m.title}'; startSearch();">${m.title}</div>`).join(''); }); }
-        function switchView(id, el) { document.querySelectorAll('.view').forEach(v => v.classList.remove('active')); document.getElementById(id).classList.add('active'); document.querySelectorAll('.nav-item').forEach(i => i.classList.remove('active')); el.classList.add('active'); if(id === 'view-movies') renderSaved(); }
+        function switchView(id, el) { document.querySelectorAll('.view').forEach(v => v.classList.remove('active')); document.getElementById(id).classList.add('active'); document.querySelectorAll('.nav-item').forEach(i => i.classList.remove('active')); el.classList.add('active'); if(id === 'view-movies') renderSaved(); if(id === 'view-frames') loadFrames(true); }
         function closeModals() { document.querySelectorAll('.modal').forEach(m => m.style.display = 'none'); }
         function logout() { localStorage.removeItem('butaca_active_email'); location.reload(); }
-        async function searchFrames() { const q = document.getElementById('frame-query').value; if(!q) return; const r = await fetch(`https://api.themoviedb.org/3/search/movie?api_key=${API_KEY}&query=${encodeURIComponent(q)}&language=es-ES`); const d = await r.json(); const c = document.getElementById('frames-container'); c.innerHTML = ""; for(let item of d.results.slice(0, 3)) { const ir = await fetch(`https://api.themoviedb.org/3/movie/${item.id}/images?api_key=${API_KEY}`); const id = await ir.json(); id.backdrops.slice(0, 10).forEach(img => { c.innerHTML += `<div class="card"><img src="https://image.tmdb.org/t/p/original${img.file_path}" onclick="openFrameViewer(this.src)"></div>`; }); } }
+        async function searchFrames() { const q = document.getElementById('frame-query').value; if(!q) return loadFrames(true); document.getElementById('frames-container').innerHTML = ""; const r = await fetch(`https://api.themoviedb.org/3/search/movie?api_key=${API_KEY}&query=${encodeURIComponent(q)}&language=es-ES`); const d = await r.json(); const c = document.getElementById('frames-container'); for(let item of d.results.slice(0, 3)) { const ir = await fetch(`https://api.themoviedb.org/3/movie/${item.id}/images?api_key=${API_KEY}`); const id = await ir.json(); id.backdrops.slice(0, 10).forEach(img => { c.innerHTML += `<div class="card"><img src="https://image.tmdb.org/t/p/original${img.file_path}" onclick="openFrameViewer(this.src)"></div>`; }); } }
         function confirmRemove() { removeItem(isFromFolder ? 'lists' : 'movies_gen', currentItem.id, isFromFolder, sourceFolderIdx); closeModals(); }
         function deleteFolder(idx) { if(confirm("¿Eliminar carpeta?")) { let l = uData('lists'); l.splice(idx,1); setUData('lists', l); renderSaved(); } }
     </script>
